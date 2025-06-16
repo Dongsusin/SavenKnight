@@ -7,10 +7,8 @@ const groups = ["스페셜", "일반", "아소드", "아이사", "기타"];
 export default function Dex() {
   const [selectedGroup, setSelectedGroup] = useState("스페셜");
 
-  // 선택된 그룹에 해당하는 캐릭터만 필터링
   const groupHeroes = heroes.filter((hero) => hero.group === selectedGroup);
 
-  // 해당 그룹에서 사용된 카테고리 목록 추출
   const categories = [...new Set(groupHeroes.map((hero) => hero.category))];
 
   return (
