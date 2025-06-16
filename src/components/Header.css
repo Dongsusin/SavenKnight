@@ -1,0 +1,32 @@
+.app-header {
+  background-color: black;
+  color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  height: 100px;
+}
+
+.nav-left .logo {
+  height: 100px;
+  object-fit: contain;
+}
+
+.nav-right {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.nav-right a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s, transform 0.2s;
+}
+
+.nav-right a:hover,
+.nav-right a:active {
+  color: gold;
+}
