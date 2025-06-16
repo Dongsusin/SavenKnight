@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import heroes from "../data/heroes.json";
 import "./Dex.css";
 
@@ -40,9 +41,11 @@ export default function Dex() {
                 {categoryHeroes.map((hero) => {
                   const imagePath = `/도감/${hero.group}/아이콘/${hero.name}.png`;
                   return (
-                    <div key={hero.id} className="hero-card">
-                      <img src={imagePath} alt={hero.name} />
-                    </div>
+                    <Link to={`/hero/${hero.name}`}>
+                      <div key={hero.id} className="hero-card">
+                        <img src={imagePath} alt={hero.name} />
+                      </div>
+                    </Link>
                   );
                 })}
               </div>
