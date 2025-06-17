@@ -149,21 +149,30 @@ export default function GrowthDungeon() {
           <div className="reward-section">
             <p>획득 가능 보상</p>
             <div className="reward-text">
-              {selectedDungeon.rewardsByStage?.[selectedStage - 1] ||
-                "보상 정보 없음"}
+              {(
+                selectedDungeon.rewardsByStage?.[selectedStage - 1] ||
+                "보상 정보 없음"
+              )
+                .split(",")
+                .map((part, index) => (
+                  <div key={index}>{part.trim()}</div>
+                ))}
             </div>
           </div>
 
-          <div className="stage-select">
-            {[...Array(10)].map((_, i) => (
-              <button
-                key={i}
-                className={selectedStage === i + 1 ? "active" : ""}
-                onClick={() => setSelectedStage(i + 1)}
-              >
-                {i + 1}
-              </button>
-            ))}
+          <div className="stage">
+            <p>단계 선택</p>
+            <div className="stage-select">
+              {[...Array(10)].map((_, i) => (
+                <button
+                  key={i}
+                  className={selectedStage === i + 1 ? "active" : ""}
+                  onClick={() => setSelectedStage(i + 1)}
+                >
+                  {i + 1}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
