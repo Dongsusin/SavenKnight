@@ -74,7 +74,7 @@
   width: 100vw;
   margin-left: calc(-50vw + 50%);
   margin-bottom: 3rem;
-  padding: 0 2rem 1rem;
+  padding: 0.2rem 1rem;
   border-bottom: 1px solid #444;
   box-sizing: border-box;
 }
@@ -129,12 +129,17 @@
 
 @media (max-width: 426px) {
   .hero-cards {
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
     margin: 0 auto 0.5rem;
   }
 
   .hero-card {
-    width: 100px;
+    width: 80px;
+  }
+
+  .category-section {
+    padding: 0.2rem 0.5rem;
+    margin-bottom: 0.5rem;
   }
 }
 
