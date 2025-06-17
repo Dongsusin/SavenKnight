@@ -119,7 +119,7 @@ export default function GrowthDungeon() {
   const selectedDungeon = dungeonList.find((d) => d.id === selectedId);
 
   return (
-    <div className="growth-container">
+    <div className="growth-container page">
       <div className="dungeon-list">
         {dungeonList.map((dungeon) => (
           <div

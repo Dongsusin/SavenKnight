@@ -10,8 +10,8 @@
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 2rem;
-  margin-top: 2rem;
+  gap: 1rem;
+  margin-top: 1rem;
 }
 
 .raid-card {
@@ -41,4 +41,42 @@
   font-weight: bold;
   background-color: #111;
   border-top: 1px solid #333;
+}
+
+@media (max-width: 768px) {
+  .raid-card {
+    width: 200px;
+  }
+  .raid-card img {
+    height: 400px;
+  }
+}
+
+@media (max-width: 426px) {
+  .raid-cards {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .raid-card {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 200px;
+  }
+
+  .raid-card img {
+    width: 40%;
+    height: auto;
+  }
+
+  .raid-name {
+    padding: 1rem;
+    font-size: 1rem;
+    text-align: left;
+    flex: 1;
+    background-color: transparent;
+    border-top: none;
+  }
 }

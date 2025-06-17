@@ -8,7 +8,7 @@ export default function Raid() {
   ];
 
   return (
-    <div className="raid-page">
+    <div className="raid-page page">
       <h1>레이드</h1>
 
       <div className="raid-cards">
