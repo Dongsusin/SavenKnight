@@ -36,7 +36,6 @@
   justify-content: center;
   color: white;
   background-size: cover;
-  background-position: center;
 }
 
 .dungeon-tab:hover {
@@ -47,8 +46,6 @@
   outline: 2px solid #ffd700;
   box-shadow: 0 0 10px #ffd700;
   background: linear-gradient(to right, #ffcc00, #ff9900);
-  color: black;
-  font-weight: bold;
 }
 
 .dungeon-label-overlay {
@@ -173,12 +170,14 @@
     gap: 1rem;
     border-right: none;
     border-bottom: 1px solid #333;
+    height: auto;
   }
 
   .dungeon-tab {
     flex: 0 0 auto;
     width: 125px;
     height: 80px;
+    background: linear-gradient(to right, #ffcc00, #ff9900);
   }
 
   .dungeon-detail {
