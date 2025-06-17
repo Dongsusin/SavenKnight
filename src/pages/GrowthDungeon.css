@@ -1,0 +1,144 @@
+.growth-container {
+  display: flex;
+  background-color: #111;
+  color: white;
+}
+
+.dungeon-list {
+  width: 400px;
+  background-color: #1a1a1a;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  gap: 1rem;
+  border-right: 1px solid #333;
+  justify-content: center;
+}
+
+.dungeon-tab {
+  position: relative;
+  width: 100%;
+  height: 80px;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  background-size: cover;
+}
+
+.dungeon-tab:hover {
+  transform: scale(1.02);
+}
+
+.dungeon-tab.active {
+  outline: 2px solid #ffd700;
+  box-shadow: 0 0 10px #ffd700;
+}
+
+.dungeon-label-overlay {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.dungeon-tab.active {
+  background: linear-gradient(to right, #ffcc00, #ff9900);
+  color: black;
+  font-weight: bold;
+}
+
+.dungeon-detail {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  background-color: #1a1a1a;
+  overflow: auto;
+}
+
+.dungeon-bg img {
+  width: 100%;
+  height: 40vh;
+  border-radius: 12px;
+  object-fit: contain;
+  margin-bottom: 1rem;
+  box-shadow: 0 0 10px #000;
+}
+
+.dungeon-info {
+  background-color: #222;
+  padding: 1.5rem;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.dungeon-info h2 {
+  font-size: 1.5rem;
+  color: #ffd700;
+  margin: 0;
+}
+
+.reward-section p {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.rewards img {
+  width: 40px;
+  margin-right: 10px;
+}
+
+.stage-select {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.stage-select button {
+  background: #222;
+  color: white;
+  border: 1px solid #444;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.stage-select button.active {
+  background: #ffd700;
+  color: black;
+  font-weight: bold;
+}
+
+.enter-button {
+  align-self: flex-start;
+  background: gold;
+  color: black;
+  font-weight: bold;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.reward-text {
+  margin-top: 0.5rem;
+  background-color: #111;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #ffd700;
+  border: 1px solid #444;
+}

@@ -26,17 +26,8 @@ export default function Header() {
           <NavLink to="/" onClick={closeMenu}>
             도감
           </NavLink>
-          <NavLink to="/adventure" onClick={closeMenu}>
-            모험
-          </NavLink>
           <NavLink to="/raid" onClick={closeMenu}>
             레이드
-          </NavLink>
-          <NavLink to="/infinity-tower" onClick={closeMenu}>
-            무한의탑
-          </NavLink>
-          <NavLink to="/arena" onClick={closeMenu}>
-            결투장
           </NavLink>
           <NavLink to="/growth-dungeon" onClick={closeMenu}>
             성장던전
