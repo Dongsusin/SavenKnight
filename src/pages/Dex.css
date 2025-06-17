@@ -57,10 +57,8 @@
   flex: 1;
   padding: 2rem;
   overflow-x: hidden;
-  overflow-y: auto;
   box-sizing: border-box;
   text-align: center;
-  height: 100%;
   margin-top: 60px;
 }
 
