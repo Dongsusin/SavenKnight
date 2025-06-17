@@ -16,6 +16,9 @@
   white-space: nowrap;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
+  position: fixed;
+  width: 100vw;
+  height: 60px;
 }
 
 .hero-dex-sidebar::-webkit-scrollbar {
@@ -54,8 +57,11 @@
   flex: 1;
   padding: 2rem;
   overflow-x: hidden;
+  overflow-y: auto;
   box-sizing: border-box;
   text-align: center;
+  height: 100%;
+  margin-top: 60px;
 }
 
 .hero-dex-content h2 {

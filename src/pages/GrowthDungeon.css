@@ -64,10 +64,8 @@
   min-width: 0;
   padding: 1rem;
   background-color: #1a1a1a;
-  overflow: auto;
   display: flex;
   flex-direction: column;
-  height: 100%;
 }
 
 .dungeon-bg img {
@@ -163,6 +161,7 @@
   }
 
   .dungeon-list {
+    position: fixed;
     width: 100%;
     flex-direction: row;
     overflow-x: auto;
@@ -170,7 +169,7 @@
     gap: 1rem;
     border-right: none;
     border-bottom: 1px solid #333;
-    height: auto;
+    height: 115px;
   }
 
   .dungeon-tab {
@@ -182,6 +181,7 @@
 
   .dungeon-detail {
     padding: 1rem;
+    margin-top: 115px;
   }
 
   .dungeon-bg img {
