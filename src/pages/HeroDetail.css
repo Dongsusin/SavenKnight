@@ -188,8 +188,9 @@
 }
 
 .side-nav-button.disabled {
-  background-color: #999;
-  color: #ccc;
+  background-color: #555;
+  color: #555;
+  opacity: 0.75;
   pointer-events: none;
   cursor: default;
 }
