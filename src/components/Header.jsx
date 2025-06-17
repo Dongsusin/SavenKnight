@@ -1,20 +1,54 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { NavLink } from "react-router-dom";
 import "./Header.css";
 
 export default function Header() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const closeMenu = () => setMenuOpen(false);
+
   return (
-    <header className="app-header">
-      <div className="nav-left">
-        <img src="/logo.png" alt="Logo" className="logo" />
-      </div>
-      <nav className="nav-right">
-        <Link to="/">도감</Link>
-        <Link to="/adventure">모험</Link>
-        <Link to="/raid">레이드</Link>
-        <Link to="/infinity-tower">무한의탑</Link>
-        <Link to="/arena">결투장</Link>
-        <Link to="/growth-dungeon">성장던전</Link>
-      </nav>
-    </header>
+    <>
+      <header className="app-header">
+        <div className="nav-left">
+          <img src="/logo.png" alt="Logo" className="logo" />
+        </div>
+
+        <button
+          className="menu-toggle"
+          onClick={() => setMenuOpen((prev) => !prev)}
+          aria-label="메뉴 열기"
+        >
+          ☰
+        </button>
+
+        <nav className={`nav-right ${menuOpen ? "open" : ""}`}>
+          <NavLink to="/" onClick={closeMenu}>
+            도감
+          </NavLink>
+          <NavLink to="/adventure" onClick={closeMenu}>
+            모험
+          </NavLink>
+          <NavLink to="/raid" onClick={closeMenu}>
+            레이드
+          </NavLink>
+          <NavLink to="/infinity-tower" onClick={closeMenu}>
+            무한의탑
+          </NavLink>
+          <NavLink to="/arena" onClick={closeMenu}>
+            결투장
+          </NavLink>
+          <NavLink to="/growth-dungeon" onClick={closeMenu}>
+            성장던전
+          </NavLink>
+        </nav>
+      </header>
+
+      {/* 오버레이 추가 */}
+      <div
+        className={`mobile-overlay ${menuOpen ? "show" : ""}`}
+        onClick={closeMenu}
+      ></div>
+    </>
   );
 }

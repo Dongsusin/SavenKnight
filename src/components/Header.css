@@ -7,6 +7,8 @@
   align-items: center;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   height: 100px;
+  position: relative;
+  z-index: 9999;
 }
 
 .nav-left .logo {
@@ -23,10 +25,94 @@
   color: white;
   text-decoration: none;
   font-weight: 500;
+  text-wrap: nowrap;
+  font-size: 1.1rem;
   transition: color 0.2s, transform 0.2s;
 }
 
 .nav-right a:hover,
 .nav-right a:active {
   color: gold;
+}
+
+.menu-toggle {
+  display: none;
+  font-size: 32px;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+.mobile-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease;
+}
+
+.mobile-overlay.show {
+  opacity: 1;
+  visibility: visible;
+}
+.nav-right a {
+  transition: color 0.2s, transform 0.2s;
+}
+
+.nav-right a.active {
+  color: gold;
+  font-weight: 700;
+}
+
+@media (max-width: 426px) {
+  .app-header {
+    height: 70px;
+    padding: 0.5rem 1rem;
+  }
+
+  .nav-left .logo {
+    height: 50px;
+  }
+
+  .menu-toggle {
+    display: block;
+    z-index: 10001;
+  }
+
+  .nav-right {
+    position: fixed;
+    top: 0;
+    right: -80%;
+    width: 80%;
+    height: 100vh;
+    background-color: #222;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+    gap: 12px;
+    transition: right 0.3s ease, opacity 0.3s ease;
+    opacity: 0;
+    visibility: hidden;
+    z-index: 10000;
+    display: flex;
+  }
+
+  .nav-right.open {
+    right: 0;
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .nav-right a {
+    width: 100%;
+    padding: 12px 0;
+    font-size: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
 }

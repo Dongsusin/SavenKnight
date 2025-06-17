@@ -1101,7 +1101,7 @@
       [],
       ["효과 상승: [매의 발톱] 받는 피해량 4%"]
     ],
-    "sixtranscendenceSkillUp": [[], [], ["방어 무시"], []]
+    "sixtranscendenceSkillUp": [[], [], ["효과 추가: 방어 무시"], []]
   },
   {
     "id": 16,

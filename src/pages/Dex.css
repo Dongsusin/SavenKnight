@@ -101,3 +101,13 @@
   border-color: #ffd700;
   box-shadow: 0 0 10px #ffd700, 0 0 20px #ffea70;
 }
+
+@media (max-width: 426px) {
+  .hero-cards {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    margin: 0 auto 0.5rem;
+  }
+  .hero-card {
+    width: 100px;
+  }
+}
