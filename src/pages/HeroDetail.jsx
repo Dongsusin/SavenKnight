@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import heroes from "../data/heroes.json";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import "./HeroDetail.css";
 
 export default function HeroDetail() {
   const { name } = useParams();
   const [selectedSkillIndex, setSelectedSkillIndex] = useState(0);
   const [activeTab, setActiveTab] = useState("스킬");
+  const [level, setLevel] = useState(1);
+  const [enhance, setEnhance] = useState(0);
+  const [transcend, setTranscend] = useState(0);
 
   useEffect(() => {
     setSelectedSkillIndex(0);
@@ -226,6 +230,53 @@ export default function HeroDetail() {
           {activeTab === "스탯" && (
             <div className="stat-section">
               <h3>스탯</h3>
+
+              <div className="stat-settings">
+                {[
+                  {
+                    label: "레벨",
+                    value: level,
+                    setValue: setLevel,
+                    min: 1,
+                    max: 30,
+                  },
+                  {
+                    label: "강화",
+                    value: enhance,
+                    setValue: setEnhance,
+                    min: 0,
+                    max: 5,
+                  },
+                  {
+                    label: "초월",
+                    value: transcend,
+                    setValue: setTranscend,
+                    min: 0,
+                    max: 12,
+                  },
+                ].map(({ label, value, setValue, min, max }) => (
+                  <div className="stat-adjust-box" key={label}>
+                    <span className="stat-label">{label}</span>
+                    <div className="stat-stepper">
+                      <button
+                        onClick={() => setValue(Math.max(min, value - 1))}
+                        disabled={value <= min}
+                      >
+                        <FaChevronLeft />
+                      </button>
+                      <span className="stat-value-text">
+                        {label === "강화" ? `+${value}` : value}
+                      </span>
+                      <button
+                        onClick={() => setValue(Math.min(max, value + 1))}
+                        disabled={value >= max}
+                      >
+                        <FaChevronRight />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
               <div className="stat-list">
                 {[
                   { label: "물리 공격력", value: "522" },
