@@ -720,6 +720,24 @@ export default function HeroDetail() {
                   해당 등급은 스탯 정보가 제공되지 않습니다.
                 </p>
               )}
+              <div className="stat-color-legend">
+                <p>
+                  <span className="color-box total"></span> 노란색:{" "}
+                  <strong>총합</strong>
+                </p>
+                <p>
+                  <span className="color-box base"></span> 흰색:{" "}
+                  <strong>기본 수치 (레벨 기반)</strong>
+                </p>
+                <p>
+                  <span className="color-box enhance"></span> 초록색:{" "}
+                  <strong>강화 수치</strong>
+                </p>
+                <p>
+                  <span className="color-box transcend"></span> 빨간색:{" "}
+                  <strong>초월 수치</strong>
+                </p>
+              </div>
             </div>
           )}
         </div>
