@@ -11,7 +11,22 @@ export default function HeroDetail() {
   const [level, setLevel] = useState(1);
   const [enhance, setEnhance] = useState(0);
   const [transcend, setTranscend] = useState(0);
-
+  const statByGradeAndType = {
+    S: {
+      공격: { 공격력: 239, 생명력: 92, 방어력: 535, 속공: 29 },
+      마법: { 공격력: 239, 생명력: 92, 방어력: 535, 속공: 29 },
+      만능: { 공격력: 211, 생명력: 102, 방어력: 594, 속공: 25 },
+      방어: { 공격력: 116, 생명력: 135, 방어력: 773, 속공: 19 },
+      치유: { 공격력: 176, 생명력: 108, 방어력: 714, 속공: 19 },
+    },
+    A: {
+      공격: { 공격력: 221, 생명력: 88, 방어력: 510, 속공: 25 },
+      마법: { 공격력: 221, 생명력: 88, 방어력: 510, 속공: 25 },
+      만능: { 공격력: 197, 생명력: 98, 방어력: 567, 속공: 21 },
+      방어: { 공격력: 108, 생명력: 129, 방어력: 735, 속공: 16 },
+      치유: { 공격력: 165, 생명력: 104, 방어력: 680, 속공: 16 },
+    },
+  };
   useEffect(() => {
     setSelectedSkillIndex(0);
     setActiveTab("스킬");
@@ -339,89 +354,114 @@ export default function HeroDetail() {
             <div className="stat-section">
               <h3>스탯</h3>
 
-              <div className="stat-settings">
-                {[
-                  {
-                    label: "레벨",
-                    toggle: true,
-                  },
-                  {
-                    label: "강화",
-                    value: enhance,
-                    setValue: setEnhance,
-                    min: 0,
-                    max: 5,
-                  },
-                  {
-                    label: "초월",
-                    value: transcend,
-                    setValue: setTranscend,
-                    min: 0,
-                    max: 12,
-                  },
-                ].map(({ label, value, setValue, min, max, toggle }) => (
-                  <div className="stat-adjust-box" key={label}>
-                    <span className="stat-label">{label}</span>
-                    {toggle && label === "레벨" ? (
-                      <div className="level-toggle-buttons">
-                        <button
-                          className={level === 1 ? "active" : ""}
-                          onClick={() => setLevel(1)}
-                        >
-                          기본
-                        </button>
-                        <button
-                          className={level === 30 ? "active" : ""}
-                          onClick={() => setLevel(30)}
-                        >
-                          최대
-                        </button>
+              {["S", "A"].includes(hero.grade) ? (
+                <>
+                  <div className="stat-settings">
+                    {[
+                      // 기존 레벨/강화/초월 조절
+                      {
+                        label: "레벨",
+                        toggle: true,
+                      },
+                      {
+                        label: "강화",
+                        value: enhance,
+                        setValue: setEnhance,
+                        min: 0,
+                        max: 5,
+                      },
+                      {
+                        label: "초월",
+                        value: transcend,
+                        setValue: setTranscend,
+                        min: 0,
+                        max: 12,
+                      },
+                    ].map(({ label, value, setValue, min, max, toggle }) => (
+                      <div className="stat-adjust-box" key={label}>
+                        <span className="stat-label">{label}</span>
+                        {toggle && label === "레벨" ? (
+                          <div className="level-toggle-buttons">
+                            <button
+                              className={level === 1 ? "active" : ""}
+                              onClick={() => setLevel(1)}
+                            >
+                              기본
+                            </button>
+                            <button
+                              className={level === 30 ? "active" : ""}
+                              onClick={() => setLevel(30)}
+                            >
+                              최대
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="stat-stepper">
+                            <button
+                              onClick={() => setValue(Math.max(min, value - 1))}
+                              disabled={value <= min}
+                            >
+                              <FaChevronLeft />
+                            </button>
+                            <span className="stat-value-text">
+                              {label === "강화" ? `+${value}` : value}
+                            </span>
+                            <button
+                              onClick={() => setValue(Math.min(max, value + 1))}
+                              disabled={value >= max}
+                            >
+                              <FaChevronRight />
+                            </button>
+                          </div>
+                        )}
                       </div>
-                    ) : (
-                      <div className="stat-stepper">
-                        <button
-                          onClick={() => setValue(Math.max(min, value - 1))}
-                          disabled={value <= min}
-                        >
-                          <FaChevronLeft />
-                        </button>
-                        <span className="stat-value-text">
-                          {label === "강화" ? `+${value}` : value}
-                        </span>
-                        <button
-                          onClick={() => setValue(Math.min(max, value + 1))}
-                          disabled={value >= max}
-                        >
-                          <FaChevronRight />
-                        </button>
-                      </div>
-                    )}
+                    ))}
                   </div>
-                ))}
-              </div>
 
-              <div className="stat-list">
-                {[
-                  { label: "물리 공격력", value: "522" },
-                  { label: "방어력", value: "657" },
-                  { label: "생명력", value: "3,470" },
-                  { label: "속공", value: "19" },
-                  { label: "치명타 확률", value: "5%" },
-                  { label: "치명타 피해", value: "150%" },
-                  { label: "약점 공격 확률", value: "0%" },
-                  { label: "막기 확률", value: "0%" },
-                  { label: "받기 피해 감소", value: "0%" },
-                  { label: "효과 적중", value: "0%" },
-                  { label: "효과 저항", value: "0%" },
-                ].map((stat, i) => (
-                  <div key={i} className="stat-row">
-                    <div className="stat-left">
-                      <span className="stat-label">{stat.label}</span>
-                    </div>
-                    <div className="stat-value">{stat.value}</div>
+                  <div className="stat-list">
+                    {(() => {
+                      const statBase =
+                        hero.grade && hero.type
+                          ? statByGradeAndType?.[hero.grade]?.[hero.type]
+                          : null;
+
+                      const dynamicStats = statBase
+                        ? [
+                            { label: "물리 공격력", value: statBase.공격력 },
+                            { label: "생명력", value: statBase.생명력 },
+                            { label: "방어력", value: statBase.방어력 },
+                            { label: "속공", value: statBase.속공 },
+                          ]
+                        : [];
+
+                      const fixedStats = [
+                        { label: "치명타 확률", value: "5%" },
+                        { label: "치명타 피해", value: "150%" },
+                        { label: "약점 공격 확률", value: "0%" },
+                        { label: "막기 확률", value: "0%" },
+                        { label: "받기 피해 감소", value: "0%" },
+                        { label: "효과 적중", value: "0%" },
+                        { label: "효과 저항", value: "0%" },
+                      ];
+
+                      const finalStats = [...dynamicStats, ...fixedStats];
+
+                      return finalStats.map((stat, i) => (
+                        <div key={i} className="stat-row">
+                          <div className="stat-left">
+                            <span className="stat-label">{stat.label}</span>
+                          </div>
+                          <div className="stat-value">{stat.value}</div>
+                        </div>
+                      ));
+                    })()}
                   </div>
-                ))}
-              </div>
+                </>
+              ) : (
+                <p style={{ color: "#aaa", textAlign: "center" }}>
+                  해당 등급은 스탯 정보가 제공되지 않습니다.
+                </p>
+              )}
             </div>
           )}
         </div>
