@@ -84,6 +84,14 @@
     "group": "스페셜",
     "grade": "S",
     "type": "만능",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 },
+      { "stat": "생명력", "value": 18 },
+      { "stat": "효과 적중", "value": 24 },
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 }
+    ],
     "category": "세븐나이츠",
     "title": "포디나의 여제",
     "skilltitle": ["기본공격", "뇌제의 분노", "청천벽력", "포디나의 분노"],
@@ -155,6 +163,14 @@
     "group": "스페셜",
     "grade": "S",
     "type": "만능",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 },
+      { "stat": "생명력", "value": 18 },
+      { "stat": "약점 공격 확률", "value": 20 },
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 }
+    ],
     "category": "세븐나이츠",
     "title": "불명의 화신",
     "skilltitle": ["기본공격", "염화", "불새", "화염의 힘"],
@@ -234,6 +250,14 @@
     "group": "스페셜",
     "grade": "S",
     "type": "공격",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 },
+      { "stat": "생명력", "value": 18 },
+      { "stat": "치명타 확률", "value": 18 },
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 }
+    ],
     "category": "세븐나이츠",
     "title": "죽음의 군주",
     "skilltitle": ["기본공격", "사신강림", "죽음의 일격", "죽음의 경계"],
@@ -312,6 +336,14 @@
     "group": "스페셜",
     "grade": "S",
     "type": "만능",
+    "transcendBonus": [
+      { "stat": "방어력", "value": 12 },
+      { "stat": "방어력", "value": 6 },
+      { "stat": "생명력", "value": 18 },
+      { "stat": "받는 피해 감소", "value": 10 },
+      { "stat": "방어력", "value": 12 },
+      { "stat": "방어력", "value": 6 }
+    ],
     "category": "세븐나이츠",
     "title": "죽음의 군주",
     "skilltitle": ["기본공격", "혹한의 일격", "혹한의 지진", "혹한의 심장"],
@@ -410,6 +442,14 @@
     "group": "스페셜",
     "grade": "S",
     "type": "만능",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 },
+      { "stat": "생명력", "value": 18 },
+      { "stat": "받는 피해 감소", "value": 10 },
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 }
+    ],
     "category": "세븐나이츠",
     "title": "수호신",
     "skilltitle": ["기본공격", "분노의 일격", "용의 분노", "복수의 갑옷"],
@@ -499,6 +539,14 @@
     "group": "스페셜",
     "grade": "S",
     "type": "만능",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 },
+      { "stat": "생명력", "value": 18 },
+      { "stat": "효과 적중", "value": 24 },
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 }
+    ],
     "category": "세븐나이츠",
     "title": "지옥의 군주",
     "skilltitle": ["기본공격", "어둠의 일격", "어둠의 속삭임", "영혼 흡수"],
@@ -572,6 +620,14 @@
     "group": "스페셜",
     "grade": "S",
     "type": "마법",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 },
+      { "stat": "생명력", "value": 18 },
+      { "stat": "효과 적중", "value": 24 },
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 }
+    ],
     "category": "세븐나이츠",
     "title": "시간 목격자",
     "skilltitle": ["기본공격", "모래열풍", "메마른 해일", "사막의 마법사"],
@@ -644,6 +700,14 @@
     "group": "스페셜",
     "grade": "S",
     "type": "공격",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 },
+      { "stat": "생명력", "value": 18 },
+      { "stat": "치명타 확률", "value": 18 },
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 }
+    ],
     "category": "(구)세븐나이츠",
     "title": "사막의 화염",
     "skilltitle": ["기본공격", "아그니아의 창", "염룡의 연주", "솟구치는 불꽃"],
@@ -740,6 +804,14 @@
     "group": "스페셜",
     "grade": "S",
     "type": "치유",
+    "transcendBonus": [
+      { "stat": "방어력", "value": 12 },
+      { "stat": "방어력", "value": 6 },
+      { "stat": "생명력", "value": 18 },
+      { "stat": "받는 피해 감소", "value": 10 },
+      { "stat": "방어력", "value": 12 },
+      { "stat": "방어력", "value": 6 }
+    ],
     "category": "(구)세븐나이츠",
     "title": "은둔한 성기사",
     "skilltitle": ["기본공격", "달빛의 심판", "성령의 기도", "망자의 축복"],
@@ -816,6 +888,14 @@
     "group": "스페셜",
     "grade": "S",
     "type": "마법",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 },
+      { "stat": "생명력", "value": 18 },
+      { "stat": "약점 공격 확률", "value": 20 },
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 }
+    ],
     "category": "(구)세븐나이츠",
     "title": "지고의 정의",
     "skilltitle": ["기본공격", "천상의 심판", "최고 판결", "신의 저울"],
@@ -887,6 +967,14 @@
     "group": "스페셜",
     "grade": "S",
     "type": "만능",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 },
+      { "stat": "생명력", "value": 18 },
+      { "stat": "치명타 확률", "value": 18 },
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 }
+    ],
     "category": "사황",
     "title": "총운검의 주인",
     "skilltitle": ["기본공격", "달빛 베기", "일도천화엽", "불굴의 지휘"],
@@ -963,6 +1051,14 @@
     "group": "스페셜",
     "grade": "S",
     "type": "공격",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 },
+      { "stat": "생명력", "value": 18 },
+      { "stat": "치명타 피해", "value": 24 },
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 }
+    ],
     "category": "(구)사황",
     "title": "나이트 크로우",
     "skilltitle": ["기본공격", "흑풍참", "흑익만월참", "까마귀 눈동자"],
@@ -1028,6 +1124,14 @@
     "group": "스페셜",
     "grade": "S",
     "type": "마법",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 },
+      { "stat": "생명력", "value": 18 },
+      { "stat": "치명타 확률", "value": 18 },
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 }
+    ],
     "category": "(구)사황",
     "title": "종말의 인도자",
     "skilltitle": ["기본공격", "파괴의 손짓", "종말의 영면", "혜안"],
@@ -1096,6 +1200,14 @@
     "group": "스페셜",
     "grade": "S",
     "type": "공격",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 },
+      { "stat": "생명력", "value": 18 },
+      { "stat": "치명타 확률", "value": 18 },
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 }
+    ],
     "category": "나이트크로우",
     "title": "나이트 크로우",
     "skilltitle": ["기본공격", "바람의 칼날", "죽음의 무도", "매의 발톱"],
@@ -1162,6 +1274,14 @@
     "group": "스페셜",
     "grade": "S",
     "type": "마법",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 },
+      { "stat": "생명력", "value": 18 },
+      { "stat": "치명타 확률", "value": 18 },
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 }
+    ],
     "category": "????",
     "title": "파괴의 정화자",
     "skilltitle": ["기본공격", "정의의 단죄", "정화의 일격", "기사의 의지"],
@@ -1230,6 +1350,14 @@
     "group": "일반",
     "grade": "A",
     "type": "방어",
+    "transcendBonus": [
+      { "stat": "방어력", "value": 9 },
+      { "stat": "방어력", "value": 4.5 },
+      { "stat": "생명력", "value": 14 },
+      { "stat": "막기 확률", "value": 14 },
+      { "stat": "방어력", "value": 9 },
+      { "stat": "방어력", "value": 4.5 }
+    ],
     "category": "에반원정대",
     "title": "총사령관",
     "skilltitle": ["기본공격", "연속 공격", "균형의 방패", "의지"],
@@ -1297,6 +1425,14 @@
     "name": "카린",
     "group": "일반",
     "grade": "A",
+    "transcendBonus": [
+      { "stat": "방어력", "value": 9 },
+      { "stat": "방어력", "value": 4.5 },
+      { "stat": "생명력", "value": 14 },
+      { "stat": "받는 피해 감소", "value": 14 },
+      { "stat": "방어력", "value": 9 },
+      { "stat": "방어력", "value": 4.5 }
+    ],
     "type": "치유",
     "category": "에반원정대",
     "title": "성녀",
@@ -1353,6 +1489,14 @@
     "group": "일반",
     "grade": "A",
     "type": "마법",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 },
+      { "stat": "생명력", "value": 14 },
+      { "stat": "치명타 확률", "value": 14 },
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 }
+    ],
     "category": "에반원정대",
     "title": "우두머리 삼미호",
     "skilltitle": ["기본공격", "정기 흡수", "마력의 구슬", "여우의 매력"],
@@ -1421,6 +1565,14 @@
     "group": "일반",
     "grade": "A",
     "type": "방어",
+    "transcendBonus": [
+      { "stat": "방어력", "value": 9 },
+      { "stat": "방어력", "value": 4.5 },
+      { "stat": "생명력", "value": 14 },
+      { "stat": "막기 확률", "value": 14 },
+      { "stat": "방어력", "value": 9 },
+      { "stat": "방어력", "value": 4.5 }
+    ],
     "category": "에반원정대",
     "title": "분노의 파계승",
     "skilltitle": ["기본공격", "금강불괴", "패도멸악권", "응보의 진언"],
@@ -1487,6 +1639,14 @@
     "group": "일반",
     "grade": "A",
     "type": "치유",
+    "transcendBonus": [
+      { "stat": "방어력", "value": 9 },
+      { "stat": "방어력", "value": 4.5 },
+      { "stat": "생명력", "value": 14 },
+      { "stat": "받는 피해 감소", "value": 7 },
+      { "stat": "방어력", "value": 9 },
+      { "stat": "방어력", "value": 4.5 }
+    ],
     "category": "에반원정대",
     "title": "마에스트로",
     "skilltitle": [
@@ -1552,6 +1712,14 @@
     "group": "일반",
     "grade": "A",
     "type": "마법",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 },
+      { "stat": "생명력", "value": 14 },
+      { "stat": "치명타 확률", "value": 14 },
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 }
+    ],
     "category": "에반원정대",
     "title": "빛의 축복",
     "skilltitle": ["기본공격", "빛의 심판", "눈부신 빛", "신의 은총"],
@@ -1618,6 +1786,14 @@
     "group": "일반",
     "grade": "A",
     "type": "공격",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 },
+      { "stat": "생명력", "value": 14 },
+      { "stat": "치명타 확률", "value": 14 },
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 }
+    ],
     "category": "에반원정대",
     "title": "꿰뚫는 화살",
     "skilltitle": ["기본공격", "저격 자세", "저격", "매의 눈"],
@@ -1689,6 +1865,14 @@
     "group": "일반",
     "grade": "A",
     "type": "공격",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 },
+      { "stat": "생명력", "value": 14 },
+      { "stat": "치명타 확률", "value": 14 },
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 }
+    ],
     "category": "에반원정대",
     "title": "전설의 사냥꾼",
     "skilltitle": ["기본공격", "난사", "사형 선고", "사냥술"],
@@ -1749,6 +1933,14 @@
     "group": "일반",
     "grade": "A",
     "type": "방어",
+    "transcendBonus": [
+      { "stat": "방어력", "value": 9 },
+      { "stat": "방어력", "value": 4.5 },
+      { "stat": "생명력", "value": 14 },
+      { "stat": "막기 확률", "value": 14 },
+      { "stat": "방어력", "value": 9 },
+      { "stat": "방어력", "value": 4.5 }
+    ],
     "category": "에반원정대",
     "title": "붉은 혜성",
     "skilltitle": ["기본공격", "하늘의 빛", "하늘의 방패", "발키리의 저력"],
@@ -1821,6 +2013,14 @@
     "group": "일반",
     "grade": "A",
     "type": "공격",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 },
+      { "stat": "생명력", "value": 14 },
+      { "stat": "치명타 확률", "value": 14 },
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 }
+    ],
     "category": "에반원정대",
     "title": "푸른 유성",
     "skilltitle": ["기본공격", "검의 심판", "맹렬한 공격", "마법 포착"],
@@ -1884,6 +2084,14 @@
     "group": "일반",
     "grade": "A",
     "type": "치유",
+    "transcendBonus": [
+      { "stat": "방어력", "value": 9 },
+      { "stat": "방어력", "value": 4.5 },
+      { "stat": "생명력", "value": 14 },
+      { "stat": "받는 피해 감소", "value": 7 },
+      { "stat": "방어력", "value": 9 },
+      { "stat": "방어력", "value": 4.5 }
+    ],
     "category": "모험가",
     "title": "자연의 주인",
     "skilltitle": ["기본공격", "자연의 회복", "자연의 숨결", "자연의 보호"],
@@ -1941,6 +2149,14 @@
     "group": "일반",
     "grade": "A",
     "type": "만능",
+    "transcendBonus": [
+      { "stat": "방어력", "value": 9 },
+      { "stat": "방어력", "value": 4.5 },
+      { "stat": "생명력", "value": 14 },
+      { "stat": "받는 피해 감소", "value": 7 },
+      { "stat": "방어력", "value": 9 },
+      { "stat": "방어력", "value": 4.5 }
+    ],
     "category": "모험가",
     "title": "해적왕",
     "skilltitle": ["기본공격", "권총 사격", "사기 진작", "해적왕의 위엄"],
@@ -2006,6 +2222,14 @@
     "group": "일반",
     "grade": "A",
     "type": "치유",
+    "transcendBonus": [
+      { "stat": "방어력", "value": 9 },
+      { "stat": "방어력", "value": 4.5 },
+      { "stat": "생명력", "value": 14 },
+      { "stat": "받는 피해 감소", "value": 7 },
+      { "stat": "방어력", "value": 9 },
+      { "stat": "방어력", "value": 4.5 }
+    ],
     "category": "모험가",
     "title": "신기술사",
     "skilltitle": ["기본공격", "신비한 춤사위", "신내림", "영적능력"],
@@ -2069,6 +2293,14 @@
     "group": "일반",
     "grade": "S",
     "type": "마법",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 },
+      { "stat": "생명력", "value": 18 },
+      { "stat": "치명타 확률", "value": 18 },
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 }
+    ],
     "category": "모험가",
     "title": "어둠불꽃",
     "skilltitle": ["기본공격", "메테오", "어둠의 환영", "흑월의 축복"],
@@ -2145,6 +2377,14 @@
     "group": "일반",
     "grade": "A",
     "type": "마법",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 },
+      { "stat": "생명력", "value": 14 },
+      { "stat": "치명타 확률", "value": 14 },
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 }
+    ],
     "category": "모험가",
     "title": "음령술사",
     "skilltitle": ["기본공격", "영혼의 숨결", "쇠악의 저주", "빛나는 악령"],
@@ -2200,6 +2440,14 @@
     "group": "일반",
     "grade": "A",
     "type": "마법",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 },
+      { "stat": "생명력", "value": 14 },
+      { "stat": "치명타 확률", "value": 14 },
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 }
+    ],
     "category": "모험가",
     "title": "환상 마술사",
     "skilltitle": ["기본공격", "풀하우스", "마술 모자", "행운의 동전"],
@@ -2260,6 +2508,14 @@
     "group": "일반",
     "grade": "S",
     "type": "방어",
+    "transcendBonus": [
+      { "stat": "방어력", "value": 12 },
+      { "stat": "방어력", "value": 6 },
+      { "stat": "생명력", "value": 18 },
+      { "stat": "막기 확률", "value": 18 },
+      { "stat": "방어력", "value": 12 },
+      { "stat": "방어력", "value": 6 }
+    ],
     "category": "테라영지",
     "title": "친위대",
     "skilltitle": ["기본공격", "투창", "진형 굳히기", "공성 방패"],
@@ -2327,6 +2583,14 @@
     "group": "일반",
     "grade": "S",
     "type": "만능",
+    "transcendBonus": [
+      { "stat": "방어력", "value": 12 },
+      { "stat": "방어력", "value": 6 },
+      { "stat": "생명력", "value": 18 },
+      { "stat": "받는 피해 감소", "value": 10 },
+      { "stat": "방어력", "value": 12 },
+      { "stat": "방어력", "value": 6 }
+    ],
     "category": "테라영지",
     "title": "친위대장",
     "skilltitle": ["기본공격", "분쇄", "대지 파괴", "위압감"],
@@ -2413,6 +2677,14 @@
     "group": "일반",
     "grade": "A",
     "type": "공격",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 },
+      { "stat": "생명력", "value": 18 },
+      { "stat": "효과 적중", "value": 18 },
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 }
+    ],
     "category": "테라영지",
     "title": "사랑의 배달부",
     "skilltitle": ["기본공격", "호신용 총", "무차별 난사", "허세"],
@@ -2497,6 +2769,14 @@
     "group": "일반",
     "grade": "S",
     "type": "치유",
+    "transcendBonus": [
+      { "stat": "방어력", "value": 12 },
+      { "stat": "방어력", "value": 6 },
+      { "stat": "생명력", "value": 18 },
+      { "stat": "받는 피해 감소", "value": 10 },
+      { "stat": "방어력", "value": 12 },
+      { "stat": "방어력", "value": 6 }
+    ],
     "category": "테라영지",
     "title": "로멘틱",
     "skilltitle": ["기본공격", "비밀의 문", "내 카드 속엔?", "나. 너. 로맨틱"],
@@ -2567,6 +2847,14 @@
     "group": "일반",
     "grade": "S",
     "type": "방어",
+    "transcendBonus": [
+      { "stat": "방어력", "value": 12 },
+      { "stat": "방어력", "value": 6 },
+      { "stat": "생명력", "value": 18 },
+      { "stat": "막기 확률", "value": 18 },
+      { "stat": "방어력", "value": 12 },
+      { "stat": "방어력", "value": 6 }
+    ],
     "category": "테라영지",
     "title": "총사령관",
     "skilltitle": ["기본공격", "포격 지원", "노장의 위엄"],
@@ -2626,6 +2914,14 @@
     "group": "일반",
     "grade": "A",
     "type": "마법",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 },
+      { "stat": "생명력", "value": 14 },
+      { "stat": "받는 피해 감소", "value": 7 },
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 }
+    ],
     "category": "테라영지",
     "title": "역사의 기록자",
     "skilltitle": ["기본공격", "잘못된 기록", "파멸의 고서", "칼보다 강한 펜"],
@@ -2688,6 +2984,14 @@
     "group": "일반",
     "grade": "A",
     "type": "치유",
+    "transcendBonus": [
+      { "stat": "방어력", "value": 9 },
+      { "stat": "방어력", "value": 4.5 },
+      { "stat": "생명력", "value": 14 },
+      { "stat": "받는 피해 감소", "value": 7 },
+      { "stat": "방어력", "value": 9 },
+      { "stat": "방어력", "value": 4.5 }
+    ],
     "category": "테라영지",
     "title": "소환상점 주인",
     "skilltitle": ["기본공격", "고양이의 은혜", "청소 시간", "고양이 춤"],
@@ -2756,6 +3060,14 @@
     "group": "일반",
     "grade": "S",
     "type": "마법",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 },
+      { "stat": "생명력", "value": 18 },
+      { "stat": "약점 공격 확률", "value": 20 },
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 }
+    ],
     "category": "성십자단",
     "title": "신성한 탄환",
     "skilltitle": ["기본공격", "근거리 연사", "폭격 지원", "뒷거래"],
@@ -2825,6 +3137,14 @@
     "group": "일반",
     "grade": "S",
     "type": "만능",
+    "transcendBonus": [
+      { "stat": "방어력", "value": 12 },
+      { "stat": "방어력", "value": 6 },
+      { "stat": "생명력", "value": 18 },
+      { "stat": "효과 적중", "value": 24 },
+      { "stat": "방어력", "value": 12 },
+      { "stat": "방어력", "value": 6 }
+    ],
     "category": "성십자단",
     "title": "마공학 볼트와",
     "skilltitle": ["기본공격", "100만 볼트", "시간 조작", "예비 전력"],
@@ -2897,6 +3217,14 @@
     "group": "일반",
     "grade": "S",
     "type": "만능",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 },
+      { "stat": "생명력", "value": 18 },
+      { "stat": "치명타 확률", "value": 18 },
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 }
+    ],
     "category": "성십자단",
     "title": "악마 사냥꾼",
     "skilltitle": ["기본공격", "정화탄", "신의 심판", "마력 정화"],
@@ -2962,6 +3290,14 @@
     "group": "일반",
     "grade": "S",
     "type": "공격",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 },
+      { "stat": "생명력", "value": 18 },
+      { "stat": "치명타 확률", "value": 18 },
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 }
+    ],
     "category": "성십자단",
     "title": "악마 봉인자",
     "skilltitle": ["기본공격", "귀신 베기", "악마의 힘"],
@@ -3018,6 +3354,14 @@
     "group": "일반",
     "grade": "S",
     "type": "만능",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 },
+      { "stat": "생명력", "value": 18 },
+      { "stat": "치명타 확률", "value": 18 },
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 }
+    ],
     "category": "성십자단",
     "title": "마검의 주인",
     "skilltitle": ["기본공격", "부숴버려!", "봉인해제!", "나만 믿어"],
@@ -3083,6 +3427,14 @@
     "group": "일반",
     "grade": "A",
     "type": "공격",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 },
+      { "stat": "생명력", "value": 14 },
+      { "stat": "효과 적중", "value": 18 },
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 }
+    ],
     "category": "그림자단",
     "title": "침묵의 암살자",
     "skilltitle": ["기본공격", "암습", "급소 강타", "은신"],
@@ -3146,6 +3498,14 @@
     "group": "일반",
     "grade": "A",
     "type": "공격",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 },
+      { "stat": "생명력", "value": 14 },
+      { "stat": "치명타 확률", "value": 14 },
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 }
+    ],
     "category": "그림자단",
     "title": "밤에 피는 꽃",
     "skilltitle": ["기본공격", "기습 침투", "떨어지는 장미", "뛰어난 적응력"],
@@ -3214,6 +3574,14 @@
     "group": "일반",
     "grade": "A",
     "type": "마법",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 },
+      { "stat": "생명력", "value": 14 },
+      { "stat": "치명타 확률", "value": 14 },
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 }
+    ],
     "category": "그림자단",
     "title": "마령의 주인",
     "skilltitle": ["기본공격", "망령의 웃음", "망령의 그림자", "천둥의 그림자"],
@@ -3278,6 +3646,14 @@
     "group": "일반",
     "grade": "S",
     "type": "공격",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 },
+      { "stat": "생명력", "value": 18 },
+      { "stat": "치명타 확률", "value": 18 },
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 }
+    ],
     "category": "그림자단",
     "title": "그림자 사냥꾼",
     "skilltitle": ["기본공격", "죽음의 그림자", "사신의 딸"],
@@ -3549,6 +3925,14 @@
     "group": "아소드",
     "grade": "A",
     "type": "공격",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 },
+      { "stat": "생명력", "value": 14 },
+      { "stat": "치명타 확률", "value": 14 },
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 }
+    ],
     "category": "신비의 숲",
     "title": "고블린 대족장",
     "skilltitle": ["기본공격", "무기 투척", "민첩한 라이더", "투쟁심"],
@@ -3833,6 +4217,14 @@
     "group": "아소드",
     "grade": "A",
     "type": "방어",
+    "transcendBonus": [
+      { "stat": "방어력", "value": 9 },
+      { "stat": "방어력", "value": 4.5 },
+      { "stat": "생명력", "value": 14 },
+      { "stat": "막기 확률", "value": 14 },
+      { "stat": "방어력", "value": 9 },
+      { "stat": "방어력", "value": 4.5 }
+    ],
     "category": "침묵의 광산",
     "title": "광산의 지배자",
     "skilltitle": ["기본공격", "강철의 피부", "오크킹의 함성", "불굴의 오크"],
@@ -4066,6 +4458,14 @@
     "group": "아소드",
     "grade": "A",
     "type": "공격",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 },
+      { "stat": "생명력", "value": 14 },
+      { "stat": "치명타 확률", "value": 14 },
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 }
+    ],
     "category": "화염의 사막",
     "title": "검은 복수",
     "skilltitle": ["기본공격", "무차별 살육", "사자의 포효", "야수의 근성"],
@@ -4201,7 +4601,7 @@
     "name": "스커드",
     "group": "아소드",
     "grade": "B",
-    "type": "고역",
+    "type": "공격",
     "category": "암흑의 무덤",
     "title": "해골 지휘관",
     "skilltitle": ["기본공격", "정조준", "뼈에 새긴 분노"],
@@ -4374,6 +4774,14 @@
     "group": "아소드",
     "grade": "A",
     "type": "마법",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 },
+      { "stat": "생명력", "value": 14 },
+      { "stat": "치명타 확률", "value": 14 },
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 }
+    ],
     "category": "암흑의 무덤",
     "title": "야망의 반역자",
     "skilltitle": ["기본공격", "마력 분출", "마력의 구슬", "죽음 극복"],
@@ -4675,6 +5083,14 @@
     "group": "아소드",
     "grade": "A",
     "type": "마법",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 },
+      { "stat": "생명력", "value": 14 },
+      { "stat": "치명타 확률", "value": 14 },
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 }
+    ],
     "category": "용의 유적지",
     "title": "파멸의 시선",
     "skilltitle": ["기본공격", "맹독", "시선", "아테나의 저주"],
@@ -4973,6 +5389,14 @@
     "group": "아소드",
     "grade": "A",
     "type": "만능",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 },
+      { "stat": "생명력", "value": 14 },
+      { "stat": "약점 공격 확률", "value": 16 },
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 }
+    ],
     "category": "눈보라의 대지",
     "title": "설원의 주인",
     "skilltitle": ["기본공격", "얼음 파편", "블리자드", "설원의 지배자"],
@@ -5218,6 +5642,14 @@
     "group": "아소드",
     "grade": "A",
     "type": "치유",
+    "transcendBonus": [
+      { "stat": "방어력", "value": 9 },
+      { "stat": "방어력", "value": 4.5 },
+      { "stat": "생명력", "value": 14 },
+      { "stat": "받는 피해 감소", "value": 7 },
+      { "stat": "방어력", "value": 9 },
+      { "stat": "방어력", "value": 4.5 }
+    ],
     "category": "복수자의 지옥",
     "title": "서큐버스 여왕",
     "skilltitle": ["기본공격", "악마의 유혹", "악마의 키스", "악마의 계약"],
@@ -5283,6 +5715,14 @@
     "group": "아소드",
     "grade": "S",
     "type": "방어",
+    "transcendBonus": [
+      { "stat": "방어력", "value": 12 },
+      { "stat": "방어력", "value": 6 },
+      { "stat": "생명력", "value": 18 },
+      { "stat": "막기 확률", "value": 18 },
+      { "stat": "방어력", "value": 12 },
+      { "stat": "방어력", "value": 6 }
+    ],
     "category": "복수자의 지옥",
     "title": "지옥의 총사령관",
     "skilltitle": ["기본공격", "지옥의 방패", "지옥의 일격", "지옥의 기사"],
@@ -5352,6 +5792,14 @@
     "group": "아이사",
     "grade": "S",
     "type": "치유",
+    "transcendBonus": [
+      { "stat": "방어력", "value": 12 },
+      { "stat": "방어력", "value": 6 },
+      { "stat": "생명력", "value": 18 },
+      { "stat": "받는 피해 감소", "value": 10 },
+      { "stat": "방어력", "value": 12 },
+      { "stat": "방어력", "value": 6 }
+    ],
     "category": "달빛의 섬",
     "title": "전설의 심금",
     "skilltitle": ["기본공격", "행진가", "따뜻한 울림", "불협화음"],
@@ -5477,6 +5925,14 @@
     "group": "아이사",
     "grade": "A",
     "type": "공격",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 },
+      { "stat": "생명력", "value": 14 },
+      { "stat": "치명타 확률", "value": 14 },
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 }
+    ],
     "category": "달빛의 섬",
     "title": "고양이의 화신",
     "skilltitle": ["기본공격", "마구 할퀴기", "약점 찾기", "날카로운 손톱"],
@@ -5542,6 +5998,14 @@
     "group": "아이사",
     "grade": "A",
     "type": "공격",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 },
+      { "stat": "생명력", "value": 14 },
+      { "stat": "치명타 확률", "value": 14 },
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 }
+    ],
     "category": "달빛의 섬",
     "title": "강철 주먹",
     "skilltitle": ["기본공격", "진-파공권", "극한 연참권", "수련의 성과"],
@@ -5612,6 +6076,14 @@
     "group": "아이사",
     "grade": "A",
     "type": "공격",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 },
+      { "stat": "생명력", "value": 14 },
+      { "stat": "치명타 확률", "value": 14 },
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 }
+    ],
     "category": "달빛의 섬",
     "title": "영원한 복수",
     "skilltitle": ["기본공격", "쾌속살법", "단도 폭우", "은신"],
@@ -5862,6 +6334,14 @@
     "group": "아이사",
     "grade": "A",
     "type": "공격",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 },
+      { "stat": "생명력", "value": 14 },
+      { "stat": "치명타 확률", "value": 14 },
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 }
+    ],
     "category": "천자의 땅 서쪽",
     "title": "매의 눈",
     "skilltitle": ["기본공격", "심장 쏘기", "매 날리기", "정찰"],
@@ -5937,6 +6417,14 @@
     "group": "아이사",
     "grade": "A",
     "type": "공격",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 },
+      { "stat": "생명력", "value": 14 },
+      { "stat": "치명타 확률", "value": 14 },
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 }
+    ],
     "category": "천자의 땅 서쪽",
     "title": "폭풍의 검신",
     "skilltitle": ["기본공격", "구운검격", "이기어검", "검의 결계"],
@@ -5999,6 +6487,14 @@
     "group": "아이사",
     "grade": "S",
     "type": "마법",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 },
+      { "stat": "생명력", "value": 18 },
+      { "stat": "효과 적중", "value": 24 },
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 }
+    ],
     "category": "천자의 땅 동쪽",
     "title": "천창신선",
     "skilltitle": ["기본공격", "뇌운 흑염량", "번뇌", "신선의 가르침"],
@@ -6065,6 +6561,14 @@
     "group": "아이사",
     "grade": "S",
     "type": "공격",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 },
+      { "stat": "생명력", "value": 18 },
+      { "stat": "치명타 확률", "value": 18 },
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 }
+    ],
     "category": "천자의 땅 동쪽",
     "title": "풍월주",
     "skilltitle": ["기본공격", "거궁신포", "태전포화", "화랑의 후예"],
@@ -6134,6 +6638,14 @@
     "group": "아이사",
     "grade": "A",
     "type": "만능",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 },
+      { "stat": "생명력", "value": 14 },
+      { "stat": "받는 피해 감소", "value": 7 },
+      { "stat": "공격력", "value": 9 },
+      { "stat": "공격력", "value": 4.5 }
+    ],
     "category": "어둠의 안식처",
     "title": "황실 친위대",
     "skilltitle": ["기본공격", "정령의 대검", "정령의 가호", "지혜의 눈동자"],
@@ -6195,6 +6707,14 @@
     "group": "아이사",
     "grade": "S",
     "type": "마법",
+    "transcendBonus": [
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 },
+      { "stat": "생명력", "value": 18 },
+      { "stat": "치명타 피해", "value": 24 },
+      { "stat": "공격력", "value": 12 },
+      { "stat": "공격력", "value": 6 }
+    ],
     "category": "어둠의 안식처",
     "title": "황제",
     "skilltitle": ["기본공격", "어둠의 문", "파괴의 거인", "천자의 권능"],

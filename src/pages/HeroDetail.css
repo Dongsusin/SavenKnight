@@ -62,7 +62,7 @@
   justify-content: space-between;
   align-items: flex-start;
   width: 100vw;
-  padding: 100px; /* 상단 여백 */
+  padding: 50px;
   box-sizing: border-box;
   position: relative;
 }
@@ -73,7 +73,6 @@
   padding: 20px;
   box-sizing: border-box;
   text-align: center;
-  max-height: 500px;
 }
 
 /* 오른쪽 고정 영역 */
@@ -82,7 +81,6 @@
   padding: 20px;
   box-sizing: border-box;
   text-align: left;
-  max-height: 500px;
 }
 
 .hero-info h2 {
@@ -192,11 +190,28 @@
 }
 
 .skill-transcendence-box {
-  background-color: #5e3a7d;
-  padding: 10px;
-  border-radius: 10px;
-  color: white;
+  padding: 12px;
+  border-radius: 8px;
   margin-bottom: 10px;
+  border: 1px solid #444;
+  background-color: #5e3a7d;
+}
+
+.skill-transcendence-box.active {
+  color: #fff;
+}
+
+.skill-transcendence-box.inactive {
+  color: #888;
+  filter: grayscale(100%) brightness(0.7);
+  pointer-events: none;
+}
+
+.skill-transcendence-title {
+  font-weight: bold;
+  font-size: 1.1em;
+  margin-bottom: 6px;
+  color: #ff6666;
 }
 
 .hero-image-with-nav {
@@ -212,7 +227,7 @@
   position: fixed;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 3rem;
+  font-size: 1.5rem;
   background-color: rgba(0, 0, 0, 0.4);
   color: white;
   padding: 12px 18px;
@@ -252,7 +267,7 @@
   gap: 1rem;
   justify-content: center;
   margin-bottom: 1rem;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   width: 100%;
 }
 
@@ -263,7 +278,7 @@
 }
 
 .stat-list {
-  max-height: 200px;
+  max-height: 400px;
   overflow-y: auto;
   width: 100%;
   background-color: rgba(255, 255, 255, 0.05);
@@ -308,10 +323,9 @@
   flex-direction: column;
   align-items: center;
   background-color: #222;
-  padding: 10px;
+  padding: 5px;
   border-radius: 10px;
   border: 1px solid #555;
-  min-width: 100px;
 }
 
 .stat-stepper {
@@ -352,8 +366,9 @@
 
 .level-toggle-buttons button {
   flex: 1;
-  padding: 6px 12px;
+  padding: 3px 6px;
   border-radius: 999px;
+  text-wrap: nowrap;
   background-color: #222;
   color: #ccc;
   border: 1px solid #555;
@@ -417,6 +432,7 @@
     width: 100%;
     height: auto;
     padding: 10px;
+    max-height: 100%;
   }
 
   .nav-button {

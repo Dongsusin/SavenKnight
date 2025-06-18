@@ -265,6 +265,65 @@ export default function HeroDetail() {
           <p className="info-category">{hero.category}</p>
           <img src={imagePath} alt={hero.name} className="main-image" />
           <p className="info-title">{hero.title}</p>
+
+          {/* 레벨/강화/초월 설정 박스 항상 표시 */}
+          <div className="stat-settings">
+            {[
+              { label: "레벨", toggle: true },
+              {
+                label: "강화",
+                value: enhance,
+                setValue: setEnhance,
+                min: 0,
+                max: 5,
+              },
+              {
+                label: "초월",
+                value: transcend,
+                setValue: setTranscend,
+                min: 0,
+                max: 12,
+              },
+            ].map(({ label, value, setValue, min, max, toggle }) => (
+              <div className="stat-adjust-box" key={label}>
+                <span className="stat-label">{label}</span>
+                {toggle && label === "레벨" ? (
+                  <div className="level-toggle-buttons">
+                    <button
+                      className={level === 1 ? "active" : ""}
+                      onClick={() => setLevel(1)}
+                    >
+                      기본
+                    </button>
+                    <button
+                      className={level === 30 ? "active" : ""}
+                      onClick={() => setLevel(30)}
+                    >
+                      최대
+                    </button>
+                  </div>
+                ) : (
+                  <div className="stat-stepper">
+                    <button
+                      onClick={() => setValue(Math.max(min, value - 1))}
+                      disabled={value <= min}
+                    >
+                      <FaChevronLeft />
+                    </button>
+                    <span className="stat-value-text">
+                      {label === "강화" ? `+${value}` : value}
+                    </span>
+                    <button
+                      onClick={() => setValue(Math.min(max, value + 1))}
+                      disabled={value >= max}
+                    >
+                      <FaChevronRight />
+                    </button>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="info-right">
@@ -360,9 +419,14 @@ export default function HeroDetail() {
                       hero.sixtranscendenceSkillUp?.[selectedSkillIndex]
                         ?.length > 0) && (
                       <div style={{ marginTop: "10px" }}>
+                        {/* 2초월 */}
                         {hero.twotranscendenceSkillUp?.[selectedSkillIndex]
                           ?.length > 0 && (
-                          <div className="skill-transcendence-box">
+                          <div
+                            className={`skill-transcendence-box ${
+                              transcend >= 2 ? "active" : "inactive"
+                            }`}
+                          >
                             <p className="skill-transcendence-title">
                               2초월 효과
                             </p>
@@ -378,9 +442,15 @@ export default function HeroDetail() {
                             ))}
                           </div>
                         )}
+
+                        {/* 6초월 */}
                         {hero.sixtranscendenceSkillUp?.[selectedSkillIndex]
                           ?.length > 0 && (
-                          <div className="skill-transcendence-box">
+                          <div
+                            className={`skill-transcendence-box ${
+                              transcend >= 6 ? "active" : "inactive"
+                            }`}
+                          >
                             <p className="skill-transcendence-title">
                               6초월 효과
                             </p>
@@ -423,68 +493,6 @@ export default function HeroDetail() {
 
               {["S", "A"].includes(hero.grade) ? (
                 <>
-                  <div className="stat-settings">
-                    {[
-                      // 기존 레벨/강화/초월 조절
-                      {
-                        label: "레벨",
-                        toggle: true,
-                      },
-                      {
-                        label: "강화",
-                        value: enhance,
-                        setValue: setEnhance,
-                        min: 0,
-                        max: 5,
-                      },
-                      {
-                        label: "초월",
-                        value: transcend,
-                        setValue: setTranscend,
-                        min: 0,
-                        max: 12,
-                      },
-                    ].map(({ label, value, setValue, min, max, toggle }) => (
-                      <div className="stat-adjust-box" key={label}>
-                        <span className="stat-label">{label}</span>
-                        {toggle && label === "레벨" ? (
-                          <div className="level-toggle-buttons">
-                            <button
-                              className={level === 1 ? "active" : ""}
-                              onClick={() => setLevel(1)}
-                            >
-                              기본
-                            </button>
-                            <button
-                              className={level === 30 ? "active" : ""}
-                              onClick={() => setLevel(30)}
-                            >
-                              최대
-                            </button>
-                          </div>
-                        ) : (
-                          <div className="stat-stepper">
-                            <button
-                              onClick={() => setValue(Math.max(min, value - 1))}
-                              disabled={value <= min}
-                            >
-                              <FaChevronLeft />
-                            </button>
-                            <span className="stat-value-text">
-                              {label === "강화" ? `+${value}` : value}
-                            </span>
-                            <button
-                              onClick={() => setValue(Math.min(max, value + 1))}
-                              disabled={value >= max}
-                            >
-                              <FaChevronRight />
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-
                   <div className="stat-list">
                     {(() => {
                       const statBase =
