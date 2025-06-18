@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import heroes from "../data/heroes.json";
+import equipmentData from "../data/equipment.json";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import "./HeroDetail.css";
 
@@ -11,55 +12,61 @@ export default function HeroDetail() {
   const [level, setLevel] = useState(1);
   const [enhance, setEnhance] = useState(0);
   const [transcend, setTranscend] = useState(0);
+  // 장비 모달 열림 여부
+  const [equipModalOpen, setEquipModalOpen] = useState(false);
+  // 클릭한 슬롯 정보를 저장 (예: { slotType: "weapon", slotIndex: 0 })
+  const [selectedEquipSlot, setSelectedEquipSlot] = useState(null);
+  // 각 슬롯에 할당된 장비를 저장 (키는 고유 식별자: slotType+index)
+  const [selectedEquipments, setSelectedEquipments] = useState({});
 
   const statByGradeAndType = {
     S: {
-      공격: { 공격력: 239, 생명력: 92, 방어력: 535, 속공: 29 },
-      마법: { 공격력: 239, 생명력: 92, 방어력: 535, 속공: 29 },
-      만능: { 공격력: 211, 생명력: 102, 방어력: 594, 속공: 25 },
-      방어: { 공격력: 116, 생명력: 135, 방어력: 773, 속공: 19 },
-      치유: { 공격력: 176, 생명력: 108, 방어력: 714, 속공: 19 },
+      공격: { 공격력: 239, 방어력: 92, 생명력: 535, 속공: 29 },
+      마법: { 공격력: 239, 방어력: 92, 생명력: 535, 속공: 29 },
+      만능: { 공격력: 211, 방어력: 102, 생명력: 594, 속공: 25 },
+      방어: { 공격력: 116, 방어력: 135, 생명력: 773, 속공: 19 },
+      치유: { 공격력: 176, 방어력: 108, 생명력: 714, 속공: 19 },
     },
     A: {
-      공격: { 공격력: 221, 생명력: 88, 방어력: 510, 속공: 25 },
-      마법: { 공격력: 221, 생명력: 88, 방어력: 510, 속공: 25 },
-      만능: { 공격력: 197, 생명력: 98, 방어력: 567, 속공: 21 },
-      방어: { 공격력: 108, 생명력: 129, 방어력: 735, 속공: 16 },
-      치유: { 공격력: 165, 생명력: 104, 방어력: 680, 속공: 16 },
+      공격: { 공격력: 221, 방어력: 88, 생명력: 510, 속공: 25 },
+      마법: { 공격력: 221, 방어력: 88, 생명력: 510, 속공: 25 },
+      만능: { 공격력: 197, 방어력: 98, 생명력: 567, 속공: 21 },
+      방어: { 공격력: 108, 방어력: 129, 생명력: 735, 속공: 16 },
+      치유: { 공격력: 165, 방어력: 104, 생명력: 680, 속공: 16 },
     },
   };
 
   const maxStatByGradeAndType = {
     S: {
-      공격: { 공격력: 1080, 생명력: 411, 방어력: 2391, 속공: 29 },
-      마법: { 공격력: 1080, 생명력: 411, 방어력: 2391, 속공: 29 },
-      만능: { 공격력: 936, 생명력: 479, 방어력: 2653, 속공: 25 },
-      방어: { 공격력: 522, 생명력: 657, 방어력: 3470, 속공: 19 },
-      치유: { 공격력: 785, 생명력: 485, 방어력: 3208, 속공: 19 },
+      공격: { 공격력: 1080, 방어력: 411, 생명력: 2391, 속공: 29 },
+      마법: { 공격력: 1080, 방어력: 411, 생명력: 2391, 속공: 29 },
+      만능: { 공격력: 936, 방어력: 479, 생명력: 2653, 속공: 25 },
+      방어: { 공격력: 522, 방어력: 657, 생명력: 3470, 속공: 19 },
+      치유: { 공격력: 785, 방어력: 485, 생명력: 3208, 속공: 19 },
     },
     A: {
-      공격: { 공격력: 1004, 생명력: 378, 방어력: 2279, 속공: 25 },
-      마법: { 공격력: 1004, 생명력: 378, 방어력: 2279, 속공: 25 },
-      만능: { 공격력: 893, 생명력: 446, 방어력: 2539, 속공: 21 },
-      방어: { 공격력: 514, 생명력: 593, 방어력: 3287, 속공: 16 },
-      치유: { 공격력: 745, 생명력: 452, 방어력: 3058, 속공: 16 },
+      공격: { 공격력: 1004, 방어력: 378, 생명력: 2279, 속공: 25 },
+      마법: { 공격력: 1004, 방어력: 378, 생명력: 2279, 속공: 25 },
+      만능: { 공격력: 893, 방어력: 446, 생명력: 2539, 속공: 21 },
+      방어: { 공격력: 514, 방어력: 593, 생명력: 3287, 속공: 16 },
+      치유: { 공격력: 745, 방어력: 452, 생명력: 3058, 속공: 16 },
     },
   };
 
   const enhanceBonusByGradeAndType = {
     S: {
-      공격: { 공격력: 84, 생명력: 32, 방어력: 237 },
-      마법: { 공격력: 84, 생명력: 32, 방어력: 237 },
-      만능: { 공격력: 74, 생명력: 36, 방어력: 208 },
-      방어: { 공격력: 41, 생명력: 47, 방어력: 271 },
-      치유: { 공격력: 62, 생명력: 38, 방어력: 250 },
+      공격: { 공격력: 84, 방어력: 32, 생명력: 187 },
+      마법: { 공격력: 84, 방어력: 32, 생명력: 187 },
+      만능: { 공격력: 74, 방어력: 36, 생명력: 208 },
+      방어: { 공격력: 41, 방어력: 47, 생명력: 271 },
+      치유: { 공격력: 62, 방어력: 38, 생명력: 250 },
     },
     A: {
-      공격: { 공격력: 77, 생명력: 31, 방어력: 179 },
-      마법: { 공격력: 77, 생명력: 31, 방어력: 179 },
-      만능: { 공격력: 69, 생명력: 34, 방어력: 197 },
-      방어: { 공격력: 38, 생명력: 45, 방어력: 257 },
-      치유: { 공격력: 58, 생명력: 36, 방어력: 238 },
+      공격: { 공격력: 77, 방어력: 31, 생명력: 179 },
+      마법: { 공격력: 77, 방어력: 31, 생명력: 179 },
+      만능: { 공격력: 69, 방어력: 34, 생명력: 197 },
+      방어: { 공격력: 38, 방어력: 45, 생명력: 257 },
+      치유: { 공격력: 58, 방어력: 36, 생명력: 238 },
     },
   };
 
@@ -236,6 +243,11 @@ export default function HeroDetail() {
 
     return highlighted;
   };
+
+  function handleEquipSlotClick(slotType, slotIndex) {
+    setSelectedEquipSlot({ slotType, slotIndex });
+    setEquipModalOpen(true);
+  }
 
   return (
     <div className="hero-detail page">
@@ -473,20 +485,6 @@ export default function HeroDetail() {
             </>
           )}
 
-          {activeTab === "장비" && (
-            <div className="equipment-section">
-              <h3>장비</h3>
-              <div className="equipment-grid">
-                <div className="equip-slot weapon"></div>
-                <div className="equip-slot armor"></div>
-                <div className="equip-slot accessory"></div>
-                <div className="equip-slot weapon"></div>
-                <div className="equip-slot armor"></div>
-                <div className="empty-slot"></div>{" "}
-              </div>
-            </div>
-          )}
-
           {activeTab === "스탯" && (
             <div className="stat-section">
               <h3>스탯</h3>
@@ -515,6 +513,7 @@ export default function HeroDetail() {
                         statKey
                       ) => {
                         const enhanceBonus = enhancePerStep * enhance;
+                        const baseWithEnhance = base + enhanceBonus;
 
                         const transcendArray = hero.transcendBonus || [];
 
@@ -530,8 +529,9 @@ export default function HeroDetail() {
                             : 0;
 
                         const totalPercent = basePercent + extraPercent;
+
                         const transcendBonus = Math.floor(
-                          base * (totalPercent / 100)
+                          baseWithEnhance * (totalPercent / 100)
                         );
 
                         return {
@@ -580,19 +580,19 @@ export default function HeroDetail() {
                               ),
                             },
                             {
-                              label: "생명력",
-                              ...getFinalStat(
-                                statBase.생명력,
-                                enhanceBonus?.생명력,
-                                "생명력"
-                              ),
-                            },
-                            {
                               label: "방어력",
                               ...getFinalStat(
                                 statBase.방어력,
                                 enhanceBonus?.방어력,
                                 "방어력"
+                              ),
+                            },
+                            {
+                              label: "생명력",
+                              ...getFinalStat(
+                                statBase.생명력,
+                                enhanceBonus?.생명력,
+                                "생명력"
                               ),
                             },
                             {
@@ -738,6 +738,116 @@ export default function HeroDetail() {
                   <strong>초월 수치</strong>
                 </p>
               </div>
+            </div>
+          )}
+
+          {activeTab === "장비" && (
+            <div className="equipment-section">
+              <h3>장비</h3>
+              <div className="equipment-grid">
+                {[
+                  { type: "weapon", index: 0 },
+                  { type: "armor", index: 1 },
+                  { type: "accessory", index: 2 },
+                  { type: "weapon", index: 3 },
+                  { type: "armor", index: 4 },
+                  { type: "empty", index: 5 },
+                ].map(({ type, index }) => {
+                  const key = `${type}${index}`;
+                  const item = selectedEquipments[key];
+
+                  if (type === "empty") {
+                    return <div key={index} className="empty-slot" />;
+                  }
+
+                  return (
+                    <div
+                      key={index}
+                      className={`equip-slot ${type}`}
+                      onClick={() => handleEquipSlotClick(type, index)}
+                      onContextMenu={(e) => {
+                        e.preventDefault();
+                        const key = `${type}${index}`;
+                        setSelectedEquipments((prev) => {
+                          const updated = { ...prev };
+                          delete updated[key];
+                          return updated;
+                        });
+                      }}
+                    >
+                      {item ? (
+                        <>
+                          <img src={item.image} alt={item.name} />
+                          <button
+                            className="unequip-button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              const key = `${type}${index}`;
+                              setSelectedEquipments((prev) => {
+                                const updated = { ...prev };
+                                delete updated[key];
+                                return updated;
+                              });
+                            }}
+                          >
+                            ✕
+                          </button>
+                        </>
+                      ) : (
+                        <span className="empty-text">클릭하여 장비</span>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+              {equipModalOpen && selectedEquipSlot && (
+                <div className="equipment-modal-overlay">
+                  <div className="equipment-modal">
+                    <button
+                      className="close-modal"
+                      onClick={() => setEquipModalOpen(false)}
+                    >
+                      ✕
+                    </button>
+                    <h3>
+                      {selectedEquipSlot.slotType.toUpperCase()} 장비 선택
+                    </h3>
+                    <div className="equipment-list">
+                      {equipmentData
+                        .filter(
+                          (item) => item.type === selectedEquipSlot.slotType
+                        )
+                        .map((item) => {
+                          const key =
+                            selectedEquipSlot.slotType +
+                            selectedEquipSlot.slotIndex;
+
+                          return (
+                            <div
+                              key={item.id}
+                              className="equipment-item"
+                              onClick={() => {
+                                setSelectedEquipments((prev) => ({
+                                  ...prev,
+                                  [key]: item,
+                                }));
+                                setEquipModalOpen(false);
+                              }}
+                            >
+                              <img src={item.image} alt={item.name} />
+                              <div className="equipment-info">
+                                <p className="equipment-name">{item.name}</p>
+                                <p className="equipment-desc">
+                                  {item.description}
+                                </p>
+                              </div>
+                            </div>
+                          );
+                        })}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
