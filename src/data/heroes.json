@@ -5,6 +5,14 @@
     "group": "스페셜",
     "grade": "S",
     "type": "방어",
+    "transcendBonus": [
+      { "stat": "방어력", "value": 12 },
+      { "stat": "방어력", "value": 6 },
+      { "stat": "생명력", "value": 18 },
+      { "stat": "막기 확률", "value": 18 },
+      { "stat": "방어력", "value": 12 },
+      { "stat": "방어력", "value": 6 }
+    ],
     "category": "세븐나이츠",
     "title": "절대 수호자",
     "skilltitle": ["기본공격", "돌격", "방어준비", "견고한 방패"],

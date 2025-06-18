@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import heroes from "../data/heroes.json";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
@@ -11,6 +11,7 @@ export default function HeroDetail() {
   const [level, setLevel] = useState(1);
   const [enhance, setEnhance] = useState(0);
   const [transcend, setTranscend] = useState(0);
+
   const statByGradeAndType = {
     S: {
       공격: { 공격력: 239, 생명력: 92, 방어력: 535, 속공: 29 },
@@ -27,6 +28,71 @@ export default function HeroDetail() {
       치유: { 공격력: 165, 생명력: 104, 방어력: 680, 속공: 16 },
     },
   };
+
+  const maxStatByGradeAndType = {
+    S: {
+      공격: { 공격력: 1080, 생명력: 411, 방어력: 2391, 속공: 29 },
+      마법: { 공격력: 1080, 생명력: 411, 방어력: 2391, 속공: 29 },
+      만능: { 공격력: 936, 생명력: 479, 방어력: 2653, 속공: 25 },
+      방어: { 공격력: 522, 생명력: 657, 방어력: 3470, 속공: 19 },
+      치유: { 공격력: 785, 생명력: 485, 방어력: 3208, 속공: 19 },
+    },
+    A: {
+      공격: { 공격력: 1004, 생명력: 378, 방어력: 2279, 속공: 25 },
+      마법: { 공격력: 1004, 생명력: 378, 방어력: 2279, 속공: 25 },
+      만능: { 공격력: 893, 생명력: 446, 방어력: 2539, 속공: 21 },
+      방어: { 공격력: 514, 생명력: 593, 방어력: 3287, 속공: 16 },
+      치유: { 공격력: 745, 생명력: 452, 방어력: 3058, 속공: 16 },
+    },
+  };
+
+  const enhanceBonusByGradeAndType = {
+    S: {
+      공격: { 공격력: 84, 생명력: 32, 방어력: 237 },
+      마법: { 공격력: 84, 생명력: 32, 방어력: 237 },
+      만능: { 공격력: 74, 생명력: 36, 방어력: 208 },
+      방어: { 공격력: 41, 생명력: 47, 방어력: 271 },
+      치유: { 공격력: 62, 생명력: 38, 방어력: 250 },
+    },
+    A: {
+      공격: { 공격력: 77, 생명력: 31, 방어력: 179 },
+      마법: { 공격력: 77, 생명력: 31, 방어력: 179 },
+      만능: { 공격력: 69, 생명력: 34, 방어력: 197 },
+      방어: { 공격력: 38, 생명력: 45, 방어력: 257 },
+      치유: { 공격력: 58, 생명력: 36, 방어력: 238 },
+    },
+  };
+
+  function AnimatedNumber({ value, duration = 500 }) {
+    const [displayValue, setDisplayValue] = useState(value);
+    const raf = useRef(null);
+    const start = useRef(null);
+    const from = useRef(value);
+
+    useEffect(() => {
+      from.current = displayValue;
+      cancelAnimationFrame(raf.current);
+      start.current = null;
+
+      const step = (timestamp) => {
+        if (!start.current) start.current = timestamp;
+        const progress = Math.min((timestamp - start.current) / duration, 1);
+        const next = Math.floor(
+          from.current + (value - from.current) * progress
+        );
+        setDisplayValue(next);
+        if (progress < 1) {
+          raf.current = requestAnimationFrame(step);
+        }
+      };
+
+      raf.current = requestAnimationFrame(step);
+      return () => cancelAnimationFrame(raf.current);
+    }, [value, duration]);
+
+    return <span>{displayValue.toLocaleString()}</span>;
+  }
+
   useEffect(() => {
     setSelectedSkillIndex(0);
     setActiveTab("스킬");
@@ -159,6 +225,7 @@ export default function HeroDetail() {
     const sortedBuffKeywords = [...buffKeywords].sort(
       (a, b) => b.length - a.length
     );
+
     sortedBuffKeywords.forEach((keyword) => {
       const regex = new RegExp(keyword, "g");
       highlighted = highlighted.replace(
@@ -422,26 +489,140 @@ export default function HeroDetail() {
                     {(() => {
                       const statBase =
                         hero.grade && hero.type
-                          ? statByGradeAndType?.[hero.grade]?.[hero.type]
+                          ? level === 30
+                            ? maxStatByGradeAndType?.[hero.grade]?.[hero.type]
+                            : statByGradeAndType?.[hero.grade]?.[hero.type]
                           : null;
+
+                      const enhanceBonus =
+                        hero.grade && hero.type
+                          ? enhanceBonusByGradeAndType?.[hero.grade]?.[
+                              hero.type
+                            ]
+                          : null;
+
+                      const getFinalStat = (
+                        base = 0,
+                        enhancePerStep = 0,
+                        statKey
+                      ) => {
+                        const enhanceBonus = enhancePerStep * enhance;
+
+                        const transcendArray = hero.transcendBonus || [];
+
+                        const basePercent = transcendArray
+                          .slice(0, Math.min(transcend, 6))
+                          .filter((t) => t.stat === statKey)
+                          .reduce((sum, t) => sum + t.value, 0);
+
+                        const extraPercent =
+                          transcend > 6 &&
+                          ["공격력", "생명력", "방어력"].includes(statKey)
+                            ? (transcend - 6) * 2
+                            : 0;
+
+                        const totalPercent = basePercent + extraPercent;
+                        const transcendBonus = Math.floor(
+                          base * (totalPercent / 100)
+                        );
+
+                        return {
+                          base,
+                          enhanceBonus,
+                          transcendBonus,
+                          value: base,
+                          total: base + enhanceBonus + transcendBonus,
+                        };
+                      };
+
+                      const getFixedStatWithTranscend = (
+                        basePercent,
+                        statKey
+                      ) => {
+                        const transcendArray = hero.transcendBonus || [];
+
+                        const baseTranscend = transcendArray
+                          .slice(0, Math.min(transcend, 6))
+                          .filter((t) => t.stat === statKey)
+                          .reduce((sum, t) => sum + t.value, 0);
+
+                        const extraTranscend =
+                          transcend > 6 &&
+                          ["공격력", "생명력", "방어력"].includes(statKey)
+                            ? (transcend - 6) * 2
+                            : 0;
+
+                        const totalBonus = baseTranscend + extraTranscend;
+
+                        return {
+                          base: basePercent,
+                          transcendBonus: totalBonus,
+                          value: `${basePercent}%`,
+                        };
+                      };
 
                       const dynamicStats = statBase
                         ? [
-                            { label: "물리 공격력", value: statBase.공격력 },
-                            { label: "생명력", value: statBase.생명력 },
-                            { label: "방어력", value: statBase.방어력 },
-                            { label: "속공", value: statBase.속공 },
+                            {
+                              label: "물리 공격력",
+                              ...getFinalStat(
+                                statBase.공격력,
+                                enhanceBonus?.공격력,
+                                "공격력"
+                              ),
+                            },
+                            {
+                              label: "생명력",
+                              ...getFinalStat(
+                                statBase.생명력,
+                                enhanceBonus?.생명력,
+                                "생명력"
+                              ),
+                            },
+                            {
+                              label: "방어력",
+                              ...getFinalStat(
+                                statBase.방어력,
+                                enhanceBonus?.방어력,
+                                "방어력"
+                              ),
+                            },
+                            {
+                              label: "속공",
+                              ...getFinalStat(statBase.속공, 0, "속공"),
+                            },
                           ]
                         : [];
 
                       const fixedStats = [
-                        { label: "치명타 확률", value: "5%" },
-                        { label: "치명타 피해", value: "150%" },
-                        { label: "약점 공격 확률", value: "0%" },
-                        { label: "막기 확률", value: "0%" },
-                        { label: "받기 피해 감소", value: "0%" },
-                        { label: "효과 적중", value: "0%" },
-                        { label: "효과 저항", value: "0%" },
+                        {
+                          label: "치명타 확률",
+                          ...getFixedStatWithTranscend(5, "치명타 확률"),
+                        },
+                        {
+                          label: "치명타 피해",
+                          ...getFixedStatWithTranscend(150, "치명타 피해"),
+                        },
+                        {
+                          label: "약점 공격 확률",
+                          ...getFixedStatWithTranscend(0, "약점 공격 확률"),
+                        },
+                        {
+                          label: "막기 확률",
+                          ...getFixedStatWithTranscend(0, "막기 확률"),
+                        },
+                        {
+                          label: "받기 피해 감소",
+                          ...getFixedStatWithTranscend(0, "받기 피해 감소"),
+                        },
+                        {
+                          label: "효과 적중",
+                          ...getFixedStatWithTranscend(0, "효과 적중"),
+                        },
+                        {
+                          label: "효과 저항",
+                          ...getFixedStatWithTranscend(0, "효과 저항"),
+                        },
                       ];
 
                       const finalStats = [...dynamicStats, ...fixedStats];
@@ -451,7 +632,76 @@ export default function HeroDetail() {
                           <div className="stat-left">
                             <span className="stat-label">{stat.label}</span>
                           </div>
-                          <div className="stat-value">{stat.value}</div>
+                          <div className="stat-value">
+                            {typeof stat.value === "number" ? (
+                              <>
+                                <span
+                                  style={{
+                                    color: "#FFD700",
+                                    fontWeight: "bold",
+                                  }}
+                                >
+                                  <AnimatedNumber value={stat.total} />
+                                </span>
+                                <span
+                                  style={{
+                                    fontSize: "0.9em",
+                                    marginLeft: "6px",
+                                  }}
+                                >
+                                  (
+                                  <span style={{ color: "#FFFFFF" }}>
+                                    {stat.base.toLocaleString()}
+                                  </span>
+                                  {stat.enhanceBonus > 0 && (
+                                    <span style={{ color: "#00FF66" }}>
+                                      {" + " +
+                                        stat.enhanceBonus.toLocaleString()}
+                                    </span>
+                                  )}
+                                  {stat.transcendBonus > 0 && (
+                                    <span style={{ color: "#FF6666" }}>
+                                      {" + " +
+                                        stat.transcendBonus.toLocaleString()}
+                                    </span>
+                                  )}
+                                  )
+                                </span>
+                              </>
+                            ) : (
+                              <>
+                                <span
+                                  style={{
+                                    color: "#FFD700",
+                                    fontWeight: "bold",
+                                  }}
+                                >
+                                  {parseFloat(
+                                    stat.base + stat.transcendBonus
+                                  ).toFixed(1)}
+                                  %
+                                </span>
+                                <span
+                                  style={{
+                                    fontSize: "0.9em",
+                                    marginLeft: "6px",
+                                  }}
+                                >
+                                  (
+                                  <span style={{ color: "#FFFFFF" }}>
+                                    {stat.base}%
+                                  </span>
+                                  {stat.transcendBonus > 0 && (
+                                    <span style={{ color: "#FF6666" }}>
+                                      {" "}
+                                      + {stat.transcendBonus}%
+                                    </span>
+                                  )}
+                                  )
+                                </span>
+                              </>
+                            )}
+                          </div>
                         </div>
                       ));
                     })()}
