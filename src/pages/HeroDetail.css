@@ -73,6 +73,7 @@
   padding: 20px;
   box-sizing: border-box;
   text-align: center;
+  max-height: 500px;
 }
 
 /* 오른쪽 고정 영역 */
@@ -81,6 +82,7 @@
   padding: 20px;
   box-sizing: border-box;
   text-align: left;
+  max-height: 500px;
 }
 
 .hero-info h2 {
@@ -257,7 +259,7 @@
 }
 
 .stat-list {
-  max-height: 300px;
+  max-height: 200px;
   overflow-y: auto;
   width: 100%;
   max-width: 400px;
