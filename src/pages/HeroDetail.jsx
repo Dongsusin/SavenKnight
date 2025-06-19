@@ -1077,7 +1077,6 @@ export default function HeroDetail() {
 
                             <div className="equipment-stats">
                               <p className="equipment-name">
-                                {item.name}
                                 <span className="equipment-desc">
                                   (
                                   {(() => {
