@@ -487,6 +487,10 @@
   overflow-y: auto;
 }
 
+.equipment-item img {
+  width: 100px;
+}
+
 .close-modal {
   position: absolute;
   top: 10px;
@@ -803,6 +807,10 @@
     border: none;
     cursor: pointer;
   }
+
+  .equipment-item img {
+    width: 70px;
+  }
 }
 
 @media (max-width: 426px) {
@@ -864,6 +872,10 @@
 
   .substat-row {
     flex-direction: column;
+  }
+
+  .equipment-modal {
+    padding: 10px;
   }
 }
 
