@@ -432,19 +432,29 @@
   background-color: #ff6666;
 }
 
+.color-box.equipment {
+  background-color: #33ccff;
+}
+
+/* 장비 슬롯 기본 스타일 */
 .equip-slot {
   border: 1px solid #666;
   background: #222;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 80px;
   cursor: pointer;
   position: relative;
+  padding: 6px;
+  gap: 10px;
+  text-align: left;
+  border-radius: 8px;
 }
 
+/* 장착된 장비 이미지 스타일 */
 .equip-slot img {
-  max-height: 70px;
+  max-height: 64px;
+  width: auto;
+  object-fit: contain;
+  border-radius: 4px;
 }
 
 .empty-text {
@@ -490,47 +500,77 @@
 }
 
 .equipment-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  justify-items: center;
+}
+
+.equipment-grid {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
 }
 
-.equipment-item {
+.equipped-item {
   display: flex;
-  background: #333;
-  border: 1px solid #555;
-  border-radius: 6px;
-  padding: 8px;
-  width: calc(50% - 10px);
-  cursor: pointer;
+  justify-content: center;
+  align-items: flex-start;
   gap: 10px;
-  transition: background 0.2s;
+  position: relative;
+  width: 100%;
+  min-width: 415px;
+  padding: 4px;
 }
 
-.equipment-item:hover {
-  background: #444;
-}
-
-.equipment-item img {
-  width: 48px;
-  height: 48px;
-  object-fit: cover;
-  border-radius: 4px;
-}
-
-.equipment-info {
+.equipment-stats {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  color: white;
+  gap: 6px;
   flex: 1;
 }
 
-.equipment-name {
+.equipment-stats .equipment-name {
+  font-size: 0.9rem;
   font-weight: bold;
-  margin: 0;
+  color: #ffd700;
 }
 
-.equipment-desc {
-  font-size: 0.8em;
-  margin: 0;
+.equipment-stats .equipment-desc {
+  font-size: 0.75rem;
   color: #ccc;
+}
+
+.equipment-stat-list {
+  margin-top: 4px;
+  padding-left: 0;
+  list-style: none;
+  font-size: 0.75rem;
+}
+
+.equipment-stat-item {
+  display: flex;
+  gap: 6px;
+  color: #ddd;
+  line-height: 1.2;
+}
+
+.equip-image-clickable {
+  cursor: pointer;
+  border: 2px solid #888;
+  border-radius: 6px;
+}
+
+.equipment-stat-item .stat-name {
+  color: #00ffcc;
+  font-weight: 600;
+}
+
+.equipment-stat-item .stat-value {
+  color: #ffffff;
 }
 
 .unequip-button {
@@ -552,6 +592,91 @@
 
 .unequip-button:hover {
   background: rgba(255, 50, 50, 0.9);
+}
+
+.substat-selection {
+  margin-top: 10px;
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 10px;
+  border-radius: 8px;
+  border: #f6e586 1px solid;
+  width: 100%;
+}
+
+.substat-title {
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #ffd700;
+}
+
+.substat-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+  gap: 4px;
+}
+
+.substat-row label {
+  color: #ccc;
+  font-size: 0.75rem;
+}
+
+.substat-row select {
+  flex: 1;
+  padding: 3px;
+  background-color: #222;
+  color: #fff;
+  border: 1px solid #555;
+  border-radius: 4px;
+  font-size: 0.75rem;
+}
+
+.stat-display {
+  display: flex;
+  align-items: center;
+  font-size: 0.75rem;
+  margin-bottom: 2px;
+  gap: 4px;
+  color: #ffd700;
+}
+
+.stat-value {
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.stat-bonus {
+  font-size: 0.7em;
+  color: #ff4444;
+  margin-left: 2px;
+  background: rgba(255, 0, 0, 0.2);
+  border-radius: 4px;
+  padding: 0 4px;
+}
+
+.enhance-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  margin-bottom: 6px;
+}
+
+.enhance-controls button {
+  background-color: #333;
+  color: #fff;
+  border: 1px solid #666;
+  border-radius: 4px;
+  width: 24px;
+  height: 24px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.enhance-controls span {
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #77dd77;
 }
 
 /* 반응형 */
@@ -576,6 +701,101 @@
 
   .level-toggle-buttons button {
     padding: 3px 6px;
+  }
+
+  .equipped-item.mobile-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 10px;
+    position: relative;
+    min-width: auto;
+    align-items: center;
+  }
+
+  .equip-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .equip-top img {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 6px;
+  }
+
+  .equipment-name {
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: #ffd700;
+  }
+
+  .equipment-desc {
+    font-size: 0.75rem;
+    color: #ccc;
+    margin-left: 4px;
+  }
+
+  .equip-bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .enhance-controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .substat-selection {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 6px;
+    background: #1a1a1a;
+    border-radius: 6px;
+    min-width: 80vw;
+  }
+
+  .substat-row {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+  }
+
+  .substat-row select {
+    width: 100%;
+    padding: 4px;
+    font-size: 0.85rem;
+  }
+
+  .stat-display {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    padding: 2px 4px;
+    background: #111;
+    border-radius: 4px;
+    color: #fff;
+  }
+
+  .unequip-button {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    font-size: 0.8rem;
+    background: transparent;
+    color: #ccc;
+    border: none;
+    cursor: pointer;
   }
 }
 
@@ -630,14 +850,14 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .equip-slot {
-    width: 80px;
-    height: 80px;
+  .substat-selection {
+    overflow-y: auto;
+    max-height: 200px;
+    padding-right: 4px;
   }
 
-  .empty-slot {
-    width: 80px;
-    height: 80px;
+  .substat-row {
+    flex-direction: column;
   }
 }
 

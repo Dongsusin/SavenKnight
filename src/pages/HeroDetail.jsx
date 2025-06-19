@@ -12,9 +12,11 @@ export default function HeroDetail() {
   const [level, setLevel] = useState(1);
   const [enhance, setEnhance] = useState(0);
   const [transcend, setTranscend] = useState(0);
+  const [substats, setSubstats] = useState({});
+  const [substatUpgrades, setSubstatUpgrades] = useState({});
   // 장비 모달 열림 여부
   const [equipModalOpen, setEquipModalOpen] = useState(false);
-  // 클릭한 슬롯 정보를 저장 (예: { slotType: "weapon", slotIndex: 0 })
+  // 클릭한 슬롯 정보를 저장 (예: { slotType: "무기", slotIndex: 0 })
   const [selectedEquipSlot, setSelectedEquipSlot] = useState(null);
   // 각 슬롯에 할당된 장비를 저장 (키는 고유 식별자: slotType+index)
   const [selectedEquipments, setSelectedEquipments] = useState({});
@@ -69,6 +71,149 @@ export default function HeroDetail() {
       치유: { 공격력: 58, 방어력: 36, 생명력: 238 },
     },
   };
+
+  const weaponMainStatTable = {
+    "약점 공격 확률": { base: 7, perLevel: 1.4, isPercent: true },
+    "치명타 확률": { base: 6, perLevel: 1.2, isPercent: true },
+    "치명타 피해": { base: 9, perLevel: 1.8, isPercent: true },
+    공격력: { base: 60, perLevel: 12, isPercent: false },
+    "공격력%": { base: 7, perLevel: 1.4, isPercent: true },
+    방어력: { base: 40, perLevel: 8, isPercent: false },
+    "방어력%": { base: 7, perLevel: 1.4, isPercent: true },
+    생명력: { base: 220, perLevel: 42, isPercent: false },
+    "생명력%": { base: 7, perLevel: 1.4, isPercent: true },
+    "효과 적중": { base: 7, perLevel: 1.4, isPercent: true },
+  };
+
+  const armorMainStatTable = {
+    "받는 피해 감소": { base: 4, perLevel: 0.8, isPercent: true },
+    "막기 확률": { base: 6, perLevel: 1.2, isPercent: true },
+    공격력: { base: 60, perLevel: 12, isPercent: false },
+    "공격력%": { base: 7, perLevel: 1.4, isPercent: true },
+    방어력: { base: 40, perLevel: 8, isPercent: false },
+    "방어력%": { base: 7, perLevel: 1.4, isPercent: true },
+    생명력: { base: 220, perLevel: 42, isPercent: false },
+    "생명력%": { base: 7, perLevel: 1.4, isPercent: true },
+    "효과 저항": { base: 7, perLevel: 1.4, isPercent: true },
+  };
+
+  const subStatTable = {
+    공격력: { base: 50, per3Level: 50, isPercent: false },
+    "공격력%": { base: 5, per3Level: 5, isPercent: true },
+    방어력: { base: 30, per3Level: 30, isPercent: false },
+    "방어력%": { base: 5, per3Level: 5, isPercent: true },
+    생명력: { base: 180, per3Level: 180, isPercent: false },
+    "생명력%": { base: 5, per3Level: 5, isPercent: true },
+    속공: { base: 4, per3Level: 4, isPercent: false },
+    "치명타 확률": { base: 4, per3Level: 4, isPercent: true },
+    "치명타 피해": { base: 6, per3Level: 6, isPercent: true },
+    "약점 공격 확률": { base: 5, per3Level: 5, isPercent: true },
+    "막기 확률": { base: 4, per3Level: 4, isPercent: true },
+    "효과 적중": { base: 5, per3Level: 5, isPercent: true },
+    "효과 저항": { base: 5, per3Level: 5, isPercent: true },
+  };
+
+  const setEffectTable = {
+    선봉장: {
+      "2세트": [{ stat: "공격력%", value: 15 }],
+      "4세트": [{ stat: "공격력%", value: 35 }],
+    },
+    추적자: {
+      "2세트": [{ stat: "약점 공격 확률", value: 15 }],
+      "4세트": [
+        { stat: "약점 공격 확률", value: 30 },
+        { stat: "약점 공격 피해량", value: 20 },
+      ],
+    },
+    성기사: {
+      "2세트": [{ stat: "생명력%", value: 15 }],
+      "4세트": [{ stat: "생명력%", value: 35 }],
+    },
+    수문장: {
+      "2세트": [{ stat: "막기 확률", value: 15 }],
+      "4세트": [
+        { stat: "막기 확률", value: 30 },
+        { stat: "막기 피해 감소율", value: 10 },
+      ],
+    },
+    수호자: {
+      "2세트": [{ stat: "방어력%", value: 15 }],
+      "4세트": [{ stat: "방어력%", value: 35 }],
+    },
+    암살자: {
+      "2세트": [{ stat: "치명타 확률", value: 15 }],
+      "4세트": [
+        { stat: "치명타 확률", value: 30 },
+        { stat: "방어 무시", value: 15 },
+      ],
+    },
+    복수자: {
+      "2세트": [{ stat: "주는 피해량", value: 15 }],
+      "4세트": [
+        { stat: "주는 피해량", value: 30 },
+        { stat: "보스 대상 피해량", value: 40 },
+      ],
+    },
+    주술사: {
+      "2세트": [{ stat: "효과 적중", value: 15 }],
+      "4세트": [
+        { stat: "효과 적중", value: 35 },
+        { stat: "효과 적용 확률", value: 10 },
+      ],
+    },
+    조율자: {
+      "2세트": [{ stat: "효과 저항", value: 17 }],
+      "4세트": [
+        { stat: "효과 저항", value: 35 },
+        { stat: "행동 면역", value: 1 },
+      ],
+    },
+  };
+
+  function getSetCounts() {
+    const counts = {};
+    Object.values(selectedEquipments).forEach((item) => {
+      if (!item?.set) return;
+      counts[item.set] = (counts[item.set] || 0) + 1;
+    });
+    return counts;
+  }
+
+  function getMainStatOptions(itemType) {
+    return Object.keys(
+      itemType === "무기" ? weaponMainStatTable : armorMainStatTable
+    );
+  }
+
+  function getSubStatOptions() {
+    return Object.keys(subStatTable);
+  }
+
+  function calcMainStat(statName, level, isWeapon) {
+    const table = isWeapon ? weaponMainStatTable : armorMainStatTable;
+    const entry = table[statName];
+    if (!entry) return null;
+
+    const total = entry.base + level * entry.perLevel;
+    return entry.isPercent ? `${total.toFixed(1)}%` : Math.floor(total);
+  }
+
+  function calcSubStat(statName, level) {
+    const entry = subStatTable[statName];
+    if (!entry) return null;
+
+    const bonusSteps = Math.floor(level / 3);
+    const total = entry.base + bonusSteps * entry.per3Level;
+    return entry.isPercent ? `${total.toFixed(1)}%` : Math.floor(total);
+  }
+
+  function getAvailableSubstatPoints(level) {
+    let points = 0;
+    if (level >= 9) points++;
+    if (level >= 12) points++;
+    if (level >= 15) points++;
+    return points;
+  }
 
   function AnimatedNumber({ value, duration = 500 }) {
     const [displayValue, setDisplayValue] = useState(value);
@@ -249,6 +394,106 @@ export default function HeroDetail() {
     setEquipModalOpen(true);
   }
 
+  function getEquipmentStatBonus(statKey) {
+    let flatBonus = 0;
+    let percentBonus = 0;
+
+    // 퍼센트 스탯 → 실제 적용 대상 매핑
+    const percentToBaseStatMap = {
+      "공격력%": "공격력",
+      "방어력%": "방어력",
+      "생명력%": "생명력",
+    };
+
+    Object.entries(selectedEquipments).forEach(([key, equip]) => {
+      if (!equip) return;
+
+      const isWeapon = equip.type === "무기";
+      const isArmor = equip.type === "방어구";
+      const level = equip.level ?? 0;
+
+      // ✅ 무기 기본 공격력 보너스
+      if (isWeapon && statKey === "공격력") {
+        const baseAtk = 64;
+        const perLevelAtk = 16;
+        flatBonus += baseAtk + perLevelAtk * level;
+      }
+
+      // ✅ 방어구 기본 방어력 및 생명력 보너스
+      if (isArmor) {
+        if (statKey === "생명력") {
+          const baseHp = 224;
+          const perLevelHp = 57;
+          flatBonus += baseHp + perLevelHp * level;
+        }
+        if (statKey === "방어력") {
+          const baseDef = 39;
+          const perLevelDef = 10;
+          flatBonus += baseDef + perLevelDef * level;
+        }
+      }
+
+      // ✅ 장비 고정 스탯
+      if (equip.stats?.[statKey]) {
+        flatBonus += equip.stats[statKey];
+      }
+
+      // ✅ 주스탯 적용
+      const mainStat = substats[key]?.main;
+      if (mainStat) {
+        const value = calcMainStat(mainStat, level, isWeapon);
+        const mappedKey = percentToBaseStatMap[mainStat] || mainStat;
+
+        if (mappedKey === statKey) {
+          if (typeof value === "string" && value.endsWith("%")) {
+            percentBonus += parseFloat(value);
+          } else {
+            flatBonus += parseFloat(value);
+          }
+        }
+      }
+
+      // ✅ 부스탯 적용
+      const subList = substats[key]?.subs ?? [];
+      const upgrades = substatUpgrades[key] ?? {};
+      subList.forEach((subName, i) => {
+        const value = calcSubStat(subName, (upgrades[i] ?? 0) * 3);
+        const mappedKey = percentToBaseStatMap[subName] || subName;
+
+        if (mappedKey === statKey) {
+          if (typeof value === "string" && value.endsWith("%")) {
+            percentBonus += parseFloat(value);
+          } else {
+            flatBonus += parseFloat(value);
+          }
+        }
+      });
+    });
+
+    // ✅ 세트효과 적용
+    const setCounts = getSetCounts();
+    Object.entries(setCounts).forEach(([setName, count]) => {
+      const effect = setEffectTable[setName];
+      if (!effect) return;
+
+      let chosenEffects = [];
+      if (count >= 4 && effect["4세트"]) {
+        chosenEffects = effect["4세트"];
+      } else if (count >= 2 && effect["2세트"]) {
+        chosenEffects = effect["2세트"];
+      }
+
+      chosenEffects.forEach(({ stat, value }) => {
+        const mappedKey = percentToBaseStatMap[stat] || stat.replace("%", "");
+        if (mappedKey === statKey) {
+          percentBonus += value;
+        }
+      });
+    });
+
+    return { flatBonus, percentBonus };
+  }
+
   return (
     <div className="hero-detail page">
       <Link to="/" className="back-button">
@@ -351,7 +596,6 @@ export default function HeroDetail() {
               </button>
             ))}
           </div>
-
           {/* 탭 내용 */}
           {activeTab === "스킬" && (
             <>
@@ -513,9 +757,10 @@ export default function HeroDetail() {
                         statKey
                       ) => {
                         const enhanceBonus = enhancePerStep * enhance;
-                        const baseWithEnhance = base + enhanceBonus;
+                        const baseStat = base + enhanceBonus;
 
                         const transcendArray = hero.transcendBonus || [];
+                        const equipmentBonus = getEquipmentStatBonus(statKey);
 
                         const basePercent = transcendArray
                           .slice(0, Math.min(transcend, 6))
@@ -528,18 +773,26 @@ export default function HeroDetail() {
                             ? (transcend - 6) * 2
                             : 0;
 
-                        const totalPercent = basePercent + extraPercent;
-
-                        const transcendBonus = Math.floor(
-                          baseWithEnhance * (totalPercent / 100)
+                        const totalPercent =
+                          basePercent +
+                          extraPercent +
+                          equipmentBonus.percentBonus;
+                        const total = Math.floor(
+                          baseStat * (1 + totalPercent / 100) +
+                            equipmentBonus.flatBonus
                         );
 
                         return {
                           base,
                           enhanceBonus,
-                          transcendBonus,
-                          value: base,
-                          total: base + enhanceBonus + transcendBonus,
+                          transcendBonus: Math.floor(
+                            (baseStat * (basePercent + extraPercent)) / 100
+                          ),
+                          total,
+                          flatBonus: equipmentBonus.flatBonus,
+                          percentBonus: equipmentBonus.percentBonus,
+                          transcendPercent: basePercent + extraPercent,
+                          totalBonusFromEquip: total - baseStat,
                         };
                       };
 
@@ -548,6 +801,7 @@ export default function HeroDetail() {
                         statKey
                       ) => {
                         const transcendArray = hero.transcendBonus || [];
+                        const equipmentBonus = getEquipmentStatBonus(statKey);
 
                         const baseTranscend = transcendArray
                           .slice(0, Math.min(transcend, 6))
@@ -561,18 +815,31 @@ export default function HeroDetail() {
                             : 0;
 
                         const totalBonus = baseTranscend + extraTranscend;
+                        const safeBasePercent = basePercent || 0;
+                        const safeEquipmentPercent =
+                          equipmentBonus?.percentBonus || 0;
+                        const totalPercent =
+                          safeBasePercent + totalBonus + safeEquipmentPercent;
 
                         return {
-                          base: basePercent,
+                          base: safeBasePercent,
                           transcendBonus: totalBonus,
-                          value: `${basePercent}%`,
+                          percentBonus: safeEquipmentPercent,
+                          value: `${totalPercent.toFixed(1)}%`,
+                          totalPercentAll: totalPercent,
                         };
                       };
+
+                      const atkLabel = ["공격", "방어", "만능"].includes(
+                        hero.type
+                      )
+                        ? "물리 공격력"
+                        : "마법 공격력";
 
                       const dynamicStats = statBase
                         ? [
                             {
-                              label: "물리 공격력",
+                              label: atkLabel,
                               ...getFinalStat(
                                 statBase.공격력,
                                 enhanceBonus?.공격력,
@@ -620,8 +887,8 @@ export default function HeroDetail() {
                           ...getFixedStatWithTranscend(0, "막기 확률"),
                         },
                         {
-                          label: "받기 피해 감소",
-                          ...getFixedStatWithTranscend(0, "받기 피해 감소"),
+                          label: "받는 피해 감소",
+                          ...getFixedStatWithTranscend(0, "받는 피해 감소"),
                         },
                         {
                           label: "효과 적중",
@@ -635,83 +902,94 @@ export default function HeroDetail() {
 
                       const finalStats = [...dynamicStats, ...fixedStats];
 
-                      return finalStats.map((stat, i) => (
-                        <div key={i} className="stat-row">
-                          <div className="stat-left">
-                            <span className="stat-label">{stat.label}</span>
-                          </div>
-                          <div className="stat-value">
-                            {typeof stat.value === "number" ? (
-                              <>
-                                <span
-                                  style={{
-                                    color: "#FFD700",
-                                    fontWeight: "bold",
-                                  }}
-                                >
-                                  <AnimatedNumber value={stat.total} />
-                                </span>
-                                <span
-                                  style={{
-                                    fontSize: "0.9em",
-                                    marginLeft: "6px",
-                                  }}
-                                >
-                                  (
-                                  <span style={{ color: "#FFFFFF" }}>
-                                    {stat.base.toLocaleString()}
+                      return finalStats.map((stat, i) => {
+                        const isNumber = stat.hasOwnProperty("total");
+
+                        return (
+                          <div key={i} className="stat-row">
+                            <div className="stat-left">
+                              <span className="stat-label">{stat.label}</span>
+                            </div>
+                            <div className="stat-value">
+                              {isNumber ? (
+                                <>
+                                  <span
+                                    style={{
+                                      color: "#FFD700",
+                                      fontWeight: "bold",
+                                    }}
+                                  >
+                                    <AnimatedNumber value={stat.total} />
                                   </span>
-                                  {stat.enhanceBonus > 0 && (
-                                    <span style={{ color: "#00FF66" }}>
-                                      {" + " +
-                                        stat.enhanceBonus.toLocaleString()}
+                                  <span
+                                    style={{
+                                      fontSize: "0.9em",
+                                      marginLeft: "6px",
+                                    }}
+                                  >
+                                    (
+                                    <span style={{ color: "#FFFFFF" }}>
+                                      {stat.base.toLocaleString()}
                                     </span>
-                                  )}
-                                  {stat.transcendBonus > 0 && (
-                                    <span style={{ color: "#FF6666" }}>
-                                      {" + " +
-                                        stat.transcendBonus.toLocaleString()}
-                                    </span>
-                                  )}
-                                  )
-                                </span>
-                              </>
-                            ) : (
-                              <>
-                                <span
-                                  style={{
-                                    color: "#FFD700",
-                                    fontWeight: "bold",
-                                  }}
-                                >
-                                  {parseFloat(
-                                    stat.base + stat.transcendBonus
-                                  ).toFixed(1)}
-                                  %
-                                </span>
-                                <span
-                                  style={{
-                                    fontSize: "0.9em",
-                                    marginLeft: "6px",
-                                  }}
-                                >
-                                  (
-                                  <span style={{ color: "#FFFFFF" }}>
-                                    {stat.base}%
+                                    {stat.enhanceBonus > 0 && (
+                                      <span style={{ color: "#00FF66" }}>
+                                        {" + " +
+                                          stat.enhanceBonus.toLocaleString()}
+                                      </span>
+                                    )}
+                                    {stat.transcendBonus > 0 && (
+                                      <span style={{ color: "#FF6666" }}>
+                                        {" + " +
+                                          stat.transcendBonus.toLocaleString()}
+                                      </span>
+                                    )}
+                                    {stat.totalBonusFromEquip > 0 && (
+                                      <span style={{ color: "#33ccff" }}>
+                                        {" + " +
+                                          stat.totalBonusFromEquip.toLocaleString()}
+                                      </span>
+                                    )}
+                                    )
                                   </span>
-                                  {stat.transcendBonus > 0 && (
-                                    <span style={{ color: "#FF6666" }}>
-                                      {" "}
-                                      + {stat.transcendBonus}%
+                                </>
+                              ) : (
+                                <>
+                                  <span
+                                    style={{
+                                      color: "#FFD700",
+                                      fontWeight: "bold",
+                                    }}
+                                  >
+                                    {stat.value}
+                                  </span>
+                                  <span
+                                    style={{
+                                      fontSize: "0.9em",
+                                      marginLeft: "6px",
+                                    }}
+                                  >
+                                    (
+                                    <span style={{ color: "#FFFFFF" }}>
+                                      {stat.base}%
                                     </span>
-                                  )}
-                                  )
-                                </span>
-                              </>
-                            )}
+                                    {stat.transcendBonus > 0 && (
+                                      <span style={{ color: "#FF6666" }}>
+                                        {" + " + stat.transcendBonus}%
+                                      </span>
+                                    )}
+                                    {stat.percentBonus > 0 && (
+                                      <span style={{ color: "#33ccff" }}>
+                                        {" + " + stat.percentBonus}%
+                                      </span>
+                                    )}
+                                    )
+                                  </span>
+                                </>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      ));
+                        );
+                      });
                     })()}
                   </div>
                 </>
@@ -720,22 +998,27 @@ export default function HeroDetail() {
                   해당 등급은 스탯 정보가 제공되지 않습니다.
                 </p>
               )}
+
               <div className="stat-color-legend">
                 <p>
-                  <span className="color-box total"></span> 노란색:{" "}
+                  <span className="color-box total"></span> :{" "}
                   <strong>총합</strong>
                 </p>
                 <p>
-                  <span className="color-box base"></span> 흰색:{" "}
-                  <strong>기본 수치 (레벨 기반)</strong>
+                  <span className="color-box base"></span>:{" "}
+                  <strong>기본 수치</strong>
                 </p>
                 <p>
-                  <span className="color-box enhance"></span> 초록색:{" "}
+                  <span className="color-box enhance"></span>:{" "}
                   <strong>강화 수치</strong>
                 </p>
                 <p>
-                  <span className="color-box transcend"></span> 빨간색:{" "}
+                  <span className="color-box transcend"></span>:{" "}
                   <strong>초월 수치</strong>
+                </p>
+                <p>
+                  <span className="color-box equipment"></span>:{" "}
+                  <strong>장비 수치</strong>
                 </p>
               </div>
             </div>
@@ -746,29 +1029,32 @@ export default function HeroDetail() {
               <h3>장비</h3>
               <div className="equipment-grid">
                 {[
-                  { type: "weapon", index: 0 },
-                  { type: "armor", index: 1 },
-                  { type: "accessory", index: 2 },
-                  { type: "weapon", index: 3 },
-                  { type: "armor", index: 4 },
-                  { type: "empty", index: 5 },
+                  { type: "무기", index: 0 },
+                  { type: "방어구", index: 1 },
+                  { type: "무기", index: 2 },
+                  { type: "방어구", index: 3 },
                 ].map(({ type, index }) => {
                   const key = `${type}${index}`;
                   const item = selectedEquipments[key];
 
-                  if (type === "empty") {
+                  if (type === "empty")
                     return <div key={index} className="empty-slot" />;
-                  }
 
                   return (
                     <div
                       key={index}
                       className={`equip-slot ${type}`}
-                      onClick={() => handleEquipSlotClick(type, index)}
+                      onClick={() => {
+                        if (!item) handleEquipSlotClick(type, index);
+                      }}
                       onContextMenu={(e) => {
                         e.preventDefault();
-                        const key = `${type}${index}`;
                         setSelectedEquipments((prev) => {
+                          const updated = { ...prev };
+                          delete updated[key];
+                          return updated;
+                        });
+                        setSubstats((prev) => {
                           const updated = { ...prev };
                           delete updated[key];
                           return updated;
@@ -776,14 +1062,246 @@ export default function HeroDetail() {
                       }}
                     >
                       {item ? (
-                        <>
-                          <img src={item.image} alt={item.name} />
+                        <div className="equipped-item mobile-layout">
+                          {/* 상단: 이미지 + 이름 + 기본 스탯 */}
+                          <div className="equip-top">
+                            <img
+                              src={item.image}
+                              alt={item.name}
+                              className="equip-image-clickable"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleEquipSlotClick(type, index);
+                              }}
+                            />
+
+                            <div className="equipment-stats">
+                              <p className="equipment-name">
+                                {item.name}
+                                <span className="equipment-desc">
+                                  (
+                                  {(() => {
+                                    const isWeapon = item.type === "무기";
+                                    const isArmor = item.type === "방어구";
+                                    const level = item.level ?? 0;
+                                    const result = [];
+
+                                    if (isWeapon) {
+                                      const atk = 64 + level * 16;
+                                      result.push(`공격력 +${atk}`);
+                                    }
+                                    if (isArmor) {
+                                      const def = 39 + level * 10;
+                                      const hp = 224 + level * 57;
+                                      result.push(`방어력 +${def}`);
+                                      result.push(`생명력 +${hp}`);
+                                    }
+
+                                    return result.join(", ");
+                                  })()}
+                                  )
+                                </span>
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* 하단: 강화 + 스탯 선택 */}
+                          <div className="equip-bottom">
+                            {/* 강화 */}
+                            <div className="enhance-controls">
+                              <button
+                                onClick={() =>
+                                  setSelectedEquipments((prev) => ({
+                                    ...prev,
+                                    [key]: {
+                                      ...prev[key],
+                                      level: Math.max(
+                                        0,
+                                        (prev[key]?.level || 0) - 1
+                                      ),
+                                    },
+                                  }))
+                                }
+                              >
+                                -
+                              </button>
+                              <span>+{item.level ?? 0}</span>
+                              <button
+                                onClick={() =>
+                                  setSelectedEquipments((prev) => ({
+                                    ...prev,
+                                    [key]: {
+                                      ...prev[key],
+                                      level: Math.min(
+                                        15,
+                                        (prev[key]?.level || 0) + 1
+                                      ),
+                                    },
+                                  }))
+                                }
+                              >
+                                +
+                              </button>
+                            </div>
+
+                            {/* 주스탯 및 부스탯 선택 */}
+                            <div className="substat-selection">
+                              <p className="substat-title">부가 스탯 선택</p>
+
+                              {/* 주스탯 */}
+                              <div className="substat-row">
+                                <label>주스탯:</label>
+                                <select
+                                  value={substats[key]?.main || ""}
+                                  onChange={(e) =>
+                                    setSubstats((prev) => ({
+                                      ...prev,
+                                      [key]: {
+                                        ...prev[key],
+                                        main: e.target.value,
+                                      },
+                                    }))
+                                  }
+                                >
+                                  <option value="">선택</option>
+                                  {getMainStatOptions(item.type).map((stat) => (
+                                    <option key={stat} value={stat}>
+                                      {stat}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+                              {substats[key]?.main && (
+                                <div className="stat-display">
+                                  <span className="stat-label">
+                                    {substats[key].main}
+                                  </span>
+                                  <span className="stat-value">
+                                    {calcMainStat(
+                                      substats[key].main,
+                                      item.level ?? 0,
+                                      item.type === "무기"
+                                    )}
+                                  </span>
+                                </div>
+                              )}
+
+                              {/* 부스탯 1~4 */}
+                              {[0, 1, 2, 3].map((i) => {
+                                const statName = substats[key]?.subs?.[i];
+                                const points = substatUpgrades[key]?.[i] ?? 0;
+                                const level = item.level ?? 0;
+                                const totalPoints =
+                                  getAvailableSubstatPoints(level);
+                                const currentTotalUsed = Object.values(
+                                  substatUpgrades[key] || {}
+                                ).reduce((sum, val) => sum + val, 0);
+                                const remainingPoints =
+                                  totalPoints - currentTotalUsed;
+
+                                return (
+                                  <div key={i} className="substat-row">
+                                    <label>부스탯 {i + 1}:</label>
+                                    <select
+                                      value={statName || ""}
+                                      onChange={(e) => {
+                                        const updatedSubs = [
+                                          ...(substats[key]?.subs || []),
+                                        ];
+                                        updatedSubs[i] = e.target.value;
+                                        setSubstats((prev) => ({
+                                          ...prev,
+                                          [key]: {
+                                            ...prev[key],
+                                            subs: updatedSubs,
+                                          },
+                                        }));
+                                      }}
+                                    >
+                                      <option value="">선택</option>
+                                      {getSubStatOptions().map((stat) => (
+                                        <option key={stat} value={stat}>
+                                          {stat}
+                                        </option>
+                                      ))}
+                                    </select>
+
+                                    {statName && (
+                                      <div className="stat-display">
+                                        <span className="stat-label">
+                                          {statName}
+                                        </span>
+                                        <span className="stat-value">
+                                          {calcSubStat(statName, points * 3)}
+                                        </span>
+
+                                        <div className="substat-point-controls">
+                                          <button
+                                            onClick={() => {
+                                              setSubstatUpgrades((prev) => {
+                                                const current =
+                                                  prev[key]?.[i] ?? 0;
+                                                if (current <= 0) return prev;
+                                                return {
+                                                  ...prev,
+                                                  [key]: {
+                                                    ...prev[key],
+                                                    [i]: current - 1,
+                                                  },
+                                                };
+                                              });
+                                            }}
+                                            disabled={points <= 0}
+                                          >
+                                            -
+                                          </button>
+                                          <span className="point-text">
+                                            +{points}
+                                          </span>
+                                          <button
+                                            onClick={() => {
+                                              if (remainingPoints <= 0) return;
+                                              setSubstatUpgrades((prev) => {
+                                                const current =
+                                                  prev[key]?.[i] ?? 0;
+                                                return {
+                                                  ...prev,
+                                                  [key]: {
+                                                    ...prev[key],
+                                                    [i]: current + 1,
+                                                  },
+                                                };
+                                              });
+                                            }}
+                                            disabled={remainingPoints <= 0}
+                                          >
+                                            +
+                                          </button>
+                                        </div>
+                                      </div>
+                                    )}
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+
+                          {/* 장비 해제 버튼 */}
                           <button
                             className="unequip-button"
                             onClick={(e) => {
                               e.stopPropagation();
-                              const key = `${type}${index}`;
                               setSelectedEquipments((prev) => {
+                                const updated = { ...prev };
+                                delete updated[key];
+                                return updated;
+                              });
+                              setSubstats((prev) => {
+                                const updated = { ...prev };
+                                delete updated[key];
+                                return updated;
+                              });
+                              setSubstatUpgrades((prev) => {
                                 const updated = { ...prev };
                                 delete updated[key];
                                 return updated;
@@ -792,7 +1310,7 @@ export default function HeroDetail() {
                           >
                             ✕
                           </button>
-                        </>
+                        </div>
                       ) : (
                         <span className="empty-text">클릭하여 장비</span>
                       )}
@@ -800,6 +1318,71 @@ export default function HeroDetail() {
                   );
                 })}
               </div>
+              {/* 세트효과 표시 */}
+              <div
+                className="set-bonus-display"
+                style={{
+                  marginTop: "12px",
+                  padding: "10px",
+                  border: "1px solid #666",
+                  borderRadius: "8px",
+                }}
+              >
+                <h4 style={{ color: "#FFD700", marginBottom: "8px" }}>
+                  세트 효과
+                </h4>
+                {Object.entries(getSetCounts()).map(([setName, count]) => {
+                  const effect = setEffectTable[setName];
+                  if (!effect) return null;
+
+                  const lines = [];
+
+                  if (count >= 2 && effect["2세트"]) {
+                    lines.push(
+                      <div
+                        key={`${setName}-2`}
+                        style={{ marginBottom: "4px", color: "#FFFFFF" }}
+                      >
+                        <strong style={{ color: "#00FF66" }}>
+                          {setName} 2세트:
+                        </strong>{" "}
+                        {effect["2세트"]
+                          .map(
+                            (e) =>
+                              `${e.stat} +${e.value}${
+                                e.stat.endsWith("%") ? "%" : ""
+                              }`
+                          )
+                          .join(", ")}
+                      </div>
+                    );
+                  }
+
+                  if (count >= 4 && effect["4세트"]) {
+                    lines.push(
+                      <div
+                        key={`${setName}-4`}
+                        style={{ marginBottom: "4px", color: "#FFFFFF" }}
+                      >
+                        <strong style={{ color: "#FF6666" }}>
+                          {setName} 4세트:
+                        </strong>{" "}
+                        {effect["4세트"]
+                          .map(
+                            (e) =>
+                              `${e.stat} +${e.value}${
+                                e.stat.endsWith("%") ? "%" : ""
+                              }`
+                          )
+                          .join(", ")}
+                      </div>
+                    );
+                  }
+
+                  return lines;
+                })}
+              </div>
+
               {equipModalOpen && selectedEquipSlot && (
                 <div className="equipment-modal-overlay">
                   <div className="equipment-modal">
@@ -822,6 +1405,23 @@ export default function HeroDetail() {
                             selectedEquipSlot.slotType +
                             selectedEquipSlot.slotIndex;
 
+                          const isMagicType = ["마법", "치유"].includes(
+                            hero.type
+                          );
+
+                          let imagePath = item.image;
+                          let itemName = item.name;
+
+                          if (item.type === "무기") {
+                            imagePath = isMagicType
+                              ? item.image2 || item.image1 || item.image
+                              : item.image1 || item.image;
+
+                            itemName = isMagicType
+                              ? item.name2 || item.name1 || item.name
+                              : item.name1 || item.name;
+                          }
+
                           return (
                             <div
                               key={item.id}
@@ -829,18 +1429,13 @@ export default function HeroDetail() {
                               onClick={() => {
                                 setSelectedEquipments((prev) => ({
                                   ...prev,
-                                  [key]: item,
+                                  [key]: { ...item, image: imagePath },
                                 }));
                                 setEquipModalOpen(false);
                               }}
                             >
-                              <img src={item.image} alt={item.name} />
-                              <div className="equipment-info">
-                                <p className="equipment-name">{item.name}</p>
-                                <p className="equipment-desc">
-                                  {item.description}
-                                </p>
-                              </div>
+                              <img src={imagePath} alt={item.name} />
+                              <div className="equipment-info" />
                             </div>
                           );
                         })}
