@@ -123,8 +123,10 @@
 
 .stage-select {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 0.5rem;
+  width: 100%;
+  overflow-x: auto;
 }
 
 .stage-select button {
@@ -155,6 +157,71 @@
   cursor: pointer;
 }
 
+.boss-stats-box {
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 16px;
+  border-radius: 12px;
+}
+
+.boss-stats-box h3 {
+  font-size: 1.4em;
+  margin-bottom: 8px;
+}
+
+.boss-stat-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  justify-items: center;
+  align-items: center;
+  height: 100%;
+}
+
+.boss-level {
+  font-size: 1.2em;
+  margin-bottom: 12px;
+}
+
+.boss-stat-list div {
+  margin: 4px 0;
+  font-size: 0.95em;
+  text-wrap: nowrap;
+}
+
+.dungeon-top {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.dungeon-image {
+  height: 100%;
+}
+
+.dungeon-image img {
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  box-shadow: 0 0 10px #000;
+  object-fit: contain;
+}
+
+.dungeon-bottom {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+@media (max-width: 786px) {
+  .dungeon-top {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
 @media (max-width: 426px) {
   .growth-container {
     flex-direction: column;
@@ -179,6 +246,10 @@
     background: linear-gradient(to right, #ffcc00, #ff9900);
   }
 
+  .dungeon-info {
+    padding: 0.5rem;
+  }
+
   .dungeon-detail {
     padding: 1rem;
     margin-top: 115px;
@@ -197,5 +268,13 @@
   .stage-select button {
     flex: 0 0 auto;
     min-width: 40px;
+  }
+
+  .boss-stats-box {
+    padding: 5px;
+  }
+
+  .boss-stat-list div {
+    font-size: 16px;
   }
 }
