@@ -14,11 +14,8 @@ export default function HeroDetail() {
   const [transcend, setTranscend] = useState(0);
   const [substats, setSubstats] = useState({});
   const [substatUpgrades, setSubstatUpgrades] = useState({});
-  // 장비 모달 열림 여부
   const [equipModalOpen, setEquipModalOpen] = useState(false);
-  // 클릭한 슬롯 정보를 저장 (예: { slotType: "무기", slotIndex: 0 })
   const [selectedEquipSlot, setSelectedEquipSlot] = useState(null);
-  // 각 슬롯에 할당된 장비를 저장 (키는 고유 식별자: slotType+index)
   const [selectedEquipments, setSelectedEquipments] = useState({});
 
   const statByGradeAndType = {
@@ -261,11 +258,13 @@ export default function HeroDetail() {
 
   const imagePath = `/도감/${hero.group}/아이콘/${hero.name}.png`;
 
-  const skillImages = [];
-  for (let i = 1; i <= 4; i++) {
-    const skillPath = `/도감/${hero.group}/스킬/${hero.name}-${i}.png`;
-    skillImages.push(skillPath);
-  }
+  const skillImages = Array.from(
+    { length: hero.skills?.length || 0 },
+    (_, i) => {
+      const skillPath = `/도감/${hero.group}/스킬/${hero.name}-${i + 1}.png`;
+      return skillPath;
+    }
+  );
 
   const highlightKeywords = (text) => {
     const goldColor = "#ffcc00";
@@ -398,7 +397,6 @@ export default function HeroDetail() {
     let flatBonus = 0;
     let percentBonus = 0;
 
-    // 퍼센트 스탯 → 실제 적용 대상 매핑
     const percentToBaseStatMap = {
       "공격력%": "공격력",
       "방어력%": "방어력",
@@ -412,14 +410,12 @@ export default function HeroDetail() {
       const isArmor = equip.type === "방어구";
       const level = equip.level ?? 0;
 
-      // ✅ 무기 기본 공격력 보너스
       if (isWeapon && statKey === "공격력") {
         const baseAtk = 64;
         const perLevelAtk = 16;
         flatBonus += baseAtk + perLevelAtk * level;
       }
 
-      // ✅ 방어구 기본 방어력 및 생명력 보너스
       if (isArmor) {
         if (statKey === "생명력") {
           const baseHp = 224;
@@ -433,12 +429,10 @@ export default function HeroDetail() {
         }
       }
 
-      // ✅ 장비 고정 스탯
       if (equip.stats?.[statKey]) {
         flatBonus += equip.stats[statKey];
       }
 
-      // ✅ 주스탯 적용
       const mainStat = substats[key]?.main;
       if (mainStat) {
         const value = calcMainStat(mainStat, level, isWeapon);
@@ -453,7 +447,6 @@ export default function HeroDetail() {
         }
       }
 
-      // ✅ 부스탯 적용
       const subList = substats[key]?.subs ?? [];
       const upgrades = substatUpgrades[key] ?? {};
       subList.forEach((subName, i) => {
@@ -470,7 +463,6 @@ export default function HeroDetail() {
       });
     });
 
-    // ✅ 세트효과 적용
     const setCounts = getSetCounts();
     Object.entries(setCounts).forEach(([setName, count]) => {
       const effect = setEffectTable[setName];
@@ -523,7 +515,6 @@ export default function HeroDetail() {
           <img src={imagePath} alt={hero.name} className="main-image" />
           <p className="info-title">{hero.title}</p>
 
-          {/* 레벨/강화/초월 설정 박스 항상 표시 */}
           <div className="stat-settings">
             {[
               { label: "레벨", toggle: true },
@@ -584,7 +575,6 @@ export default function HeroDetail() {
         </div>
 
         <div className="info-right">
-          {/* 탭 버튼 */}
           <div className="tab-buttons">
             {["스킬", "스탯", "장비"].map((tab) => (
               <button
@@ -596,7 +586,7 @@ export default function HeroDetail() {
               </button>
             ))}
           </div>
-          {/* 탭 내용 */}
+
           {activeTab === "스킬" && (
             <>
               <h3>스킬</h3>
@@ -651,7 +641,6 @@ export default function HeroDetail() {
                       );
                     })}
 
-                    {/* 스킬 강화 효과 */}
                     {hero.skillup && hero.skillup[selectedSkillIndex] && (
                       <div className="skill-upgrade-box">
                         <div className="skill-upgrade-title">
@@ -669,13 +658,11 @@ export default function HeroDetail() {
                       </div>
                     )}
 
-                    {/* 초월 효과 */}
                     {(hero.twotranscendenceSkillUp?.[selectedSkillIndex]
                       ?.length > 0 ||
                       hero.sixtranscendenceSkillUp?.[selectedSkillIndex]
                         ?.length > 0) && (
                       <div style={{ marginTop: "10px" }}>
-                        {/* 2초월 */}
                         {hero.twotranscendenceSkillUp?.[selectedSkillIndex]
                           ?.length > 0 && (
                           <div
@@ -699,7 +686,6 @@ export default function HeroDetail() {
                           </div>
                         )}
 
-                        {/* 6초월 */}
                         {hero.sixtranscendenceSkillUp?.[selectedSkillIndex]
                           ?.length > 0 && (
                           <div
@@ -1063,7 +1049,6 @@ export default function HeroDetail() {
                     >
                       {item ? (
                         <div className="equipped-item mobile-layout">
-                          {/* 상단: 이미지 + 이름 + 기본 스탯 */}
                           <div className="equip-top">
                             <img
                               src={item.image}
@@ -1143,11 +1128,9 @@ export default function HeroDetail() {
                               </button>
                             </div>
 
-                            {/* 주스탯 및 부스탯 선택 */}
                             <div className="substat-selection">
                               <p className="substat-title">부가 스탯 선택</p>
 
-                              {/* 주스탯 */}
                               <div className="substat-row">
                                 <label>주스탯:</label>
                                 <select
@@ -1185,7 +1168,6 @@ export default function HeroDetail() {
                                 </div>
                               )}
 
-                              {/* 부스탯 1~4 */}
                               {[0, 1, 2, 3].map((i) => {
                                 const statName = substats[key]?.subs?.[i];
                                 const points = substatUpgrades[key]?.[i] ?? 0;
@@ -1285,7 +1267,6 @@ export default function HeroDetail() {
                             </div>
                           </div>
 
-                          {/* 장비 해제 버튼 */}
                           <button
                             className="unequip-button"
                             onClick={(e) => {
@@ -1317,7 +1298,7 @@ export default function HeroDetail() {
                   );
                 })}
               </div>
-              {/* 세트효과 표시 */}
+
               <div
                 className="set-bonus-display"
                 style={{
