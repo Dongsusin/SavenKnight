@@ -759,26 +759,27 @@ export default function HeroDetail() {
                             ? (transcend - 6) * 2
                             : 0;
 
-                        const totalPercent =
-                          basePercent +
-                          extraPercent +
-                          equipmentBonus.percentBonus;
-                        const total = Math.floor(
-                          baseStat * (1 + totalPercent / 100) +
-                            equipmentBonus.flatBonus
+                        const transcendBonus = Math.floor(
+                          (baseStat * (basePercent + extraPercent)) / 100
                         );
+                        const total =
+                          baseStat +
+                          transcendBonus +
+                          equipmentBonus.flatBonus +
+                          Math.floor(
+                            (baseStat * equipmentBonus.percentBonus) / 100
+                          );
 
                         return {
                           base,
                           enhanceBonus,
-                          transcendBonus: Math.floor(
-                            (baseStat * (basePercent + extraPercent)) / 100
-                          ),
+                          transcendBonus,
                           total,
                           flatBonus: equipmentBonus.flatBonus,
                           percentBonus: equipmentBonus.percentBonus,
                           transcendPercent: basePercent + extraPercent,
-                          totalBonusFromEquip: total - baseStat,
+                          totalBonusFromEquip:
+                            total - (baseStat + transcendBonus),
                         };
                       };
 
@@ -800,19 +801,21 @@ export default function HeroDetail() {
                             ? (transcend - 6) * 2
                             : 0;
 
-                        const totalBonus = baseTranscend + extraTranscend;
-                        const safeBasePercent = basePercent || 0;
-                        const safeEquipmentPercent =
-                          equipmentBonus?.percentBonus || 0;
-                        const totalPercent =
-                          safeBasePercent + totalBonus + safeEquipmentPercent;
+                        const transcendBonus = baseTranscend + extraTranscend;
 
                         return {
-                          base: safeBasePercent,
-                          transcendBonus: totalBonus,
-                          percentBonus: safeEquipmentPercent,
-                          value: `${totalPercent.toFixed(1)}%`,
-                          totalPercentAll: totalPercent,
+                          base: basePercent,
+                          transcendBonus,
+                          percentBonus: equipmentBonus.percentBonus,
+                          value: `${(
+                            basePercent +
+                            transcendBonus +
+                            equipmentBonus.percentBonus
+                          ).toFixed(1)}%`,
+                          totalPercentAll:
+                            basePercent +
+                            transcendBonus +
+                            equipmentBonus.percentBonus,
                         };
                       };
 
