@@ -125,7 +125,6 @@
 
 .skill-images img {
   width: 80px;
-  height: 80px;
   border-radius: 6px;
   border: 2px solid #555;
   background-color: #000;
@@ -814,7 +813,6 @@
 
   .skill-images img {
     width: 50px;
-    height: 50px;
   }
 
   .hero-info .main-image {
@@ -877,7 +875,6 @@
 @media (max-width: 375px) {
   .skill-images img {
     width: 40px;
-    height: 40px;
   }
 
   .hero-info {

@@ -364,19 +364,11 @@ export default function HeroDetail() {
     if (!item || item.type !== "장신구") return null;
     const bonus = getAccessoryStats(item.level ?? 0);
 
-    // 특수효과 수치는 실제 스탯에 더하지 않고 표시만
-    const extra = { 공격력: 0, 방어력: 0, 생명력: 0 };
-    let extraLabel = null;
-
-    if (item.specialEffect && isStatKeyword(item.specialEffect)) {
-      extraLabel = item.specialEffect;
-    }
-
     return {
-      공격력: bonus, // 특수효과 제외
+      공격력: bonus,
       방어력: bonus,
       생명력: bonus,
-      label: extraLabel, // 표시에만 사용
+      label: item.specialEffect || null,
     };
   };
 
