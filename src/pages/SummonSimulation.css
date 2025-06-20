@@ -1,3 +1,4 @@
+/* 기본 페이지 스타일 */
 .summon-page {
   background-color: #1a1a1a;
   color: #fff;
@@ -13,11 +14,19 @@
   margin-bottom: 1.5rem;
 }
 
-.summon-button {
+.button-row {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 1rem;
+}
+
+.summon-button,
+.wishlist-toggle-button {
   background-color: #333;
   color: #fff;
   border: 1px solid #555;
-  padding: 0.75rem 1.5rem;
+  padding: 0.6rem 1.2rem;
   font-size: 1rem;
   font-weight: bold;
   border-radius: 8px;
@@ -25,20 +34,20 @@
   transition: background-color 0.3s;
 }
 
-.summon-button:hover {
+.summon-button:hover,
+.wishlist-toggle-button:hover {
   background-color: #ffcc00;
   color: #000;
 }
 
+/* 카드 그리드 */
 .card-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 12px;
   justify-items: center;
-  margin-top: 2rem;
+  margin: 2rem auto 0;
   max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .card {
@@ -87,10 +96,11 @@
 .card-image {
   width: 100%;
   height: 100%;
-  object-fit: 100%;
+  object-fit: cover;
   border-radius: 8px;
 }
 
+/* S급 효과 */
 .card.grade-S {
   border: 3px solid gold;
   box-shadow: 0 0 15px 5px rgba(255, 215, 0, 0.8);
@@ -107,6 +117,7 @@
   }
 }
 
+/* 진행도 */
 .progress-container {
   width: 100%;
   max-width: 400px;
@@ -140,14 +151,118 @@
   pointer-events: none;
 }
 
+/* 위시리스트 툴팁 */
+.wishlist-tooltip {
+  position: absolute;
+  top: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(20, 20, 20, 0.95);
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+  z-index: 10;
+  width: 320px;
+  color: #fff;
+  max-height: 400px;
+  overflow-y: auto;
+  backdrop-filter: blur(4px);
+  border: 1px solid #444;
+}
+
+.wishlist-tooltip h3 {
+  font-size: 1.1rem;
+  color: #ffd700;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.wishlist-group {
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.wishlist-group:last-child {
+  border-bottom: none;
+}
+
+.wishlist-group-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #ffda44;
+}
+
+/* 캐릭터 아이템 (중앙 정렬) */
+.wishlist-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.wishlist-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 52px;
+}
+
+.wishlist-hero {
+  width: 52px;
+  height: 52px;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.wishlist-hero:hover {
+  transform: scale(1.1);
+}
+
+.wishlist-hero.selected {
+  border: 2px solid #ffd700;
+  box-shadow: 0 0 8px #ffd700;
+}
+
+.wishlist-prob {
+  margin-top: 2px;
+  font-size: 10px;
+  color: #ddd;
+  text-align: center;
+}
+
+.wishlist-warning {
+  margin-top: 10px;
+  padding: 6px 10px;
+  background-color: rgba(255, 50, 50, 0.15);
+  border: 1px solid #ff4d4d;
+  border-radius: 8px;
+  color: #ff4d4d;
+  font-size: 12px;
+  text-align: center;
+}
+
+/* 모바일 대응 */
 @media (max-width: 426px) {
   .summon-title {
     font-size: 1.5rem;
   }
 
   .summon-button {
-    font-size: 0.9rem;
+    font-size: 16px;
     padding: 0.5rem 1rem;
+  }
+
+  .wishlist-toggle-button {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    z-index: 9999;
+    font-size: 12px;
+    padding: 0.5rem;
   }
 
   .card-grid {
@@ -161,5 +276,28 @@
 
   .card-grid > .card:nth-child(10) {
     grid-column: 2 / span 1;
+  }
+
+  .wishlist-tooltip {
+    width: 90%;
+    max-width: 320px;
+    top: 80px;
+  }
+
+  .wishlist-grid {
+    gap: 6px;
+  }
+
+  .wishlist-hero {
+    width: 44px;
+    height: 44px;
+  }
+
+  .wishlist-item {
+    width: 44px;
+  }
+
+  .wishlist-prob {
+    font-size: 9px;
   }
 }
