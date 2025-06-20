@@ -91,6 +91,22 @@
   border-radius: 8px;
 }
 
+.card.grade-S {
+  border: 3px solid gold;
+  box-shadow: 0 0 15px 5px rgba(255, 215, 0, 0.8);
+  animation: glow 1.5s infinite alternate;
+  border-radius: 12px;
+}
+
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 10px 3px rgba(255, 215, 0, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 20px 6px rgba(255, 215, 0, 1);
+  }
+}
+
 @media (max-width: 426px) {
   .summon-title {
     font-size: 1.5rem;
@@ -108,5 +124,9 @@
   .card {
     width: 72px;
     height: 100px;
+  }
+
+  .card-grid > .card:nth-child(10) {
+    grid-column: 2 / span 1;
   }
 }

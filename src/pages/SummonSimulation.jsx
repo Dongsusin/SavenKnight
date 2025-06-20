@@ -61,7 +61,9 @@ export default function SummonSimulation() {
         {summonedHeroes.map((hero, idx) => (
           <div
             key={idx}
-            className={`card ${hero.flipped ? "flipped" : ""}`}
+            className={`card ${hero.flipped ? "flipped" : ""} ${
+              hero.grade === "S" ? "grade-S" : ""
+            }`}
             onClick={() => handleFlip(idx)}
           >
             <div className="card-inner">
