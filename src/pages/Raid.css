@@ -111,11 +111,84 @@
   margin-top: 0.5rem;
 }
 
+.stage-skill-wrapper {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.stage {
+  width: 50%;
+  background-color: #222;
+  padding: 1rem;
+  border-radius: 10px;
+}
+
+.stage-select {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.stage-select button {
+  padding: 0.5rem 1rem;
+  background-color: #444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.stage-select button.active {
+  background-color: #ffd700;
+  color: black;
+}
+
+.stage-select button:hover {
+  background-color: #666;
+}
+
+.skill-section {
+  flex: 1;
+  background-color: #222;
+  padding: 1rem;
+  border-radius: 10px;
+  p {
+    margin: 0 0 0.5rem;
+    font-weight: bold;
+    color: #ffd700;
+  }
+}
+
+.skill-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
 @media (max-width: 786px) {
+  .raid-list {
+    justify-content: flex-start;
+  }
+
   .raid-top {
     display: flex;
     flex-direction: column;
     gap: 10px;
+  }
+  .stage-skill-wrapper {
+    flex-direction: column;
+  }
+  .stage {
+    width: 100%;
+  }
+  .skill-images img {
+    width: 60px;
+    height: 60px;
   }
 }
 

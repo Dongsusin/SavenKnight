@@ -4,7 +4,7 @@ import "./Raid.css";
 const raidData = [
   {
     id: 1,
-    name: "파멸의 눈동자",
+    name: "파멸의눈동자",
     image: "/레이드/선택/파멸의눈동자.png",
     bg: "/레이드/배경/파멸의눈동자.png",
     rewardsByStage: [
@@ -150,6 +150,22 @@ const raidData = [
         dmgReduction: 0,
         res: 0,
       },
+    ],
+    bossSkillsByStage: [
+      [
+        { name: "암흑 찌르기", desc: "대상에게 어둠 속성 피해를 줍니다." },
+        { name: "방어력 약화", desc: "2턴 동안 방어력을 감소시킵니다." },
+        { name: "중독", desc: "매 턴 피해를 줍니다." },
+        { name: "암흑 폭발", desc: "모든 적에게 피해를 줍니다." },
+        { name: "강화 해제", desc: "대상의 버프를 제거합니다." },
+      ],
+      [
+        { name: "어둠 찌르기+", desc: "강화된 어둠 피해를 줍니다." },
+        { name: "방깎", desc: "2턴 방어력 약화" },
+        { name: "출혈", desc: "지속 피해" },
+        { name: "검은 안개", desc: "모든 적의 명중 감소" },
+        { name: "약화 해제", desc: "모든 버프 제거" },
+      ],
     ],
   },
   {
@@ -304,7 +320,7 @@ const raidData = [
   },
   {
     id: 3,
-    name: "강철의 포식자",
+    name: "강철의포식자",
     image: "/레이드/선택/강철의포식자.png",
     bg: "/레이드/배경/강철의포식자.png",
     rewardsByStage: [
@@ -457,7 +473,7 @@ const raidData = [
 export default function Raid() {
   const [selectedId, setSelectedId] = useState(raidData[0].id);
   const [selectedStage, setSelectedStage] = useState(1);
-
+  const [modalSkill, setModalSkill] = useState(null);
   const selectedRaid = raidData.find((r) => r.id === selectedId);
   const boss = selectedRaid.bossStatsByStage?.[selectedStage - 1];
 
@@ -531,18 +547,36 @@ export default function Raid() {
             )}
           </div>
 
-          <div className="stage">
-            <p>단계 선택</p>
-            <div className="stage-select">
-              {selectedRaid.rewardsByStage.map((_, i) => (
-                <button
-                  key={i}
-                  className={selectedStage === i + 1 ? "active" : ""}
-                  onClick={() => setSelectedStage(i + 1)}
-                >
-                  {i + 1}
-                </button>
-              ))}
+          <div className="stage-skill-wrapper">
+            {/* 단계 선택 영역 */}
+            <div className="stage">
+              <p>단계 선택</p>
+              <div className="stage-select">
+                {selectedRaid.rewardsByStage.map((_, i) => (
+                  <button
+                    key={i}
+                    className={selectedStage === i + 1 ? "active" : ""}
+                    onClick={() => setSelectedStage(i + 1)}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* 스킬 이미지 영역 */}
+            <div className="skill-section">
+              <p>보스 스킬</p>
+              <div className="skill-images">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <img
+                    key={i}
+                    src={`/레이드/스킬/${selectedRaid.name}-${i + 1}.png`}
+                    alt={`스킬 ${i + 1}`}
+                    className="skill-img"
+                  />
+                ))}
+              </div>
             </div>
           </div>
 
