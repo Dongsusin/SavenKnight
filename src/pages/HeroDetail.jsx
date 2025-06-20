@@ -351,6 +351,45 @@ export default function HeroDetail() {
     return { flatBonus, percentBonus };
   }
 
+  const isStatKeyword = (text) =>
+    ["공격력", "방어력", "생명력"].some((k) => text.includes(k));
+
+  const getAccessoryStats = (level = 0) => {
+    const base = 2.5;
+    const per = 0.5;
+    return base + per * level;
+  };
+
+  const getAccessoryBonus = (item) => {
+    if (!item || item.type !== "장신구") return null;
+    const bonus = getAccessoryStats(item.level ?? 0);
+    const extra = { 공격력: 0, 방어력: 0, 생명력: 0 };
+
+    if (item.specialEffect && isStatKeyword(item.specialEffect)) {
+      if (item.specialEffect.includes("공격력"))
+        extra.공격력 += parseFloat(
+          item.specialEffect.match(/([\d.]+)%/)?.[1] || 0
+        );
+      if (item.specialEffect.includes("방어력"))
+        extra.방어력 += parseFloat(
+          item.specialEffect.match(/([\d.]+)%/)?.[1] || 0
+        );
+      if (item.specialEffect.includes("생명력"))
+        extra.생명력 += parseFloat(
+          item.specialEffect.match(/([\d.]+)%/)?.[1] || 0
+        );
+    }
+
+    return {
+      공격력: bonus + extra.공격력,
+      방어력: bonus + extra.방어력,
+      생명력: bonus + extra.생명력,
+      label: !isStatKeyword(item.specialEffect || "")
+        ? item.specialEffect
+        : null,
+    };
+  };
+
   return (
     <div className="hero-detail page">
       <Link to="/" className="back-button">
@@ -887,16 +926,16 @@ export default function HeroDetail() {
                   { type: "방어구", index: 1 },
                   { type: "무기", index: 2 },
                   { type: "방어구", index: 3 },
+                  { type: "장신구", index: 0 }, // 장신구 추가됨
                 ].map(({ type, index }) => {
                   const key = `${type}${index}`;
                   const item = selectedEquipments[key];
-
-                  if (type === "empty")
-                    return <div key={index} className="empty-slot" />;
+                  const accessory =
+                    type === "장신구" ? getAccessoryBonus(item) : null;
 
                   return (
                     <div
-                      key={index}
+                      key={key}
                       className={`equip-slot ${type}`}
                       onClick={() => {
                         if (!item) handleEquipSlotClick(type, index);
@@ -909,6 +948,11 @@ export default function HeroDetail() {
                           return updated;
                         });
                         setSubstats((prev) => {
+                          const updated = { ...prev };
+                          delete updated[key];
+                          return updated;
+                        });
+                        setSubstatUpgrades((prev) => {
                           const updated = { ...prev };
                           delete updated[key];
                           return updated;
@@ -927,31 +971,47 @@ export default function HeroDetail() {
                                 handleEquipSlotClick(type, index);
                               }}
                             />
-
                             <div className="equipment-stats">
                               <p className="equipment-name">
                                 <span className="equipment-desc">
-                                  (
                                   {(() => {
+                                    const level = item.level ?? 0;
                                     const isWeapon = item.type === "무기";
                                     const isArmor = item.type === "방어구";
-                                    const level = item.level ?? 0;
-                                    const result = [];
+                                    const desc = [];
 
                                     if (isWeapon) {
-                                      const atk = 64 + level * 16;
-                                      result.push(`공격력 +${atk}`);
-                                    }
-                                    if (isArmor) {
-                                      const def = 39 + level * 10;
-                                      const hp = 224 + level * 57;
-                                      result.push(`방어력 +${def}`);
-                                      result.push(`생명력 +${hp}`);
+                                      desc.push(`공격력 +${64 + level * 16}`);
                                     }
 
-                                    return result.join(", ");
+                                    if (isArmor) {
+                                      desc.push(`방어력 +${39 + level * 10}`);
+                                      desc.push(`생명력 +${224 + level * 57}`);
+                                    }
+
+                                    if (accessory) {
+                                      if (accessory.공격력 > 0)
+                                        desc.push(
+                                          `공격력 +${accessory.공격력.toFixed(
+                                            1
+                                          )}%`
+                                        );
+                                      if (accessory.방어력 > 0)
+                                        desc.push(
+                                          `방어력 +${accessory.방어력.toFixed(
+                                            1
+                                          )}%`
+                                        );
+                                      if (accessory.생명력 > 0)
+                                        desc.push(
+                                          `생명력 +${accessory.생명력.toFixed(
+                                            1
+                                          )}%`
+                                        );
+                                    }
+
+                                    return `(${desc.join(", ")})`;
                                   })()}
-                                  )
                                 </span>
                               </p>
                             </div>
