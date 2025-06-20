@@ -32,6 +32,9 @@ export default function Header() {
           <NavLink to="/growth-dungeon" onClick={closeMenu}>
             성장던전
           </NavLink>
+          <NavLink to="/summon" onClick={closeMenu}>
+            소환
+          </NavLink>
         </nav>
       </header>
 

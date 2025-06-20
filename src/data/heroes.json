@@ -700,6 +700,7 @@
     "group": "스페셜",
     "grade": "S",
     "type": "공격",
+    "excludeFromSummon": true,
     "transcendBonus": [
       { "stat": "공격력", "value": 12 },
       { "stat": "공격력", "value": 6 },
@@ -804,6 +805,7 @@
     "group": "스페셜",
     "grade": "S",
     "type": "치유",
+    "excludeFromSummon": true,
     "transcendBonus": [
       { "stat": "방어력", "value": 12 },
       { "stat": "방어력", "value": 6 },
@@ -888,6 +890,7 @@
     "group": "스페셜",
     "grade": "S",
     "type": "마법",
+    "excludeFromSummon": true,
     "transcendBonus": [
       { "stat": "공격력", "value": 12 },
       { "stat": "공격력", "value": 6 },
@@ -6776,6 +6779,7 @@
     "grade": "C",
     "category": "특수영웅",
     "title": "영웅 궁극 강화 재료",
+    "excludeFromSummon": true,
     "skilltitle": ["비무장", "궁극의 힘"],
     "skills": [
       [
@@ -6801,6 +6805,7 @@
     "grade": "C",
     "category": "특수영웅",
     "title": "희귀 영웅 초월 재료",
+    "excludeFromSummon": true,
     "skilltitle": ["비무장", "초월의 힘"],
     "skills": [
       [
