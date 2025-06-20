@@ -5,14 +5,17 @@ import "./GrowthDungeon.css";
 export default function GrowthDungeon() {
   const [selectedId, setSelectedId] = useState(1);
   const [selectedStage, setSelectedStage] = useState(1);
-  const [visibleSkills, setVisibleSkills] = useState([true, true, true, true]);
+  const [visibleSkills, setVisibleSkills] = useState([]);
 
   const selectedDungeon = dungeonList.find((d) => d.id === selectedId);
   const boss = selectedDungeon?.bossStatsByStage?.[selectedStage - 1];
 
+  const skillCount = selectedDungeon?.skillCount || 4; // 기본값 4개
+
   useEffect(() => {
-    setVisibleSkills([true, true, true, true]);
-  }, [selectedId, selectedStage]);
+    // skillCount에 맞춰서 visibleSkills 초기화
+    setVisibleSkills(Array(skillCount).fill(true));
+  }, [selectedId, selectedStage, selectedDungeon?.skillCount]);
 
   if (!selectedDungeon || !boss) return null;
 
@@ -113,20 +116,24 @@ export default function GrowthDungeon() {
               <div className="skill-preview">
                 <p>보스 스킬</p>
                 <div className="skill-images">
-                  {[1, 2, 3, 4].map((num, idx) =>
-                    visibleSkills[idx] ? (
+                  {[...Array(skillCount)].map((_, idx) => {
+                    const num = idx + 1;
+                    const currentDungeonId = selectedId;
+                    return visibleSkills[idx] ? (
                       <img
                         key={`${selectedDungeon.id}-${num}`}
                         src={`/성장던전/스킬/${selectedDungeon.name}-${num}.png`}
                         alt={`스킬 ${num}`}
                         onError={() => {
-                          const newVisible = [...visibleSkills];
-                          newVisible[idx] = false;
-                          setVisibleSkills(newVisible);
+                          if (currentDungeonId === selectedId) {
+                            const newVisible = [...visibleSkills];
+                            newVisible[idx] = false;
+                            setVisibleSkills(newVisible);
+                          }
                         }}
                       />
-                    ) : null
-                  )}
+                    ) : null;
+                  })}
                 </div>
               </div>
             </div>
