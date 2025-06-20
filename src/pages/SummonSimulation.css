@@ -34,6 +34,13 @@
   transition: background-color 0.3s;
 }
 
+.wishlist-toggle-button {
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+  z-index: 9999;
+}
+
 .summon-button:hover,
 .wishlist-toggle-button:hover {
   background-color: #ffcc00;
@@ -94,9 +101,8 @@
 }
 
 .card-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: 100px;
+  object-fit: contain;
   border-radius: 8px;
 }
 
@@ -162,7 +168,7 @@
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
   z-index: 10;
-  width: 320px;
+  width: 50vw;
   color: #fff;
   max-height: 400px;
   overflow-y: auto;
@@ -196,10 +202,10 @@
 
 /* 캐릭터 아이템 (중앙 정렬) */
 .wishlist-grid {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
   gap: 8px;
-  justify-content: center;
+  justify-items: center;
 }
 
 .wishlist-item {
@@ -210,8 +216,7 @@
 }
 
 .wishlist-hero {
-  width: 52px;
-  height: 52px;
+  width: 5vw;
   border: 2px solid transparent;
   border-radius: 8px;
   cursor: pointer;
@@ -235,7 +240,10 @@
 }
 
 .wishlist-warning {
-  margin-top: 10px;
+  position: absolute;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
   padding: 6px 10px;
   background-color: rgba(255, 50, 50, 0.15);
   border: 1px solid #ff4d4d;
@@ -257,10 +265,8 @@
   }
 
   .wishlist-toggle-button {
-    position: absolute;
     bottom: 10px;
     right: 10px;
-    z-index: 9999;
     font-size: 12px;
     padding: 0.5rem;
   }
@@ -271,7 +277,13 @@
 
   .card {
     width: 72px;
-    height: 100px;
+    height: 72px;
+  }
+
+  .card-image {
+    width: 72px;
+    object-fit: contain;
+    border-radius: 8px;
   }
 
   .card-grid > .card:nth-child(10) {
@@ -280,12 +292,13 @@
 
   .wishlist-tooltip {
     width: 90%;
-    max-width: 320px;
+    max-height: 75vh;
     top: 80px;
   }
 
   .wishlist-grid {
     gap: 6px;
+    grid-template-columns: repeat(4, 1fr);
   }
 
   .wishlist-hero {
@@ -299,5 +312,20 @@
 
   .wishlist-prob {
     font-size: 9px;
+  }
+
+  .wishlist-warning {
+    position: relative;
+    margin-top: 70px;
+  }
+}
+
+@media (max-width: 321px) {
+  .card {
+    width: 60px;
+  }
+
+  .card-image {
+    width: 60px;
   }
 }

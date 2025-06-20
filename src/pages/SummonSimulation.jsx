@@ -25,9 +25,6 @@ function getHeroProbability(hero, wishlistGroups) {
     (h) => h.grade === grade && !h.excludeFromSummon
   );
 
-  const isReady = isWishlistFullySelected(wishlistGroups);
-  if (!isReady) return null;
-
   if (grade === "S") {
     const selected = [...wishlistGroups.group1, ...wishlistGroups.group2];
     const selectedCount = selected.length;
@@ -39,7 +36,13 @@ function getHeroProbability(hero, wishlistGroups) {
     const remainingWeight = 1 - selectedCount * selectedWeight;
     const otherWeight = otherCount > 0 ? remainingWeight / otherCount : 0;
 
-    return selected.includes(hero.name) ? selectedWeight : otherWeight;
+    // 조건 충족 시 위시 확률, 아니면 균등
+    const isReady = isWishlistFullySelected(wishlistGroups);
+    if (isReady) {
+      return selected.includes(hero.name) ? selectedWeight : otherWeight;
+    } else {
+      return 1 / candidates.length; // 균등 확률 (1% 내에서)
+    }
   }
 
   if (grade === "A") {
@@ -53,10 +56,15 @@ function getHeroProbability(hero, wishlistGroups) {
     const remainingWeight = 14 - selectedCount * selectedWeight;
     const otherWeight = otherCount > 0 ? remainingWeight / otherCount : 0;
 
-    return selected.includes(hero.name) ? selectedWeight : otherWeight;
+    const isReady = isWishlistFullySelected(wishlistGroups);
+    if (isReady) {
+      return selected.includes(hero.name) ? selectedWeight : otherWeight;
+    } else {
+      return 14 / candidates.length; // 균등 확률
+    }
   }
 
-  return null;
+  return null; // B, C는 확률 표시 X
 }
 
 // 확률 기반 영웅 선택 (위시 반영)
