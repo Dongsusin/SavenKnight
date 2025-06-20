@@ -147,150 +147,175 @@
     "id": 19,
     "name": "부활의 반지",
     "type": "장신구",
-    "image": "/장신구/부활의반지.jpg"
+    "image": "/장신구/부활의반지.jpg",
+    "specialEffect": "사망 시 체력 100%로 1회 부활"
   },
   {
     "id": 20,
     "name": "불사의 반지",
     "type": "장신구",
-    "image": "/장신구/불사의반지.jpg"
+    "image": "/장신구/불사의반지.jpg",
+    "specialEffect": "사망 시 불사 3턴"
   },
   {
     "id": 21,
     "name": "권능의 반지",
     "type": "장신구",
-    "image": "/장신구/권능의반지.jpg"
+    "image": "/장신구/권능의반지.jpg",
+    "specialEffect": "권능:권능 발동 후 공격력 150% 보호막 2턴"
   },
   {
     "id": 22,
     "name": "마법의 반지",
     "type": "장신구",
-    "image": "/장신구/마법의반지.jpg"
+    "image": "/장신구/마법의반지.jpg",
+    "specialEffect": "기본 공격 시 12% 확률로 버프 제거 1개"
   },
   {
     "id": 23,
     "name": "시간의 반지",
     "type": "장신구",
-    "image": "/장신구/시간의반지.jpg"
+    "image": "/장신구/시간의반지.jpg",
+    "specialEffect": "기본 공격 시 12% 확률로 턴제 버프 1턴 감소"
   },
   {
     "id": 24,
     "name": "기회의 반지",
     "type": "장신구",
-    "image": "/장신구/기회의반지.jpg"
+    "image": "/장신구/기회의반지.jpg",
+    "specialEffect": "기본 공격 시 12% 확률로 1턴간 기절 효과를 부여"
   },
   {
     "id": 25,
     "name": "저주의 반지",
     "type": "장신구",
-    "image": "/장신구/저주의반지.jpg"
+    "image": "/장신구/저주의반지.jpg",
+    "specialEffect": "기본 공격 시 12% 확률로 1턴간 침묵 효과를 부여"
   },
   {
     "id": 26,
     "name": "죽음의 반지",
     "type": "장신구",
-    "image": "/장신구/죽음의반지.jpg"
+    "image": "/장신구/죽음의반지.jpg",
+    "specialEffect": "기본 공격 시 6% 확률로 3턴간 즉사 효과를 부여"
   },
   {
     "id": 27,
     "name": "재앙의 반지",
     "type": "장신구",
-    "image": "/장신구/재앙의반지.jpg"
+    "image": "/장신구/재앙의반지.jpg",
+    "specialEffect": "기본 공격 시 10% 확률로 1턴간 마비 효과를 부여"
   },
   {
     "id": 28,
     "name": "번뜩이는 반지",
     "type": "장신구",
-    "image": "/장신구/번뜩이는반지.jpg"
+    "image": "/장신구/번뜩이는반지.jpg",
+    "specialEffect": "기본 공격 시 10% 확률로 1턴간 감전 효과를 부여"
   },
   {
     "id": 29,
     "name": "공포의의 반지",
     "type": "장신구",
-    "image": "/장신구/공포의반지.jpg"
+    "image": "/장신구/공포의반지.jpg",
+    "specialEffect": "기본 공격 시 12% 확률로 1턴간 실명 효과를 부여"
   },
   {
     "id": 30,
     "name": "설원의 반지",
     "type": "장신구",
-    "image": "/장신구/설원의반지.jpg"
+    "image": "/장신구/설원의반지.jpg",
+    "specialEffect": "기본 공격 시 12% 확률로 1턴간 빙결 효과를 부여"
   },
   {
     "id": 31,
     "name": "메두사의 반지",
     "type": "장신구",
-    "image": "/장신구/메두사의반지.jpg"
+    "image": "/장신구/메두사의반지.jpg",
+    "specialEffect": "기본 공격 시 10% 확률로 1턴간 석화 효과를 부여"
   },
   {
     "id": 32,
     "name": "꿈의 반지",
     "type": "장신구",
-    "image": "/장신구/꿈의반지.jpg"
+    "image": "/장신구/꿈의반지.jpg",
+    "specialEffect": "기본 공격 시 12% 확률로 1턴간 수면 효과를 부여"
   },
   {
     "id": 33,
     "name": "가시 반지",
     "type": "장신구",
-    "image": "/장신구/가시반지.jpg"
+    "image": "/장신구/가시반지.jpg",
+    "specialEffect": "기본 공격 시 15% 확률로 2턴간 출혈 효과를 부여"
   },
   {
     "id": 34,
     "name": "샐러맨더의 반지",
     "type": "장신구",
-    "image": "/장신구/샐러맨더의반지.jpg"
+    "image": "/장신구/샐러맨더의반지.jpg",
+    "specialEffect": "기본 공격 시 15% 확률로 2턴간 화상 효과를 부여"
   },
   {
     "id": 35,
     "name": "독사 반지",
     "type": "장신구",
-    "image": "/장신구/독사반지.jpg"
+    "image": "/장신구/독사반지.jpg",
+    "specialEffect": "기본 공격 시 15% 확률로 2턴간 중독 효과를 부여"
   },
   {
     "id": 36,
     "name": "복수의 반지",
     "type": "장신구",
-    "image": "/장신구/복수의반지.jpg"
+    "image": "/장신구/복수의반지.jpg",
+    "specialEffect": "피해량 6% 상승"
   },
   {
     "id": 37,
     "name": "보호의 반지",
     "type": "장신구",
-    "image": "/장신구/보호의반지.jpg"
+    "image": "/장신구/보호의반지.jpg",
+    "specialEffect": "방어력 10% 상승"
   },
   {
     "id": 38,
     "name": "행운의 반지",
     "type": "장신구",
-    "image": "/장신구/행운의반지.jpg"
+    "image": "/장신구/행운의반지.jpg",
+    "specialEffect": "치명타 확률 10% 상승"
   },
   {
     "id": 39,
     "name": "수호의 반지",
     "type": "장신구",
-    "image": "/장신구/수호의반지.jpg"
+    "image": "/장신구/수호의반지.jpg",
+    "specialEffect": "막기 확률 10% 상승"
   },
   {
     "id": 40,
     "name": "집중의 반지",
     "type": "장신구",
-    "image": "/장신구/집중의반지.jpg"
+    "image": "/장신구/집중의반지.jpg",
+    "specialEffect": "약점 공격 확률 12% 상승"
   },
   {
     "id": 41,
     "name": "자연의 반지",
     "type": "장신구",
-    "image": "/장신구/자연의반지.jpg"
+    "image": "/장신구/자연의반지.jpg",
+    "specialEffect": "생명력 10% 상승"
   },
   {
     "id": 42,
     "name": "적중의 반지",
     "type": "장신구",
-    "image": "/장신구/적중의반지.jpg"
+    "image": "/장신구/적중의반지.jpg",
+    "specialEffect": "효과 적중 15% 상승"
   },
   {
     "id": 43,
     "name": "저항의 반지",
     "type": "장신구",
-    "image": "/장신구/저항의반지.jpg"
+    "image": "/장신구/저항의반지.jpg",
+    "specialEffect": "효과 저항 15% 상승"
   }
 ]

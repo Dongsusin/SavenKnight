@@ -275,25 +275,16 @@ export default function HeroDetail() {
       const isArmor = equip.type === "방어구";
       const level = equip.level ?? 0;
 
+      // 무기 및 방어구 기본 스탯
       if (isWeapon && statKey === "공격력") {
-        const baseAtk = 64;
-        const perLevelAtk = 16;
-        flatBonus += baseAtk + perLevelAtk * level;
+        flatBonus += 64 + 16 * level;
       }
-
       if (isArmor) {
-        if (statKey === "생명력") {
-          const baseHp = 224;
-          const perLevelHp = 57;
-          flatBonus += baseHp + perLevelHp * level;
-        }
-        if (statKey === "방어력") {
-          const baseDef = 39;
-          const perLevelDef = 10;
-          flatBonus += baseDef + perLevelDef * level;
-        }
+        if (statKey === "방어력") flatBonus += 39 + 10 * level;
+        if (statKey === "생명력") flatBonus += 224 + 57 * level;
       }
 
+      // 선택된 주스탯/부스탯
       if (equip.stats?.[statKey]) {
         flatBonus += equip.stats[statKey];
       }
@@ -302,7 +293,6 @@ export default function HeroDetail() {
       if (mainStat) {
         const value = calcMainStat(mainStat, level, isWeapon);
         const mappedKey = percentToBaseStatMap[mainStat] || mainStat;
-
         if (mappedKey === statKey) {
           if (typeof value === "string" && value.endsWith("%")) {
             percentBonus += parseFloat(value);
@@ -317,7 +307,6 @@ export default function HeroDetail() {
       subList.forEach((subName, i) => {
         const value = calcSubStat(subName, (upgrades[i] ?? 0) * 3);
         const mappedKey = percentToBaseStatMap[subName] || subName;
-
         if (mappedKey === statKey) {
           if (typeof value === "string" && value.endsWith("%")) {
             percentBonus += parseFloat(value);
@@ -326,8 +315,19 @@ export default function HeroDetail() {
           }
         }
       });
+
+      // ✅ 장신구 기본 보너스는 반영
+      if (equip.type === "장신구") {
+        const accessoryBonus = getAccessoryBonus(equip);
+        if (!accessoryBonus) return;
+
+        if (statKey === "공격력") percentBonus += accessoryBonus.공격력;
+        if (statKey === "방어력") percentBonus += accessoryBonus.방어력;
+        if (statKey === "생명력") percentBonus += accessoryBonus.생명력;
+      }
     });
 
+    // 세트 효과
     const setCounts = getSetCounts();
     Object.entries(setCounts).forEach(([setName, count]) => {
       const effect = setEffectTable[setName];
@@ -363,30 +363,20 @@ export default function HeroDetail() {
   const getAccessoryBonus = (item) => {
     if (!item || item.type !== "장신구") return null;
     const bonus = getAccessoryStats(item.level ?? 0);
+
+    // 특수효과 수치는 실제 스탯에 더하지 않고 표시만
     const extra = { 공격력: 0, 방어력: 0, 생명력: 0 };
+    let extraLabel = null;
 
     if (item.specialEffect && isStatKeyword(item.specialEffect)) {
-      if (item.specialEffect.includes("공격력"))
-        extra.공격력 += parseFloat(
-          item.specialEffect.match(/([\d.]+)%/)?.[1] || 0
-        );
-      if (item.specialEffect.includes("방어력"))
-        extra.방어력 += parseFloat(
-          item.specialEffect.match(/([\d.]+)%/)?.[1] || 0
-        );
-      if (item.specialEffect.includes("생명력"))
-        extra.생명력 += parseFloat(
-          item.specialEffect.match(/([\d.]+)%/)?.[1] || 0
-        );
+      extraLabel = item.specialEffect;
     }
 
     return {
-      공격력: bonus + extra.공격력,
-      방어력: bonus + extra.방어력,
-      생명력: bonus + extra.생명력,
-      label: !isStatKeyword(item.specialEffect || "")
-        ? item.specialEffect
-        : null,
+      공격력: bonus, // 특수효과 제외
+      방어력: bonus,
+      생명력: bonus,
+      label: extraLabel, // 표시에만 사용
     };
   };
 
@@ -926,7 +916,7 @@ export default function HeroDetail() {
                   { type: "방어구", index: 1 },
                   { type: "무기", index: 2 },
                   { type: "방어구", index: 3 },
-                  { type: "장신구", index: 0 }, // 장신구 추가됨
+                  { type: "장신구", index: 0 },
                 ].map(({ type, index }) => {
                   const key = `${type}${index}`;
                   const item = selectedEquipments[key];
@@ -1017,7 +1007,6 @@ export default function HeroDetail() {
                             </div>
                           </div>
 
-                          {/* 하단: 강화 + 스탯 선택 */}
                           <div className="equip-bottom">
                             {/* 강화 */}
                             <div className="enhance-controls">
@@ -1056,143 +1045,149 @@ export default function HeroDetail() {
                               </button>
                             </div>
 
-                            <div className="substat-selection">
-                              <p className="substat-title">부가 스탯 선택</p>
+                            {item.type !== "장신구" && (
+                              <div className="substat-selection">
+                                <p className="substat-title">부가 스탯 선택</p>
 
-                              <div className="substat-row">
-                                <label>주스탯:</label>
-                                <select
-                                  value={substats[key]?.main || ""}
-                                  onChange={(e) =>
-                                    setSubstats((prev) => ({
-                                      ...prev,
-                                      [key]: {
-                                        ...prev[key],
-                                        main: e.target.value,
-                                      },
-                                    }))
-                                  }
-                                >
-                                  <option value="">선택</option>
-                                  {getMainStatOptions(item.type).map((stat) => (
-                                    <option key={stat} value={stat}>
-                                      {stat}
-                                    </option>
-                                  ))}
-                                </select>
-                              </div>
-                              {substats[key]?.main && (
-                                <div className="stat-display">
-                                  <span className="stat-label">
-                                    {substats[key].main}
-                                  </span>
-                                  <span className="stat-value">
-                                    {calcMainStat(
-                                      substats[key].main,
-                                      item.level ?? 0,
-                                      item.type === "무기"
-                                    )}
-                                  </span>
-                                </div>
-                              )}
-
-                              {[0, 1, 2, 3].map((i) => {
-                                const statName = substats[key]?.subs?.[i];
-                                const points = substatUpgrades[key]?.[i] ?? 0;
-                                const level = item.level ?? 0;
-                                const totalPoints =
-                                  getAvailableSubstatPoints(level);
-                                const currentTotalUsed = Object.values(
-                                  substatUpgrades[key] || {}
-                                ).reduce((sum, val) => sum + val, 0);
-                                const remainingPoints =
-                                  totalPoints - currentTotalUsed;
-
-                                return (
-                                  <div key={i} className="substat-row">
-                                    <label>부스탯 {i + 1}:</label>
-                                    <select
-                                      value={statName || ""}
-                                      onChange={(e) => {
-                                        const updatedSubs = [
-                                          ...(substats[key]?.subs || []),
-                                        ];
-                                        updatedSubs[i] = e.target.value;
-                                        setSubstats((prev) => ({
-                                          ...prev,
-                                          [key]: {
-                                            ...prev[key],
-                                            subs: updatedSubs,
-                                          },
-                                        }));
-                                      }}
-                                    >
-                                      <option value="">선택</option>
-                                      {getSubStatOptions().map((stat) => (
+                                <div className="substat-row">
+                                  <label>주스탯:</label>
+                                  <select
+                                    value={substats[key]?.main || ""}
+                                    onChange={(e) =>
+                                      setSubstats((prev) => ({
+                                        ...prev,
+                                        [key]: {
+                                          ...prev[key],
+                                          main: e.target.value,
+                                        },
+                                      }))
+                                    }
+                                  >
+                                    <option value="">선택</option>
+                                    {getMainStatOptions(item.type).map(
+                                      (stat) => (
                                         <option key={stat} value={stat}>
                                           {stat}
                                         </option>
-                                      ))}
-                                    </select>
-
-                                    {statName && (
-                                      <div className="stat-display">
-                                        <span className="stat-label">
-                                          {statName}
-                                        </span>
-                                        <span className="stat-value">
-                                          {calcSubStat(statName, points * 3)}
-                                        </span>
-
-                                        <div className="substat-point-controls">
-                                          <button
-                                            onClick={() => {
-                                              setSubstatUpgrades((prev) => {
-                                                const current =
-                                                  prev[key]?.[i] ?? 0;
-                                                if (current <= 0) return prev;
-                                                return {
-                                                  ...prev,
-                                                  [key]: {
-                                                    ...prev[key],
-                                                    [i]: current - 1,
-                                                  },
-                                                };
-                                              });
-                                            }}
-                                            disabled={points <= 0}
-                                          >
-                                            -
-                                          </button>
-                                          <span className="point-text">
-                                            +{points}
-                                          </span>
-                                          <button
-                                            onClick={() => {
-                                              if (remainingPoints <= 0) return;
-                                              setSubstatUpgrades((prev) => {
-                                                const current =
-                                                  prev[key]?.[i] ?? 0;
-                                                return {
-                                                  ...prev,
-                                                  [key]: {
-                                                    ...prev[key],
-                                                    [i]: current + 1,
-                                                  },
-                                                };
-                                              });
-                                            }}
-                                            disabled={remainingPoints <= 0}
-                                          >
-                                            +
-                                          </button>
-                                        </div>
-                                      </div>
+                                      )
                                     )}
+                                  </select>
+                                </div>
+
+                                {substats[key]?.main && (
+                                  <div className="stat-display">
+                                    <span className="stat-label">
+                                      {substats[key].main}
+                                    </span>
+                                    <span className="stat-value">
+                                      {calcMainStat(
+                                        substats[key].main,
+                                        item.level ?? 0,
+                                        item.type === "무기"
+                                      )}
+                                    </span>
                                   </div>
-                                );
-                              })}
-                            </div>
+                                )}
+
+                                {[0, 1, 2, 3].map((i) => {
+                                  const statName = substats[key]?.subs?.[i];
+                                  const points = substatUpgrades[key]?.[i] ?? 0;
+                                  const level = item.level ?? 0;
+                                  const totalPoints =
+                                    getAvailableSubstatPoints(level);
+                                  const currentTotalUsed = Object.values(
+                                    substatUpgrades[key] || {}
+                                  ).reduce((sum, val) => sum + val, 0);
+                                  const remainingPoints =
+                                    totalPoints - currentTotalUsed;
+
+                                  return (
+                                    <div key={i} className="substat-row">
+                                      <label>부스탯 {i + 1}:</label>
+                                      <select
+                                        value={statName || ""}
+                                        onChange={(e) => {
+                                          const updatedSubs = [
+                                            ...(substats[key]?.subs || []),
+                                          ];
+                                          updatedSubs[i] = e.target.value;
+                                          setSubstats((prev) => ({
+                                            ...prev,
+                                            [key]: {
+                                              ...prev[key],
+                                              subs: updatedSubs,
+                                            },
+                                          }));
+                                        }}
+                                      >
+                                        <option value="">선택</option>
+                                        {getSubStatOptions().map((stat) => (
+                                          <option key={stat} value={stat}>
+                                            {stat}
+                                          </option>
+                                        ))}
+                                      </select>
+
+                                      {statName && (
+                                        <div className="stat-display">
+                                          <span className="stat-label">
+                                            {statName}
+                                          </span>
+                                          <span className="stat-value">
+                                            {calcSubStat(statName, points * 3)}
+                                          </span>
+
+                                          <div className="substat-point-controls">
+                                            <button
+                                              onClick={() => {
+                                                setSubstatUpgrades((prev) => {
+                                                  const current =
+                                                    prev[key]?.[i] ?? 0;
+                                                  if (current <= 0) return prev;
+                                                  return {
+                                                    ...prev,
+                                                    [key]: {
+                                                      ...prev[key],
+                                                      [i]: current - 1,
+                                                    },
+                                                  };
+                                                });
+                                              }}
+                                              disabled={points <= 0}
+                                            >
+                                              -
+                                            </button>
+                                            <span className="point-text">
+                                              +{points}
+                                            </span>
+                                            <button
+                                              onClick={() => {
+                                                if (remainingPoints <= 0)
+                                                  return;
+                                                setSubstatUpgrades((prev) => {
+                                                  const current =
+                                                    prev[key]?.[i] ?? 0;
+                                                  return {
+                                                    ...prev,
+                                                    [key]: {
+                                                      ...prev[key],
+                                                      [i]: current + 1,
+                                                    },
+                                                  };
+                                                });
+                                              }}
+                                              disabled={remainingPoints <= 0}
+                                            >
+                                              +
+                                            </button>
+                                          </div>
+                                        </div>
+                                      )}
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            )}
                           </div>
 
                           <button
@@ -1351,6 +1346,41 @@ export default function HeroDetail() {
                   </div>
                 </div>
               )}
+
+              {(() => {
+                const accessories = Object.values(selectedEquipments).filter(
+                  (item) => item?.type === "장신구"
+                );
+
+                const effects = accessories
+                  .map((acc) => getAccessoryBonus(acc)?.label)
+                  .filter((label) => label);
+
+                return effects.length > 0 ? (
+                  <div
+                    style={{
+                      marginTop: "12px",
+                      padding: "10px",
+                      border: "1px dashed #888",
+                      borderRadius: "8px",
+                      backgroundColor: "#222",
+                      color: "#FFD700",
+                    }}
+                  >
+                    <strong>장신구 효과</strong>
+                    <div style={{ marginTop: "6px" }}>
+                      {effects.map((label, idx) => (
+                        <div
+                          key={idx}
+                          style={{ marginBottom: "4px", color: "#fff" }}
+                        >
+                          {label}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : null;
+              })()}
             </div>
           )}
         </div>
