@@ -301,7 +301,7 @@
     left: 50%;
     transform: translateX(-50%);
     width: auto;
-    min-width: 50vw;
+    min-width: 40vw;
     max-width: 85vw;
     font-size: 14px;
     padding: 10px;
