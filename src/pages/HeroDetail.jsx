@@ -2,6 +2,13 @@ import React, { useRef, useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import heroes from "../data/heroes.json";
 import equipmentData from "../data/equipment.json";
+import statByGradeAndType from "../data/statByGradeAndType.json";
+import maxStatByGradeAndType from "../data/maxStatByGradeAndType.json";
+import enhanceBonusByGradeAndType from "../data/enhanceBonusByGradeAndType.json";
+import weaponMainStatTable from "../data/weaponMainStatTable.json";
+import armorMainStatTable from "../data/armorMainStatTable.json";
+import subStatTable from "../data/subStatTable.json";
+import setEffectTable from "../data/setEffectTable.json";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import "./HeroDetail.css";
 
@@ -17,155 +24,6 @@ export default function HeroDetail() {
   const [equipModalOpen, setEquipModalOpen] = useState(false);
   const [selectedEquipSlot, setSelectedEquipSlot] = useState(null);
   const [selectedEquipments, setSelectedEquipments] = useState({});
-
-  const statByGradeAndType = {
-    S: {
-      공격: { 공격력: 239, 방어력: 92, 생명력: 535, 속공: 29 },
-      마법: { 공격력: 239, 방어력: 92, 생명력: 535, 속공: 29 },
-      만능: { 공격력: 211, 방어력: 102, 생명력: 594, 속공: 25 },
-      방어: { 공격력: 116, 방어력: 135, 생명력: 773, 속공: 19 },
-      치유: { 공격력: 176, 방어력: 108, 생명력: 714, 속공: 19 },
-    },
-    A: {
-      공격: { 공격력: 221, 방어력: 88, 생명력: 510, 속공: 25 },
-      마법: { 공격력: 221, 방어력: 88, 생명력: 510, 속공: 25 },
-      만능: { 공격력: 197, 방어력: 98, 생명력: 567, 속공: 21 },
-      방어: { 공격력: 108, 방어력: 129, 생명력: 735, 속공: 16 },
-      치유: { 공격력: 165, 방어력: 104, 생명력: 680, 속공: 16 },
-    },
-  };
-
-  const maxStatByGradeAndType = {
-    S: {
-      공격: { 공격력: 1080, 방어력: 411, 생명력: 2391, 속공: 29 },
-      마법: { 공격력: 1080, 방어력: 411, 생명력: 2391, 속공: 29 },
-      만능: { 공격력: 936, 방어력: 479, 생명력: 2653, 속공: 25 },
-      방어: { 공격력: 522, 방어력: 657, 생명력: 3470, 속공: 19 },
-      치유: { 공격력: 785, 방어력: 485, 생명력: 3208, 속공: 19 },
-    },
-    A: {
-      공격: { 공격력: 1004, 방어력: 378, 생명력: 2279, 속공: 25 },
-      마법: { 공격력: 1004, 방어력: 378, 생명력: 2279, 속공: 25 },
-      만능: { 공격력: 893, 방어력: 446, 생명력: 2539, 속공: 21 },
-      방어: { 공격력: 514, 방어력: 593, 생명력: 3287, 속공: 16 },
-      치유: { 공격력: 745, 방어력: 452, 생명력: 3058, 속공: 16 },
-    },
-  };
-
-  const enhanceBonusByGradeAndType = {
-    S: {
-      공격: { 공격력: 84, 방어력: 32, 생명력: 187 },
-      마법: { 공격력: 84, 방어력: 32, 생명력: 187 },
-      만능: { 공격력: 74, 방어력: 36, 생명력: 208 },
-      방어: { 공격력: 41, 방어력: 47, 생명력: 271 },
-      치유: { 공격력: 62, 방어력: 38, 생명력: 250 },
-    },
-    A: {
-      공격: { 공격력: 77, 방어력: 31, 생명력: 179 },
-      마법: { 공격력: 77, 방어력: 31, 생명력: 179 },
-      만능: { 공격력: 69, 방어력: 34, 생명력: 197 },
-      방어: { 공격력: 38, 방어력: 45, 생명력: 257 },
-      치유: { 공격력: 58, 방어력: 36, 생명력: 238 },
-    },
-  };
-
-  const weaponMainStatTable = {
-    "약점 공격 확률": { base: 7, perLevel: 1.4, isPercent: true },
-    "치명타 확률": { base: 6, perLevel: 1.2, isPercent: true },
-    "치명타 피해": { base: 9, perLevel: 1.8, isPercent: true },
-    공격력: { base: 60, perLevel: 12, isPercent: false },
-    "공격력%": { base: 7, perLevel: 1.4, isPercent: true },
-    방어력: { base: 40, perLevel: 8, isPercent: false },
-    "방어력%": { base: 7, perLevel: 1.4, isPercent: true },
-    생명력: { base: 220, perLevel: 42, isPercent: false },
-    "생명력%": { base: 7, perLevel: 1.4, isPercent: true },
-    "효과 적중": { base: 7, perLevel: 1.4, isPercent: true },
-  };
-
-  const armorMainStatTable = {
-    "받는 피해 감소": { base: 4, perLevel: 0.8, isPercent: true },
-    "막기 확률": { base: 6, perLevel: 1.2, isPercent: true },
-    공격력: { base: 60, perLevel: 12, isPercent: false },
-    "공격력%": { base: 7, perLevel: 1.4, isPercent: true },
-    방어력: { base: 40, perLevel: 8, isPercent: false },
-    "방어력%": { base: 7, perLevel: 1.4, isPercent: true },
-    생명력: { base: 220, perLevel: 42, isPercent: false },
-    "생명력%": { base: 7, perLevel: 1.4, isPercent: true },
-    "효과 저항": { base: 7, perLevel: 1.4, isPercent: true },
-  };
-
-  const subStatTable = {
-    공격력: { base: 50, per3Level: 50, isPercent: false },
-    "공격력%": { base: 5, per3Level: 5, isPercent: true },
-    방어력: { base: 30, per3Level: 30, isPercent: false },
-    "방어력%": { base: 5, per3Level: 5, isPercent: true },
-    생명력: { base: 180, per3Level: 180, isPercent: false },
-    "생명력%": { base: 5, per3Level: 5, isPercent: true },
-    속공: { base: 4, per3Level: 4, isPercent: false },
-    "치명타 확률": { base: 4, per3Level: 4, isPercent: true },
-    "치명타 피해": { base: 6, per3Level: 6, isPercent: true },
-    "약점 공격 확률": { base: 5, per3Level: 5, isPercent: true },
-    "막기 확률": { base: 4, per3Level: 4, isPercent: true },
-    "효과 적중": { base: 5, per3Level: 5, isPercent: true },
-    "효과 저항": { base: 5, per3Level: 5, isPercent: true },
-  };
-
-  const setEffectTable = {
-    선봉장: {
-      "2세트": [{ stat: "공격력%", value: 15 }],
-      "4세트": [{ stat: "공격력%", value: 35 }],
-    },
-    추적자: {
-      "2세트": [{ stat: "약점 공격 확률", value: 15 }],
-      "4세트": [
-        { stat: "약점 공격 확률", value: 30 },
-        { stat: "약점 공격 피해량", value: 20 },
-      ],
-    },
-    성기사: {
-      "2세트": [{ stat: "생명력%", value: 15 }],
-      "4세트": [{ stat: "생명력%", value: 35 }],
-    },
-    수문장: {
-      "2세트": [{ stat: "막기 확률", value: 15 }],
-      "4세트": [
-        { stat: "막기 확률", value: 30 },
-        { stat: "막기 피해 감소율", value: 10 },
-      ],
-    },
-    수호자: {
-      "2세트": [{ stat: "방어력%", value: 15 }],
-      "4세트": [{ stat: "방어력%", value: 35 }],
-    },
-    암살자: {
-      "2세트": [{ stat: "치명타 확률", value: 15 }],
-      "4세트": [
-        { stat: "치명타 확률", value: 30 },
-        { stat: "방어 무시", value: 15 },
-      ],
-    },
-    복수자: {
-      "2세트": [{ stat: "주는 피해량", value: 15 }],
-      "4세트": [
-        { stat: "주는 피해량", value: 30 },
-        { stat: "보스 대상 피해량", value: 40 },
-      ],
-    },
-    주술사: {
-      "2세트": [{ stat: "효과 적중", value: 15 }],
-      "4세트": [
-        { stat: "효과 적중", value: 35 },
-        { stat: "효과 적용 확률", value: 10 },
-      ],
-    },
-    조율자: {
-      "2세트": [{ stat: "효과 저항", value: 17 }],
-      "4세트": [
-        { stat: "효과 저항", value: 35 },
-        { stat: "행동 면역", value: 1 },
-      ],
-    },
-  };
 
   function getSetCounts() {
     const counts = {};

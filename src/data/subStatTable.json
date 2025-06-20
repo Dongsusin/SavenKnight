@@ -1,0 +1,15 @@
+{
+  "공격력": { "base": 50, "per3Level": 50, "isPercent": false },
+  "공격력%": { "base": 5, "per3Level": 5, "isPercent": true },
+  "방어력": { "base": 30, "per3Level": 30, "isPercent": false },
+  "방어력%": { "base": 5, "per3Level": 5, "isPercent": true },
+  "생명력": { "base": 180, "per3Level": 180, "isPercent": false },
+  "생명력%": { "base": 5, "per3Level": 5, "isPercent": true },
+  "속공": { "base": 4, "per3Level": 4, "isPercent": false },
+  "치명타 확률": { "base": 4, "per3Level": 4, "isPercent": true },
+  "치명타 피해": { "base": 6, "per3Level": 6, "isPercent": true },
+  "약점 공격 확률": { "base": 5, "per3Level": 5, "isPercent": true },
+  "막기 확률": { "base": 4, "per3Level": 4, "isPercent": true },
+  "효과 적중": { "base": 5, "per3Level": 5, "isPercent": true },
+  "효과 저항": { "base": 5, "per3Level": 5, "isPercent": true }
+}

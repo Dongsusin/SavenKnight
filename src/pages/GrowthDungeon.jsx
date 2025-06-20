@@ -9,13 +9,66 @@ export default function GrowthDungeon() {
 
   const selectedDungeon = dungeonList.find((d) => d.id === selectedId);
   const boss = selectedDungeon?.bossStatsByStage?.[selectedStage - 1];
-
-  const skillCount = selectedDungeon?.skillCount || 4; // 기본값 4개
+  const skillCount = selectedDungeon?.skillCount || 4;
 
   useEffect(() => {
-    // skillCount에 맞춰서 visibleSkills 초기화
     setVisibleSkills(Array(skillCount).fill(true));
   }, [selectedId, selectedStage, selectedDungeon?.skillCount]);
+
+  const highlightKeywords = (text) => {
+    const goldColor = "#ffcc00";
+    const blueColor = "#00ccff";
+
+    const numberPatterns = [
+      /\d+턴/g,
+      /\d+회/g,
+      /\d+%/g,
+      /\d+번째/g,
+      /\b\d{1,3}(,\d{3})*\b/g,
+      /\b\d+\b/g,
+    ];
+
+    const buffKeywords = [
+      "화상",
+      "물리 공격력 증가",
+      "광폭화",
+      "빙결",
+      "최대 생명력 증가",
+      "기절",
+      "방어력 증가",
+      "마법 공격력 증가",
+      "감전",
+      "모든 피해 무효화",
+      "즉사",
+      "방어력 감소",
+      "관통 고정 피해",
+      "대상의 턴제 버프 감소",
+    ];
+
+    let highlighted = text;
+
+    numberPatterns.forEach((regex) => {
+      highlighted = highlighted.replace(
+        regex,
+        (match) =>
+          `<span style="color: ${goldColor}; font-weight: bold;">${match}</span>`
+      );
+    });
+
+    const sortedBuffKeywords = [...buffKeywords].sort(
+      (a, b) => b.length - a.length
+    );
+
+    sortedBuffKeywords.forEach((keyword) => {
+      const regex = new RegExp(keyword, "g");
+      highlighted = highlighted.replace(
+        regex,
+        `<span style="color: ${blueColor}; font-weight: bold;">${keyword}</span>`
+      );
+    });
+
+    return highlighted;
+  };
 
   if (!selectedDungeon || !boss) return null;
 
@@ -118,20 +171,70 @@ export default function GrowthDungeon() {
                 <div className="skill-images">
                   {[...Array(skillCount)].map((_, idx) => {
                     const num = idx + 1;
+                    const skillData = selectedDungeon.skills?.[idx];
                     const currentDungeonId = selectedId;
-                    return visibleSkills[idx] ? (
-                      <img
+                    return visibleSkills[idx] && skillData ? (
+                      <div
                         key={`${selectedDungeon.id}-${num}`}
-                        src={`/성장던전/스킬/${selectedDungeon.name}-${num}.png`}
-                        alt={`스킬 ${num}`}
-                        onError={() => {
-                          if (currentDungeonId === selectedId) {
-                            const newVisible = [...visibleSkills];
-                            newVisible[idx] = false;
-                            setVisibleSkills(newVisible);
-                          }
-                        }}
-                      />
+                        className="skill-tooltip-wrapper"
+                      >
+                        <img
+                          src={`/성장던전/스킬/${selectedDungeon.name}-${num}.png`}
+                          alt={skillData.name}
+                          onError={() => {
+                            if (currentDungeonId === selectedId) {
+                              const newVisible = [...visibleSkills];
+                              newVisible[idx] = false;
+                              setVisibleSkills(newVisible);
+                            }
+                          }}
+                        />
+                        <div className="skill-tooltip">
+                          <strong>{skillData.name}</strong>
+                          {skillData.effects?.map((e, i) => {
+                            const targetColor =
+                              e.detail === "버프"
+                                ? "#00ccff"
+                                : e.detail === "공격"
+                                ? "#ff3300"
+                                : "#ffcc00";
+                            return (
+                              <div key={i} style={{ marginBottom: "4px" }}>
+                                {e.target && (
+                                  <div
+                                    className="skill-target"
+                                    style={{
+                                      color: targetColor,
+                                      fontWeight: "bold",
+                                    }}
+                                  >
+                                    {e.target}
+                                  </div>
+                                )}
+
+                                {Array.isArray(e.effect) ? (
+                                  e.effect.map((line, idx2) => (
+                                    <div
+                                      key={idx2}
+                                      className="skill-effect-line"
+                                      dangerouslySetInnerHTML={{
+                                        __html: highlightKeywords(line),
+                                      }}
+                                    />
+                                  ))
+                                ) : (
+                                  <div
+                                    className="skill-effect"
+                                    dangerouslySetInnerHTML={{
+                                      __html: highlightKeywords(e.effect || ""),
+                                    }}
+                                  />
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
                     ) : null;
                   })}
                 </div>

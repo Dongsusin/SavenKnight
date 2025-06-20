@@ -1,0 +1,11 @@
+{
+  "받는 피해 감소": { "base": 4, "perLevel": 0.8, "isPercent": true },
+  "막기 확률": { "base": 6, "perLevel": 1.2, "isPercent": true },
+  "공격력": { "base": 60, "perLevel": 12, "isPercent": false },
+  "공격력%": { "base": 7, "perLevel": 1.4, "isPercent": true },
+  "방어력": { "base": 40, "perLevel": 8, "isPercent": false },
+  "방어력%": { "base": 7, "perLevel": 1.4, "isPercent": true },
+  "생명력": { "base": 220, "perLevel": 42, "isPercent": false },
+  "생명력%": { "base": 7, "perLevel": 1.4, "isPercent": true },
+  "효과 저항": { "base": 7, "perLevel": 1.4, "isPercent": true }
+}

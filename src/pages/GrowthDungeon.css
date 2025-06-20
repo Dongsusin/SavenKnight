@@ -252,6 +252,37 @@
   border-radius: 8px;
 }
 
+.skill-tooltip-wrapper {
+  position: relative;
+  display: inline-block;
+  margin: 4px;
+}
+
+.skill-tooltip-wrapper img {
+  width: 64px;
+  height: 64px;
+  cursor: pointer;
+}
+
+.skill-tooltip {
+  display: none;
+  position: absolute;
+  top: 70px;
+  left: 0;
+  background: rgba(0, 0, 0, 0.85);
+  color: white;
+  padding: 8px;
+  border-radius: 6px;
+  width: 220px;
+  z-index: 10;
+  white-space: normal;
+  font-size: 12px;
+}
+
+.skill-tooltip-wrapper:hover .skill-tooltip {
+  display: block;
+}
+
 @media (max-width: 786px) {
   .dungeon-top {
     display: flex;
