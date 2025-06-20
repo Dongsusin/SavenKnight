@@ -277,6 +277,9 @@
   z-index: 10;
   white-space: normal;
   font-size: 12px;
+  strong {
+    font-size: 1rem;
+  }
 }
 
 .skill-tooltip-wrapper:hover .skill-tooltip {
