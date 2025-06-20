@@ -51,7 +51,7 @@
 .card-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 12px;
+  gap: 25px;
   justify-items: center;
   margin: 2rem auto 0;
   max-width: 600px;
@@ -59,7 +59,7 @@
 
 .card {
   width: 90px;
-  height: 126px;
+  height: 140px;
   perspective: 1000px;
 }
 
@@ -101,7 +101,7 @@
 }
 
 .card-image {
-  width: 100px;
+  width: 100%;
   object-fit: contain;
   border-radius: 8px;
 }
@@ -273,17 +273,12 @@
 
   .card-grid {
     grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
   }
 
   .card {
-    width: 72px;
-    height: 72px;
-  }
-
-  .card-image {
-    width: 72px;
-    object-fit: contain;
-    border-radius: 8px;
+    width: 70px;
+    height: 100px;
   }
 
   .card-grid > .card:nth-child(10) {
@@ -323,9 +318,6 @@
 @media (max-width: 321px) {
   .card {
     width: 60px;
-  }
-
-  .card-image {
-    width: 60px;
+    height: 85px;
   }
 }
