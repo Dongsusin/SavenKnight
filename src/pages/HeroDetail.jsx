@@ -128,7 +128,14 @@ export default function HeroDetail() {
     const goldColor = "#ffcc00";
     const blueColor = "#00ccff";
 
-    const numberPatterns = [/\d+턴/g, /\d+회/g, /\d+%/g];
+    const numberPatterns = [
+      /\d+턴/g,
+      /\d+회/g,
+      /\d+%/g,
+      /\d+번째/g,
+      /\b\d{1,3}(,\d{3})*\b/g,
+      /\b\d+\b/g,
+    ];
 
     const buffKeywords = [
       "대상의 턴제 버프 감소",

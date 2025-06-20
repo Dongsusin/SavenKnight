@@ -206,6 +206,7 @@ export default function GrowthDungeon() {
                                     style={{
                                       color: targetColor,
                                       fontWeight: "bold",
+                                      fontSize: "16px",
                                     }}
                                   >
                                     {e.target}
