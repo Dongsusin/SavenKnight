@@ -120,6 +120,17 @@
   border-radius: 12px;
 }
 
+/* S급 펫 카드 글로우 효과 */
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 10px 3px rgba(255, 215, 0, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 20px 6px rgba(255, 215, 0, 1);
+  }
+}
+
+
 @keyframes glow {
   0% {
     box-shadow: 0 0 10px 3px rgba(255, 215, 0, 0.6);

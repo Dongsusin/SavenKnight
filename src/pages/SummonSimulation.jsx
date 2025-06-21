@@ -17,33 +17,6 @@ function getGradeByProbability(summonCount) {
   return "C";
 }
 
-const handleSummon = () => {
-  if (!isWishlistFullySelected(wishlist)) {
-    return;
-  }
-
-  setSummonedHeroes((prev) => prev.map((h) => ({ ...h, flipped: false })));
-
-  const newHeroes = summonTenHeroes(wishlist, false, summonCount);
-  const hasS = newHeroes.some((h) => h.grade === "S");
-  const hasPickupS = newHeroes.some(
-    (h) =>
-      h.grade === "S" &&
-      [...wishlist.group1, ...wishlist.group2].includes(h.name)
-  );
-
-  setTimeout(() => {
-    setSummonedHeroes(newHeroes);
-    setSummonCount((prev) => {
-      if (hasPickupS) return 0;
-      if (hasS && prev < 100) return 100;
-      return Math.min(prev + 10, 200);
-    });
-  }, 400);
-};
-
-
-
 function isWishlistFullySelected(wishlist) {
   return (
     wishlist.group1.length === MAX_SELECT.group1 &&
@@ -246,10 +219,6 @@ function summonTenPets(petData, summonCount) {
   return results;
 }
 
-
-
-
-
 function getWishlistGroup(hero) {
   if (hero.grade === "S" && hero.group === "스페셜") return "group1";
   if (hero.grade === "S") return "group2";
@@ -296,7 +265,7 @@ const [activeTab, setActiveTab] = useState("hero");
   setTimeout(() => {
     setSummonedPets(newPets);
     setPetSummonCount((prev) => {
-      if (hasS && prev < 100) return 100;
+      if (hasS) return 0;  // S급 나오면 초기화!
       return Math.min(prev + 10, 100);
     });
   }, 400);
@@ -464,7 +433,15 @@ const progressPercent = Math.min((summonCount / 200) * 100, 100);
       >
         <div className="card-inner">
           <div className="card-front">
-            <img src="/펫일반.png" alt="펫카드 뒷면" className="card-image" />
+            <img
+              src={
+                pet.grade === "S" || pet.grade === "A"
+                  ? "/스페셜.png"
+                  : "/펫일반.png"
+              }
+              alt="펫카드 뒷면"
+              className="card-image"
+            />
           </div>
           <div className="card-back">
             <img
@@ -478,6 +455,7 @@ const progressPercent = Math.min((summonCount / 200) * 100, 100);
     ))}
   </div>
 )}
+
 
 
 
