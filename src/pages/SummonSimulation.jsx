@@ -3,7 +3,6 @@ import heroes from "../data/heroes.json";
 import pets from "../data/pets.json";
 import "./SummonSimulation.css";
 
-// 소환 등급 확률
 function getGradeByProbability(summonCount) {
   const rand = Math.random() * 100;
 
@@ -32,8 +31,6 @@ function getHeroProbability(hero, wishlistGroups, summonCount) {
   );
 
   const isReady = isWishlistFullySelected(wishlistGroups);
-
-  // 100회 이후: 위시리스트 영웅만 등장 → 나머지 확률 0
   if (summonCount >= 100 && (grade === "S" || grade === "A")) {
     const selected =
       grade === "S"
@@ -42,7 +39,6 @@ function getHeroProbability(hero, wishlistGroups, summonCount) {
     return selected.includes(hero.name) ? (grade === "S" ? 1 / selected.length : 14 / selected.length) : 0;
   }
 
-  // 기존 확률 계산 방식 유지
   if (grade === "S") {
     const selected = [...wishlistGroups.group1, ...wishlistGroups.group2];
     const selectedCount = selected.length;
@@ -83,13 +79,11 @@ function getHeroProbability(hero, wishlistGroups, summonCount) {
 }
 
 
-// 확률 기반 영웅 선택 (위시 반영)
 function getRandomHeroByGrade(grade, wishlistGroups, summonCount) {
   let candidates = heroes.filter((h) => h.grade === grade && !h.excludeFromSummon);
 
   const wishlistReady = isWishlistFullySelected(wishlistGroups);
 
-  // 100회 이상부터는 위시리스트 영웅만 등장
   if (summonCount >= 100 && (grade === "S" || grade === "A")) {
     const selected =
       grade === "S"
@@ -99,7 +93,6 @@ function getRandomHeroByGrade(grade, wishlistGroups, summonCount) {
   }
 
   if (!wishlistReady || (grade !== "S" && grade !== "A")) {
-    // 균등 확률 처리
     const randomIndex = Math.floor(Math.random() * candidates.length);
     return candidates[randomIndex];
   }
@@ -147,7 +140,6 @@ function getRandomHeroByGrade(grade, wishlistGroups, summonCount) {
   return candidates[candidates.length - 1];
 }
 
-// 랜덤으로 펫을 뽑는 함수 추가
 function getRandomPetByGrade(grade, petData) {
   const candidates = petData.filter(p => p.grade === grade);
 
@@ -166,13 +158,11 @@ function summonTenHeroes(wishlistGroups, guaranteedS = false, summonCount = 0) {
 
   let lastHero;
 
-  // 90~100회 구간: 아무 S급 영웅 1장이 등장
   if (summonCount >= 90 && summonCount < 100) {
     const sHeroes = heroes.filter(h => h.grade === "S" && !h.excludeFromSummon);
     const randomIndex = Math.floor(Math.random() * sHeroes.length);
     lastHero = { ...sHeroes[randomIndex], flipped: false };
   } 
-  // 190~200회 구간: 픽업 S급 영웅 1장이 등장
   else if (summonCount >= 190 && summonCount < 200) {
     const pickupS = heroes.filter(
       (h) =>
@@ -183,7 +173,6 @@ function summonTenHeroes(wishlistGroups, guaranteedS = false, summonCount = 0) {
     const randomIndex = Math.floor(Math.random() * pickupS.length);
     lastHero = { ...pickupS[randomIndex], flipped: false };
   } 
-  // 나머지 구간: 보통 확률대로 마지막 1명
   else {
     const lastGrade = guaranteedS ? "S" : getGradeByProbability(summonCount);
     const hero = getRandomHeroByGrade(lastGrade, wishlistGroups, summonCount);
@@ -202,13 +191,11 @@ function summonTenPets(petData, summonCount) {
     const pet = getRandomPetByGrade(grade, petData);
     if (pet) results.push({ ...pet, flipped: false });
   }
-
-  // 마지막 1장 처리
   let lastPet;
   if (summonCount >= 90 && summonCount < 100) {
-    const sPets = petData.filter(p => p.grade === "S"); // S급 필터
+    const sPets = petData.filter(p => p.grade === "S");
     const randomIndex = Math.floor(Math.random() * sPets.length);
-    lastPet = { ...sPets[randomIndex], flipped: false }; // S급 추가
+    lastPet = { ...sPets[randomIndex], flipped: false }; 
   } else {
     const grade = getPetGradeByProbability();
     const pet = getRandomPetByGrade(grade, petData);
@@ -229,10 +216,10 @@ function getWishlistGroup(hero) {
 function getPetGradeByProbability() {
   const rand = Math.random() * 100;
 
-  if (rand < 1) return "S"; // 1% 확률로 S급
-  if (rand < 10) return "A"; // 9% 확률로 A급 (1% + 9%)
-  if (rand < 41.5) return "B"; // 31.5% 확률로 B급 (10% + 31.5%)
-  return "C"; // 나머지 58.5% 확률로 C급
+  if (rand < 1) return "S"; 
+  if (rand < 10) return "A";
+  if (rand < 41.5) return "B"; 
+  return "C"; 
 }
 
 
@@ -265,7 +252,7 @@ const [activeTab, setActiveTab] = useState("hero");
   setTimeout(() => {
     setSummonedPets(newPets);
     setPetSummonCount((prev) => {
-      if (hasS) return 0;  // S급 나오면 초기화!
+      if (hasS) return 0;
       return Math.min(prev + 10, 100);
     });
   }, 400);
@@ -327,9 +314,6 @@ const [activeTab, setActiveTab] = useState("hero");
     prev.map((p, i) => (i === idx ? { ...p, flipped: true } : p))
   );
 };
-
-
-  // 진행률 계산 (0~200회 기준, 퍼센트)
 const progressPercent = Math.min((summonCount / 200) * 100, 100);
 
   return (
@@ -384,7 +368,6 @@ const progressPercent = Math.min((summonCount / 200) * 100, 100);
       </div>
 
 
-      {/* 영웅 카드 */}
 {activeTab === "hero" && (
   <div className="card-grid">
     {summonedHeroes.map((hero, idx) => (
@@ -420,7 +403,6 @@ const progressPercent = Math.min((summonCount / 200) * 100, 100);
   </div>
 )}
 
-{/* 펫 카드 */}
 {activeTab === "pet" && (
   <div className="card-grid">
     {summonedPets.map((pet, idx) => (
@@ -465,7 +447,6 @@ const progressPercent = Math.min((summonCount / 200) * 100, 100);
         <div className="wishlist-tooltip">
           <h3>위시리스트 선택</h3>
 
-          {/* 그룹 1 */}
           <div className="wishlist-group">
             <h4 className="wishlist-group-title">
               그룹 1: 스페셜 S급 (최대 2명)
@@ -500,7 +481,6 @@ const progressPercent = Math.min((summonCount / 200) * 100, 100);
             </div>
           </div>
 
-          {/* 그룹 2 */}
           <div className="wishlist-group">
             <h4 className="wishlist-group-title">
               그룹 2: 일반 S급 (최대 3명)
@@ -535,7 +515,6 @@ const progressPercent = Math.min((summonCount / 200) * 100, 100);
             </div>
           </div>
 
-          {/* 그룹 3 */}
           <div className="wishlist-group">
             <h4 className="wishlist-group-title">그룹 3: A급 (최대 4명)</h4>
             <div className="wishlist-grid">

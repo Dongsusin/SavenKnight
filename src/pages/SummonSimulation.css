@@ -1,4 +1,3 @@
-/* 기본 페이지 스타일 */
 .summon-page {
   background-color: #1a1a1a;
   color: #fff;
@@ -53,7 +52,6 @@
 }
 
 
-/* 카드 그리드 */
 .card-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -111,8 +109,6 @@
   object-fit: contain;
   border-radius: 8px;
 }
-
-/* S급 효과 */
 .card.grade-S {
   border: 3px solid gold;
   box-shadow: 0 0 15px 5px rgba(255, 215, 0, 0.8);
@@ -120,7 +116,6 @@
   border-radius: 12px;
 }
 
-/* S급 펫 카드 글로우 효과 */
 @keyframes glow {
   0% {
     box-shadow: 0 0 10px 3px rgba(255, 215, 0, 0.6);
@@ -140,7 +135,6 @@
   }
 }
 
-/* 진행도 */
 .progress-container {
   width: 100%;
   max-width: 400px;
@@ -174,7 +168,6 @@
   pointer-events: none;
 }
 
-/* 위시리스트 툴팁 */
 .wishlist-tooltip {
   position: absolute;
   top: 90px;
@@ -217,7 +210,6 @@
   color: #ffda44;
 }
 
-/* 캐릭터 아이템 (중앙 정렬) */
 .wishlist-grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
@@ -270,7 +262,6 @@
   text-align: center;
 }
 
-/* 모바일 대응 */
 @media (max-width: 426px) {
   .summon-title {
     font-size: 1.5rem;

@@ -208,7 +208,6 @@
 }
 
 .dungeon-bottom {
-  margin-top: 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -301,8 +300,8 @@
     left: 50%;
     transform: translateX(-50%);
     width: auto;
-    min-width: 35vw;
-    max-width: 85vw;
+    min-width: 30vw;
+    max-width: 75vw;
     font-size: 12px;
     padding: 4px;
   }

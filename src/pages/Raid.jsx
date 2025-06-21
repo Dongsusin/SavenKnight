@@ -157,7 +157,7 @@ export default function Raid() {
 
             <div className="skill-section">
               <p>보스 스킬</p>
-              <div className="skill-images">
+              <div className="raid-skill-images">
                 {(selectedRaid.skills || []).map((skill, idx) =>
                   visibleSkills[idx] ? (
                     <div key={idx} className="skill-tooltip-wrapper">

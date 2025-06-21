@@ -274,8 +274,6 @@ export default function HeroDetail() {
       const isWeapon = equip.type === "무기";
       const isArmor = equip.type === "방어구";
       const level = equip.level ?? 0;
-
-      // 무기 및 방어구 기본 스탯
       if (isWeapon && statKey === "공격력") {
         flatBonus += 64 + 16 * level;
       }
@@ -283,8 +281,6 @@ export default function HeroDetail() {
         if (statKey === "방어력") flatBonus += 39 + 10 * level;
         if (statKey === "생명력") flatBonus += 224 + 57 * level;
       }
-
-      // 선택된 주스탯/부스탯
       if (equip.stats?.[statKey]) {
         flatBonus += equip.stats[statKey];
       }
@@ -316,7 +312,6 @@ export default function HeroDetail() {
         }
       });
 
-      // ✅ 장신구 기본 보너스는 반영
       if (equip.type === "장신구") {
         const accessoryBonus = getAccessoryBonus(equip);
         if (!accessoryBonus) return;
@@ -327,7 +322,6 @@ export default function HeroDetail() {
       }
     });
 
-    // 세트 효과
     const setCounts = getSetCounts();
     Object.entries(setCounts).forEach(([setName, count]) => {
       const effect = setEffectTable[setName];

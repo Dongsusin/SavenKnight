@@ -1,4 +1,3 @@
-// Dex.jsx (펫 스킬 툴팁 멀티라인 지원)
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import heroes from "../data/heroes.json";
@@ -7,7 +6,6 @@ import "./Dex.css";
 
 const GROUPS = ["스페셜", "일반", "아소드", "아이사", "기타", "펫"];
 
-// 1. highlightKeywords 함수 추가 (컴포넌트 안 or 밖)
 const highlightKeywords = (text) => {
   const goldColor = "#ffcc00";
   const blueColor = "#00ccff";
@@ -103,7 +101,7 @@ export default function Dex() {
                     <div key={entry.id} className="hero-card">
                       <img src={imagePath} alt={entry.name} className="image" />
                       {skillPath && (
-                        <div className="skill-tooltip-wrapper">
+                        <div className="pet-skill-tooltip-wrapper">
                           <img
                             src={skillPath}
                             alt={entry.name}

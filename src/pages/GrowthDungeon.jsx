@@ -74,7 +74,6 @@ export default function GrowthDungeon() {
 
   return (
     <div className="growth-container page">
-      {/* 던전 선택 탭 */}
       <div className="dungeon-list">
         {dungeonList.map((dungeon) => (
           <div
@@ -93,7 +92,6 @@ export default function GrowthDungeon() {
 
       <div className="dungeon-detail">
         <div className="dungeon-info">
-          {/* 보스 이미지 + 스탯 */}
           <div className="dungeon-top">
             <div className="dungeon-image">
               <img src={selectedDungeon.bg} alt="보스 이미지" />
@@ -148,7 +146,6 @@ export default function GrowthDungeon() {
             </div>
           </div>
 
-          {/* 단계 선택 + 스킬 */}
           <div className="dungeon-bottom">
             <div className="stage-skill-wrapper">
               <div className="stage">
@@ -243,7 +240,6 @@ export default function GrowthDungeon() {
             </div>
           </div>
 
-          {/* 보상 영역 */}
           <div className="reward-section">
             <p>획득 가능 보상</p>
             <div className="reward-text">

@@ -1,4 +1,4 @@
-/* ========== 공통 레이아웃 ========== */
+
 .hero-dex {
   background-color: #1a1a1a;
   color: #fff;
@@ -6,7 +6,6 @@
   position: relative;
 }
 
-/* ========== 사이드바 (상단 고정 탭) ========== */
 .hero-dex-sidebar {
   display: flex;
   justify-content: center;
@@ -51,7 +50,6 @@
   padding-bottom: 0.2rem;
 }
 
-/* ========== 메인 콘텐츠 영역 ========== */
 .hero-dex-content {
   flex: 1;
   padding: 2rem;
@@ -69,7 +67,6 @@
   padding-bottom: 0.5rem;
 }
 
-/* ========== 카테고리 섹션 ========== */
 .category-section {
   width: 100vw;
   margin-left: calc(-50vw + 50%);
@@ -93,7 +90,6 @@
   margin: 0 auto 1rem;
 }
 
-/* ========== 카드 그리드 ========== */
 .hero-cards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -107,7 +103,6 @@
   justify-content: center;
 }
 
-/* ========== 카드 공통 스타일 (영웅/펫) ========== */
 .hero-card {
   width: 150px;
   flex-shrink: 0;
@@ -128,11 +123,20 @@
   box-shadow: 0 0 10px #ffd700, 0 0 20px #ffea70;
 }
 
-/* ========== 펫 전용 이름 텍스트 ========== */
 .pet-name {
   font-size: 1rem;
   color: #ffcc00;
   margin-top: 0.3rem;
+}
+
+.pet-skill-tooltip-wrapper {
+  position: relative;
+  display: inline-block;
+  margin: 4px;
+}
+
+.pet-skill-tooltip-wrapper:hover .skill-tooltip {
+  display: block;
 }
 
 .pet-skill-icon {
@@ -152,10 +156,6 @@
   box-shadow: 0 0 6px #ffcc00aa;
 }
 
-
-
-
-/* ========== 반응형 ========== */
 @media (max-width: 426px) {
   .hero-cards {
     grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
