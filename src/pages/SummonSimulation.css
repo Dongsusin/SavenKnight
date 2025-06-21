@@ -47,6 +47,12 @@
   color: #000;
 }
 
+.summon-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+
 /* 카드 그리드 */
 .card-grid {
   display: grid;

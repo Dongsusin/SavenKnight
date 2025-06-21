@@ -3,13 +3,45 @@ import heroes from "../data/heroes.json";
 import "./SummonSimulation.css";
 
 // 소환 등급 확률
-function getGradeByProbability() {
+function getGradeByProbability(summonCount) {
   const rand = Math.random() * 100;
+
+  if (summonCount >= 200) {
+    return "S"; 
+  }
+
   if (rand < 1) return "S";
   if (rand < 15) return "A";
   if (rand < 55) return "B";
   return "C";
 }
+
+const handleSummon = () => {
+  if (!isWishlistFullySelected(wishlist)) {
+    return;
+  }
+
+  setSummonedHeroes((prev) => prev.map((h) => ({ ...h, flipped: false })));
+
+  const newHeroes = summonTenHeroes(wishlist, false, summonCount);
+  const hasS = newHeroes.some((h) => h.grade === "S");
+  const hasPickupS = newHeroes.some(
+    (h) =>
+      h.grade === "S" &&
+      [...wishlist.group1, ...wishlist.group2].includes(h.name)
+  );
+
+  setTimeout(() => {
+    setSummonedHeroes(newHeroes);
+    setSummonCount((prev) => {
+      if (hasPickupS) return 0;
+      if (hasS && prev < 100) return 100;
+      return Math.min(prev + 10, 200);
+    });
+  }, 400);
+};
+
+
 
 function isWishlistFullySelected(wishlist) {
   return (
@@ -19,12 +51,24 @@ function isWishlistFullySelected(wishlist) {
   );
 }
 
-function getHeroProbability(hero, wishlistGroups) {
+function getHeroProbability(hero, wishlistGroups, summonCount) {
   const grade = hero.grade;
   const candidates = heroes.filter(
     (h) => h.grade === grade && !h.excludeFromSummon
   );
 
+  const isReady = isWishlistFullySelected(wishlistGroups);
+
+  // 100회 이후: 위시리스트 영웅만 등장 → 나머지 확률 0
+  if (summonCount >= 100 && (grade === "S" || grade === "A")) {
+    const selected =
+      grade === "S"
+        ? [...wishlistGroups.group1, ...wishlistGroups.group2]
+        : wishlistGroups.group3;
+    return selected.includes(hero.name) ? (grade === "S" ? 1 / selected.length : 14 / selected.length) : 0;
+  }
+
+  // 기존 확률 계산 방식 유지
   if (grade === "S") {
     const selected = [...wishlistGroups.group1, ...wishlistGroups.group2];
     const selectedCount = selected.length;
@@ -36,12 +80,10 @@ function getHeroProbability(hero, wishlistGroups) {
     const remainingWeight = 1 - selectedCount * selectedWeight;
     const otherWeight = otherCount > 0 ? remainingWeight / otherCount : 0;
 
-    // 조건 충족 시 위시 확률, 아니면 균등
-    const isReady = isWishlistFullySelected(wishlistGroups);
     if (isReady) {
       return selected.includes(hero.name) ? selectedWeight : otherWeight;
     } else {
-      return 1 / candidates.length; // 균등 확률 (1% 내에서)
+      return 1 / candidates.length;
     }
   }
 
@@ -56,25 +98,31 @@ function getHeroProbability(hero, wishlistGroups) {
     const remainingWeight = 14 - selectedCount * selectedWeight;
     const otherWeight = otherCount > 0 ? remainingWeight / otherCount : 0;
 
-    const isReady = isWishlistFullySelected(wishlistGroups);
     if (isReady) {
       return selected.includes(hero.name) ? selectedWeight : otherWeight;
     } else {
-      return 14 / candidates.length; // 균등 확률
+      return 14 / candidates.length;
     }
   }
 
-  return null; // B, C는 확률 표시 X
+  return null;
 }
 
+
 // 확률 기반 영웅 선택 (위시 반영)
-function getRandomHeroByGrade(grade, wishlistGroups) {
-  const candidates = heroes.filter(
-    (h) => h.grade === grade && !h.excludeFromSummon
-  );
-  if (candidates.length === 0) return null;
+function getRandomHeroByGrade(grade, wishlistGroups, summonCount) {
+  let candidates = heroes.filter((h) => h.grade === grade && !h.excludeFromSummon);
 
   const wishlistReady = isWishlistFullySelected(wishlistGroups);
+
+  // 100회 이상부터는 위시리스트 영웅만 등장
+  if (summonCount >= 100 && (grade === "S" || grade === "A")) {
+    const selected =
+      grade === "S"
+        ? [...wishlistGroups.group1, ...wishlistGroups.group2]
+        : wishlistGroups.group3;
+    candidates = candidates.filter((h) => selected.includes(h.name));
+  }
 
   if (!wishlistReady || (grade !== "S" && grade !== "A")) {
     // 균등 확률 처리
@@ -125,21 +173,46 @@ function getRandomHeroByGrade(grade, wishlistGroups) {
   return candidates[candidates.length - 1];
 }
 
-function summonTenHeroes(wishlistGroups, guaranteedS = false) {
+function summonTenHeroes(wishlistGroups, guaranteedS = false, summonCount = 0) {
   const results = [];
 
   for (let i = 0; i < 9; i++) {
-    const grade = getGradeByProbability();
-    const hero = getRandomHeroByGrade(grade, wishlistGroups);
+    const grade = getGradeByProbability(summonCount);
+    const hero = getRandomHeroByGrade(grade, wishlistGroups, summonCount);
     if (hero) results.push({ ...hero, flipped: false });
   }
 
-  const lastGrade = guaranteedS ? "S" : getGradeByProbability();
-  const lastHero = getRandomHeroByGrade(lastGrade, wishlistGroups);
-  if (lastHero) results.push({ ...lastHero, flipped: false });
+  let lastHero;
 
+  // 90~100회 구간: 아무 S급 영웅 1장이 등장
+  if (summonCount >= 90 && summonCount < 100) {
+    const sHeroes = heroes.filter(h => h.grade === "S" && !h.excludeFromSummon);
+    const randomIndex = Math.floor(Math.random() * sHeroes.length);
+    lastHero = { ...sHeroes[randomIndex], flipped: false };
+  } 
+  // 190~200회 구간: 픽업 S급 영웅 1장이 등장
+  else if (summonCount >= 190 && summonCount < 200) {
+    const pickupS = heroes.filter(
+      (h) =>
+        h.grade === "S" &&
+        !h.excludeFromSummon &&
+        ([...wishlistGroups.group1, ...wishlistGroups.group2].includes(h.name))
+    );
+    const randomIndex = Math.floor(Math.random() * pickupS.length);
+    lastHero = { ...pickupS[randomIndex], flipped: false };
+  } 
+  // 나머지 구간: 보통 확률대로 마지막 1명
+  else {
+    const lastGrade = guaranteedS ? "S" : getGradeByProbability(summonCount);
+    const hero = getRandomHeroByGrade(lastGrade, wishlistGroups, summonCount);
+    lastHero = hero ? { ...hero, flipped: false } : null;
+  }
+
+  if (lastHero) results.push(lastHero);
   return results;
 }
+
+
 
 function getWishlistGroup(hero) {
   if (hero.grade === "S" && hero.group === "스페셜") return "group1";
@@ -165,16 +238,27 @@ export default function SummonSimulation() {
   });
 
   const handleSummon = () => {
-    setSummonedHeroes((prev) => prev.map((h) => ({ ...h, flipped: false })));
-    const guaranteedS = summonCount >= 9;
-    const newHeroes = summonTenHeroes(wishlist, guaranteedS);
-    const hasS = newHeroes.some((h) => h.grade === "S");
+  setSummonedHeroes((prev) => prev.map((h) => ({ ...h, flipped: false })));
 
-    setTimeout(() => {
-      setSummonedHeroes(newHeroes);
-      setSummonCount((prev) => (hasS ? 0 : prev + 1));
-    }, 400);
-  };
+  const newHeroes = summonTenHeroes(wishlist, false, summonCount);
+  const hasS = newHeroes.some((h) => h.grade === "S");
+  const hasPickupS = newHeroes.some(
+    (h) =>
+      h.grade === "S" &&
+      [...wishlist.group1, ...wishlist.group2].includes(h.name)
+  );
+
+  setTimeout(() => {
+    setSummonedHeroes(newHeroes);
+    setSummonCount((prev) => {
+  if (hasPickupS) return 0;
+  if (hasS && prev < 100) return 100;
+  return Math.min(prev + 10, 200);
+});
+
+  }, 400);
+};
+
 
   const handleFlip = (idx) => {
     setSummonedHeroes((prev) =>
@@ -201,16 +285,22 @@ export default function SummonSimulation() {
     }
   };
 
-  const progressPercent = (summonCount / 10) * 100;
+  // 진행률 계산 (0~200회 기준, 퍼센트)
+const progressPercent = Math.min((summonCount / 200) * 100, 100);
 
   return (
     <div className="summon-page page">
       <h2 className="summon-title">소환 시뮬레이션</h2>
 
       <div className="button-row">
-        <button className="summon-button" onClick={handleSummon}>
-          10회 소환
-        </button>
+        <button
+  className="summon-button"
+  onClick={handleSummon}
+  disabled={!isWishlistFullySelected(wishlist)}
+>
+  10회 소환
+</button>
+
         <button
           className="wishlist-toggle-button"
           onClick={() => setShowWishlist((prev) => !prev)}
@@ -224,7 +314,7 @@ export default function SummonSimulation() {
           className="progress-bar"
           style={{ width: `${progressPercent}%` }}
         />
-        <div className="progress-text">{`${summonCount * 10}/100`}</div>
+        <div className="progress-text">{`${summonCount}/200`}</div>
       </div>
 
       <div className="card-grid">
@@ -279,7 +369,7 @@ export default function SummonSimulation() {
                 )
                 .map((hero) => {
                   const selected = wishlist.group1.includes(hero.name);
-                  const prob = getHeroProbability(hero, wishlist);
+                  const prob = getHeroProbability(hero, wishlist, summonCount);
                   return (
                     <div key={hero.name} className="wishlist-item">
                       <img
@@ -314,7 +404,7 @@ export default function SummonSimulation() {
                 )
                 .map((hero) => {
                   const selected = wishlist.group2.includes(hero.name);
-                  const prob = getHeroProbability(hero, wishlist);
+                  const prob = getHeroProbability(hero, wishlist, summonCount);
                   return (
                     <div key={hero.name} className="wishlist-item">
                       <img
@@ -342,7 +432,7 @@ export default function SummonSimulation() {
                 .filter((h) => h.grade === "A" && !h.excludeFromSummon)
                 .map((hero) => {
                   const selected = wishlist.group3.includes(hero.name);
-                  const prob = getHeroProbability(hero, wishlist);
+                  const prob = getHeroProbability(hero, wishlist, summonCount);
                   return (
                     <div key={hero.name} className="wishlist-item">
                       <img
@@ -366,7 +456,7 @@ export default function SummonSimulation() {
 
       {!isWishlistFullySelected(wishlist) && (
         <div className="wishlist-warning">
-          ⚠️ 모든 그룹에서 정확한 수만큼 선택해야 위시 확률이 적용됩니다.
+          ⚠️ 위시리스트를 선택해주세요.
         </div>
       )}
     </div>
