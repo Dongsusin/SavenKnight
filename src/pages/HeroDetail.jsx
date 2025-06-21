@@ -365,6 +365,8 @@ export default function HeroDetail() {
       label: item.specialEffect || null,
     };
   };
+  const [youtubeOpen, setYoutubeOpen] = useState(false);
+
 
   return (
     <div className="hero-detail page">
@@ -391,6 +393,14 @@ export default function HeroDetail() {
       <section className="hero-info">
         <div className="info-left">
           <h2>{hero.name}</h2>
+          {hero.youtube && (
+            <button
+              onClick={() => setYoutubeOpen(true)}
+              className="youtube-button"
+            >
+              영웅 PV
+            </button>
+          )}
           <p className="info-category">{hero.category}</p>
           <img src={imagePath} alt={hero.name} className="main-image" />
           <p className="info-title">{hero.title}</p>
@@ -1369,6 +1379,24 @@ export default function HeroDetail() {
               })()}
             </div>
           )}
+
+          {youtubeOpen && (
+              <div className="youtube-popup-overlay" onClick={() => setYoutubeOpen(false)}>
+                <div className="youtube-popup" onClick={(e) => e.stopPropagation()}>
+                  <button className="close-button" onClick={() => setYoutubeOpen(false)}>✖</button>
+                  <iframe
+                    width="560"
+                    height="315"
+                    src={hero.youtube}
+                    title="YouTube video player"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                </div>
+              </div>
+            )}
+
         </div>
       </section>
     </div>

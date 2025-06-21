@@ -5,6 +5,7 @@
     "group": "스페셜",
     "grade": "S",
     "type": "방어",
+    "youtube": "https://www.youtube.com/embed/OonjleriOVI?si=aapDsP1lwGA03_wT",
     "transcendBonus": [
       { "stat": "방어력", "value": 12 },
       { "stat": "방어력", "value": 6 },
@@ -84,6 +85,7 @@
     "group": "스페셜",
     "grade": "S",
     "type": "만능",
+    "youtube": "https://www.youtube.com/embed/aB5RO_EvRT8?si=kw-XN4Q-sghV_SPa",
     "transcendBonus": [
       { "stat": "공격력", "value": 12 },
       { "stat": "공격력", "value": 6 },
@@ -163,6 +165,7 @@
     "group": "스페셜",
     "grade": "S",
     "type": "만능",
+     "youtube": "https://www.youtube.com/embed/lpCCxFjBVXs?si=gynLKOv-RALcXljR",
     "transcendBonus": [
       { "stat": "공격력", "value": 12 },
       { "stat": "공격력", "value": 6 },
@@ -250,6 +253,7 @@
     "group": "스페셜",
     "grade": "S",
     "type": "공격",
+    "youtube": "https://www.youtube.com/embed/_61N2S7MV30?si=DMYAnYxUhbD0-Foz",
     "transcendBonus": [
       { "stat": "공격력", "value": 12 },
       { "stat": "공격력", "value": 6 },
@@ -336,6 +340,7 @@
     "group": "스페셜",
     "grade": "S",
     "type": "만능",
+    "youtube": "https://www.youtube.com/embed/9o0NqifUIrI?si=G2uY7fgNuzhCzwta",
     "transcendBonus": [
       { "stat": "방어력", "value": 12 },
       { "stat": "방어력", "value": 6 },
@@ -442,6 +447,7 @@
     "group": "스페셜",
     "grade": "S",
     "type": "만능",
+    "youtube": "https://www.youtube.com/embed/xST7BL3NoYM?si=PUMLbZ6blPyxKUfL",
     "transcendBonus": [
       { "stat": "공격력", "value": 12 },
       { "stat": "공격력", "value": 6 },
@@ -539,6 +545,7 @@
     "group": "스페셜",
     "grade": "S",
     "type": "만능",
+    "youtube": "https://www.youtube.com/embed/uyU-r8nh0sA?si=mLO7K56gib5moF5y",
     "transcendBonus": [
       { "stat": "공격력", "value": 12 },
       { "stat": "공격력", "value": 6 },
@@ -620,6 +627,7 @@
     "group": "스페셜",
     "grade": "S",
     "type": "마법",
+    "youtube": "https://www.youtube.com/embed/etB--_9ChFw?si=jy0D9rcIM5d25dJH",
     "transcendBonus": [
       { "stat": "공격력", "value": 12 },
       { "stat": "공격력", "value": 6 },
@@ -700,6 +708,7 @@
     "group": "스페셜",
     "grade": "S",
     "type": "공격",
+    "youtube": "https://www.youtube.com/embed/E0RNQxitvRo?si=icX2eJkUViid7QGk",
     "excludeFromSummon": true,
     "transcendBonus": [
       { "stat": "공격력", "value": 12 },
@@ -805,6 +814,7 @@
     "group": "스페셜",
     "grade": "S",
     "type": "치유",
+    "youtube": "https://www.youtube.com/embed/n_57XYC7RlM?si=0Aq1XXxW4ODB3d0_",
     "excludeFromSummon": true,
     "transcendBonus": [
       { "stat": "방어력", "value": 12 },
@@ -890,6 +900,7 @@
     "group": "스페셜",
     "grade": "S",
     "type": "마법",
+    "youtube": "https://www.youtube.com/embed/iDre1B2VKo4?si=KySO3FxQTEMDwZfM",
     "excludeFromSummon": true,
     "transcendBonus": [
       { "stat": "공격력", "value": 12 },
@@ -970,6 +981,7 @@
     "group": "스페셜",
     "grade": "S",
     "type": "만능",
+    "youtube": "https://www.youtube.com/embed/ibfSpdseLRE?si=tQLnFHO9Zz008S2S",
     "transcendBonus": [
       { "stat": "공격력", "value": 12 },
       { "stat": "공격력", "value": 6 },
@@ -1054,6 +1066,7 @@
     "group": "스페셜",
     "grade": "S",
     "type": "공격",
+    "youtube": "https://www.youtube.com/embed/o2XgDY-Sa64?si=Suh1qNCrQmTL2Dxo",
     "transcendBonus": [
       { "stat": "공격력", "value": 12 },
       { "stat": "공격력", "value": 6 },
@@ -1127,6 +1140,7 @@
     "group": "스페셜",
     "grade": "S",
     "type": "마법",
+    "youtube": "https://www.youtube.com/embed/d_3vkvDTh_Q?si=WRf2GGMwWh0fAiWX",
     "transcendBonus": [
       { "stat": "공격력", "value": 12 },
       { "stat": "공격력", "value": 6 },
@@ -1203,6 +1217,7 @@
     "group": "스페셜",
     "grade": "S",
     "type": "공격",
+    "youtube": "https://www.youtube.com/embed/_aSDFxuZOqM?si=fce8xNzoG9loC31Y",
     "transcendBonus": [
       { "stat": "공격력", "value": 12 },
       { "stat": "공격력", "value": 6 },
@@ -1277,6 +1292,7 @@
     "group": "스페셜",
     "grade": "S",
     "type": "마법",
+    "youtube": "https://www.youtube.com/embed/aD_PiRg3W64?si=WaCYvy21cXYgEZaq",
     "transcendBonus": [
       { "stat": "공격력", "value": 12 },
       { "stat": "공격력", "value": 6 },
@@ -1353,6 +1369,7 @@
     "group": "일반",
     "grade": "A",
     "type": "방어",
+    "youtube": "https://www.youtube.com/embed/RrRM7rW_Oho?si=WKvEJF2M2iTHb1hy",
     "transcendBonus": [
       { "stat": "방어력", "value": 9 },
       { "stat": "방어력", "value": 4.5 },
@@ -1439,6 +1456,7 @@
     "type": "치유",
     "category": "에반원정대",
     "title": "성녀",
+     "youtube": "https://www.youtube.com/embed/LHD6Ib-5M90?si=mVamZGN0XT7-_wGe",
     "skilltitle": ["기본공격", "회복", "소생", "축복의 소생"],
     "skillcooldown": [0, 83, 90, 0],
     "skills": [

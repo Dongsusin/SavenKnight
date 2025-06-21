@@ -683,6 +683,67 @@
   color: #77dd77;
 }
 
+.youtube-button {
+  display: inline-block;
+  color: #ffcc00;
+  text-decoration: none;
+  font-size: 1rem;
+  border: 1px solid #ffcc00;
+  background-color: transparent;
+  padding: 0.4rem 1rem;
+  border-radius: 6px;
+  transition: background-color 0.2s, color 0.2s;
+  cursor: pointer;
+}
+
+.youtube-button:hover {
+  background-color: #ffcc00;
+  color: #000;
+}
+
+.youtube-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.youtube-popup {
+  background-color: #000;
+  padding: 10px;
+  border-radius: 10px;
+  position: relative;
+  max-width: 100%;
+  width: 560px;
+  box-sizing: border-box;
+}
+
+.youtube-popup iframe {
+  width: 100%;
+  height: 315px;
+  border-radius: 10px;
+}
+
+.close-button {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: white;
+  border: none;
+  border-radius: 50%;
+  padding: 5px 8px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
 @media (max-width: 768px) {
   .hero-info {
     flex-direction: column;
@@ -803,6 +864,25 @@
 
   .equipment-item img {
     width: 70px;
+  }
+
+  .youtube-popup {
+    width: 100%;
+    padding: 0;
+  }
+
+  .youtube-popup iframe {
+    width: 100%;
+    height: calc((100vw - 20px) * 9 / 16);
+  }
+
+  .close-button {
+    top: 5px;
+    right: 5px;
+    background: white;
+    padding: 5px 10px;
+    font-size: 18px;
+    z-index: 1001;
   }
 }
 
