@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import HeroSlide from "../components/HeroSlide";
+import PetSlide from "../components/PetSlide";
 import "./Home.css";
 
 export default function Home() {
@@ -68,7 +69,7 @@ export default function Home() {
         </section>
         <section className="home-panel">
           <h2>펫 도감</h2>
-          <div className="slide-placeholder">[펫 슬라이드]</div>
+          <PetSlide />
         </section>
       </main>
 

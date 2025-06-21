@@ -10,6 +10,7 @@
   background-color: #1a1a1a;
   margin-top: 70px;
   min-height: calc(100vh - 70px);
+  padding: 10px;
 }
 
 @media (max-width: 426px) {
