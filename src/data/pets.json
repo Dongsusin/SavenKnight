@@ -4,6 +4,7 @@
     "name": "루",
     "group": "축복의 천사",
     "rarity": "세븐나이츠",
+    "grade": "S",
     "skillDescription": "방어력 증가 22% [상시]"
   },
   {
@@ -11,6 +12,7 @@
     "name": "이린",
     "group": "사냥터의 왕",
     "rarity": "세븐나이츠",
+    "grade": "S",
     "skillDescription": "물리 공격력 증가 21% [상시]"
   },
   {
@@ -18,6 +20,7 @@
     "name": "리첼",
     "group": "고귀한 귀족",
     "rarity": "세븐나이츠",
+    "grade": "S",
     "skillDescription": ["약점 공격 확률 증가 13% [상시]","피해량 증가 8% [상시]"]
   },
   {
@@ -25,6 +28,7 @@
     "name": "크리",
     "group": "복수의 악마",
     "rarity": "세븐나이츠",
+    "grade": "S",
     "skillDescription": ["효과 적중률 증가 19% [상시]","모든 공격력 증가 12% [상시]"]
   },
   {
@@ -32,6 +36,7 @@
     "name": "파이크",
     "group": "따뜻한 눈보라",
     "rarity": "세븐나이츠",
+    "grade": "S",
     "skillDescription": ["효과 저항 증가 19% [상시]","방어력 증가 13% [상시]"]
   },
   {
@@ -39,6 +44,7 @@
     "name": "델로",
     "group": "작은 사신",
     "rarity": "세븐나이츠",
+    "grade": "S",
     "skillDescription": "치명타 확률 증가 21% [상시]"
   },
   {
@@ -46,6 +52,7 @@
     "name": "연지",
     "group": "잠을 인도하는",
     "rarity": "(구)사황",
+    "grade": "S",
     "skillDescription": "마법 공격력 증가 21% [상시]"
   },
   {
@@ -53,6 +60,7 @@
     "name": "아이반",
     "group": "보호의",
     "rarity": "에반원정대",
+    "grade": "B",
     "skillDescription": "최대 생명력 증가 11% [상시]"
   },
   {
@@ -60,6 +68,7 @@
     "name": "카렌",
     "group": "작은 성녀",
     "rarity": "에반원정대",
+    "grade": "B",
     "skillDescription": "주는 회복량 증가 14% [상시]"
   },
   {
@@ -67,6 +76,7 @@
     "name": "리쿠",
     "group": "분노한 목탁",
     "rarity": "에반원정대",
+    "grade": "B",
     "skillDescription": "막기 확률 증가 11% [상시]"
   },
   {
@@ -74,6 +84,7 @@
     "name": "쥬시",
     "group": "찬란한 날개",
     "rarity": "에반원정대",
+    "grade": "C",
     "skillDescription": "물리 공격력 증가 9% [상시]"
   },
   {
@@ -81,6 +92,7 @@
     "name": "헬레핀",
     "group": "발키리의 그리폰",
     "rarity": "에반원정대",
+    "grade": "A",
      "skillDescription": "막기 확률 증가 17% [상시]"
   },
   {
@@ -88,6 +100,7 @@
     "name": "헤리핀",
     "group": "발키리의 그리폰",
     "rarity": "에반원정대",
+    "grade": "C",
     "skillDescription": "방어력 증가 8% [상시]"
   },
   {
@@ -95,6 +108,7 @@
     "name": "제니퍼",
     "group": "스니퍼의 친구",
     "rarity": "에반원정대",
+    "grade": "C",
     "skillDescription": "최대 생명력 증가 9% [상시]"
   },
   {
@@ -102,6 +116,7 @@
     "name": "유우",
     "group": "여우 구슬",
     "rarity": "모험가",
+    "grade": "C",
     "skillDescription": "마법 공격력 증가 9% [상시]"
   },
   {
@@ -109,6 +124,7 @@
     "name": "크로아",
     "group": "심연의 상징",
     "rarity": "모험가",
+    "grade": "A",
     "skillDescription": "모든 공격력 증가 12% [상시]"
   },
   {
@@ -116,6 +132,7 @@
     "name": "파라곤",
     "group": "하늘의 눈",
     "rarity": "테라영지",
+    "grade": "A",
     "skillDescription": "방어력 증가 17% [상시]"
   },
   {
@@ -123,6 +140,7 @@
     "name": "노트",
     "group": "대도서관",
     "rarity": "테라영지",
+    "grade": "A",
     "skillDescription": "마법 공격력 증가 17% [상시]"
   },
   {
@@ -130,6 +148,7 @@
     "name": "베이",
     "group": "베테랑 해결사",
     "rarity": "테라영지",
+    "grade": "B",
     "skillDescription": "약점 공격 확률 증가 11% [상시]"
   },
   {
@@ -137,6 +156,7 @@
     "name": "니키",
     "group": "완전체 쥐",
     "rarity": "성십자단",
+    "grade": "A",
     "skillDescription": "효과 적중 증가 25% [상시]"
   },
   {
@@ -144,6 +164,7 @@
     "name": "세리",
     "group": "세인의 친구",
     "rarity": "성십자단",
+    "grade": "A",
     "skillDescription": "물리 공격력 증가 17% [상시]"
   },
   {
@@ -151,6 +172,7 @@
     "name": "R-rl",
     "group": "완성형",
     "rarity": "성십자단",
+    "grade": "B",
     "skillDescription": "효과 적중 증가 16% [상시]"
   },
    {
@@ -172,6 +194,7 @@
     "name": "라구리",
     "group": "두꺼비 영웅",
     "rarity": "아소드펫",
+    "grade": "C",
     "skillDescription": "효과 저항 증가 13% [상시]"
   },
   {
@@ -193,6 +216,7 @@
     "name": "니나",
     "group": "감동의 정화",
     "rarity": "아이사펫",
+    "grade": "A",
     "skillDescription": "치명타 확률 증가 17% [상시]"
   },
   {
@@ -200,6 +224,7 @@
     "name": "풍소협",
     "group": "호위 무사",
     "rarity": "아이사펫",
+    "grade": "A",
     "skillDescription": "치명타 피해량 증가 25% [상시]"
   },
   {
@@ -207,6 +232,7 @@
     "name": "뮤뮤",
     "group": "천둥 신선",
     "rarity": "아이사펫",
+    "grade": "A",
     "skillDescription": "피해량 증가 10% [상시]"
   },
   {
@@ -214,6 +240,7 @@
     "name": "믹",
     "group": "황금 상자",
     "rarity": "기타 펫",
+    "grade": "S",
     "skillDescription": "모험에서 골드 20% 추가 획득"
   },
   {
@@ -221,6 +248,7 @@
     "name": "더지",
     "group": "영리한 탐험가",
     "rarity": "기타 펫",
+    "grade": "S",
      "skillDescription": "모험에서 장비 획득 확률 30% 증가"
   },
   {
@@ -228,6 +256,7 @@
     "name": "에리",
     "group": "행복을 전하는",
     "rarity": "기타 펫",
+    "grade": "S",
      "skillDescription": "모험에서 영웅 획득 확률 10% 증가"
   }
 ]

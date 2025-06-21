@@ -1,5 +1,6 @@
 import { useState } from "react";
 import heroes from "../data/heroes.json";
+import pets from "../data/pets.json";
 import "./SummonSimulation.css";
 
 // 소환 등급 확률
@@ -173,6 +174,14 @@ function getRandomHeroByGrade(grade, wishlistGroups, summonCount) {
   return candidates[candidates.length - 1];
 }
 
+// 랜덤으로 펫을 뽑는 함수 추가
+function getRandomPetByGrade(grade, petData) {
+  const candidates = petData.filter(p => p.grade === grade);
+
+  const randomIndex = Math.floor(Math.random() * candidates.length);
+  return candidates[randomIndex];
+}
+
 function summonTenHeroes(wishlistGroups, guaranteedS = false, summonCount = 0) {
   const results = [];
 
@@ -212,6 +221,33 @@ function summonTenHeroes(wishlistGroups, guaranteedS = false, summonCount = 0) {
   return results;
 }
 
+function summonTenPets(petData, summonCount) {
+  const results = [];
+
+  for (let i = 0; i < 9; i++) {
+    const grade = getPetGradeByProbability();
+    const pet = getRandomPetByGrade(grade, petData);
+    if (pet) results.push({ ...pet, flipped: false });
+  }
+
+  // 마지막 1장 처리
+  let lastPet;
+  if (summonCount >= 90 && summonCount < 100) {
+    const sPets = petData.filter(p => p.grade === "S"); // S급 필터
+    const randomIndex = Math.floor(Math.random() * sPets.length);
+    lastPet = { ...sPets[randomIndex], flipped: false }; // S급 추가
+  } else {
+    const grade = getPetGradeByProbability();
+    const pet = getRandomPetByGrade(grade, petData);
+    lastPet = pet ? { ...pet, flipped: false } : null;
+  }
+
+  if (lastPet) results.push(lastPet);
+  return results;
+}
+
+
+
 
 
 function getWishlistGroup(hero) {
@@ -220,6 +256,16 @@ function getWishlistGroup(hero) {
   if (hero.grade === "A") return "group3";
   return null;
 }
+
+function getPetGradeByProbability() {
+  const rand = Math.random() * 100;
+
+  if (rand < 1) return "S"; // 1% 확률로 S급
+  if (rand < 10) return "A"; // 9% 확률로 A급 (1% + 9%)
+  if (rand < 41.5) return "B"; // 31.5% 확률로 B급 (10% + 31.5%)
+  return "C"; // 나머지 58.5% 확률로 C급
+}
+
 
 const MAX_SELECT = {
   group1: 2,
@@ -231,11 +277,33 @@ export default function SummonSimulation() {
   const [summonedHeroes, setSummonedHeroes] = useState([]);
   const [summonCount, setSummonCount] = useState(0);
   const [showWishlist, setShowWishlist] = useState(false);
+const [petSummonCount, setPetSummonCount] = useState(0);
+const [summonedPets, setSummonedPets] = useState([]);
+const [activeTab, setActiveTab] = useState("hero");
+
   const [wishlist, setWishlist] = useState({
     group1: [],
     group2: [],
     group3: [],
   });
+
+  const handlePetSummon = () => {
+  setSummonedPets((prev) => prev.map((p) => ({ ...p, flipped: false })));
+
+  const newPets = summonTenPets(pets, petSummonCount);
+  const hasS = newPets.some((p) => p.grade === "S");
+
+  setTimeout(() => {
+    setSummonedPets(newPets);
+    setPetSummonCount((prev) => {
+      if (hasS && prev < 100) return 100;
+      return Math.min(prev + 10, 100);
+    });
+  }, 400);
+};
+
+
+
 
   const handleSummon = () => {
   setSummonedHeroes((prev) => prev.map((h) => ({ ...h, flipped: false })));
@@ -285,6 +353,13 @@ export default function SummonSimulation() {
     }
   };
 
+  const handlePetFlip = (idx) => {
+  setSummonedPets((prev) =>
+    prev.map((p, i) => (i === idx ? { ...p, flipped: true } : p))
+  );
+};
+
+
   // 진행률 계산 (0~200회 기준, 퍼센트)
 const progressPercent = Math.min((summonCount / 200) * 100, 100);
 
@@ -295,11 +370,26 @@ const progressPercent = Math.min((summonCount / 200) * 100, 100);
       <div className="button-row">
         <button
   className="summon-button"
-  onClick={handleSummon}
+  onClick={() => {
+    handleSummon();
+    setActiveTab("hero");
+  }}
   disabled={!isWishlistFullySelected(wishlist)}
 >
-  10회 소환
+  영웅 10회 소환
 </button>
+
+<button
+  className="summon-button"
+  onClick={() => {
+    handlePetSummon();
+    setActiveTab("pet");
+  }}
+>
+  펫 10회 소환
+</button>
+
+
 
         <button
           className="wishlist-toggle-button"
@@ -314,41 +404,84 @@ const progressPercent = Math.min((summonCount / 200) * 100, 100);
           className="progress-bar"
           style={{ width: `${progressPercent}%` }}
         />
-        <div className="progress-text">{`${summonCount}/200`}</div>
+        <div className="progress-text">{`영웅 소환${summonCount}/200`}</div>
+      </div>
+      <div className="progress-container">
+        <div
+          className="progress-bar"
+          style={{ width: `${(petSummonCount / 100) * 100}%` }}
+        />
+        <div className="progress-text">{`펫소환 ${petSummonCount}/100`}</div>
       </div>
 
-      <div className="card-grid">
-        {summonedHeroes.map((hero, idx) => (
-          <div
-            key={idx}
-            className={`card ${hero.flipped ? "flipped" : ""} ${
-              hero.grade === "S" ? "grade-S" : ""
-            }`}
-            onClick={() => handleFlip(idx)}
-          >
-            <div className="card-inner">
-              <div className="card-front">
-                <img
-                  src={
-                    hero.grade === "S" || hero.grade === "A"
-                      ? "/스페셜.png"
-                      : "/일반.png"
-                  }
-                  alt="카드 뒷면"
-                  className="card-image"
-                />
-              </div>
-              <div className="card-back">
-                <img
-                  src={`/도감/${hero.group}/아이콘/${hero.name}.png`}
-                  alt={hero.name}
-                  className="card-image"
-                />
-              </div>
-            </div>
+
+      {/* 영웅 카드 */}
+{activeTab === "hero" && (
+  <div className="card-grid">
+    {summonedHeroes.map((hero, idx) => (
+      <div
+        key={idx}
+        className={`card ${hero.flipped ? "flipped" : ""} ${
+          hero.grade === "S" ? "grade-S" : ""
+        }`}
+        onClick={() => handleFlip(idx)}
+      >
+        <div className="card-inner">
+          <div className="card-front">
+            <img
+              src={
+                hero.grade === "S" || hero.grade === "A"
+                  ? "/스페셜.png"
+                  : "/일반.png"
+              }
+              alt="카드 뒷면"
+              className="card-image"
+            />
           </div>
-        ))}
+          <div className="card-back">
+            <img
+              src={`/도감/${hero.group}/아이콘/${hero.name}.png`}
+              alt={hero.name}
+              className="card-image"
+            />
+          </div>
+        </div>
       </div>
+    ))}
+  </div>
+)}
+
+{/* 펫 카드 */}
+{activeTab === "pet" && (
+  <div className="card-grid">
+    {summonedPets.map((pet, idx) => (
+      <div
+        key={idx}
+        className={`card ${pet.flipped ? "flipped" : ""} ${
+          pet.grade === "S" ? "grade-S" : ""
+        }`}
+        onClick={() => handlePetFlip(idx)}
+      >
+        <div className="card-inner">
+          <div className="card-front">
+            <img src="/펫일반.png" alt="펫카드 뒷면" className="card-image" />
+          </div>
+          <div className="card-back">
+            <img
+              src={`/도감/펫/아이콘/${pet.name}.png`}
+              alt={pet.name}
+              className="card-image"
+            />
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+)}
+
+
+
+
 
       {showWishlist && (
         <div className="wishlist-tooltip">
@@ -456,7 +589,7 @@ const progressPercent = Math.min((summonCount / 200) * 100, 100);
 
       {!isWishlistFullySelected(wishlist) && (
         <div className="wishlist-warning">
-          ⚠️ 위시리스트를 선택해주세요.
+          ⚠️ 영웅소환은 위시리스트를 선택해주세요.
         </div>
       )}
     </div>
