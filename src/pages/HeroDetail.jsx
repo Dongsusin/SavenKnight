@@ -370,7 +370,7 @@ export default function HeroDetail() {
 
   return (
     <div className="hero-detail page">
-      <Link to="/" className="back-button">
+      <Link to="/dex" className="back-button">
         ← 돌아가기
       </Link>
 

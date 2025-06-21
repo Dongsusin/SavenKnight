@@ -11,8 +11,11 @@ export default function Header() {
     <>
       <header className="app-header">
         <div className="nav-left">
-          <img src="/logo.png" alt="Logo" className="logo" />
+          <NavLink to="/" onClick={closeMenu}>
+            <img src="/logo.png" alt="Logo" className="logo" />
+          </NavLink>
         </div>
+
 
         <button
           className="menu-toggle"
@@ -24,6 +27,9 @@ export default function Header() {
 
         <nav className={`nav-right ${menuOpen ? "open" : ""}`}>
           <NavLink to="/" onClick={closeMenu}>
+            홈
+          </NavLink>
+          <NavLink to="/dex" onClick={closeMenu}>
             도감
           </NavLink>
           <NavLink to="/raid" onClick={closeMenu}>

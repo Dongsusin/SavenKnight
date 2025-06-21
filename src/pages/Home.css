@@ -1,0 +1,185 @@
+/* Home.css */
+
+.home-page {
+  background-color: #121212;
+  color: #ffffff;
+  min-height: 100vh;
+  padding-top: 60px;
+  font-family: 'Pretendard', sans-serif;
+}
+
+/* 슬라이더 영역 */
+.video-slider {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  overflow: hidden;
+  background-color: black;
+}
+
+.slide {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+  z-index: 0;
+}
+
+.slide.active {
+  opacity: 1;
+  z-index: 1;
+}
+
+.slider-controls {
+  position: absolute;
+  bottom: 15px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  z-index: 2;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: none;
+  background-color: #666;
+  cursor: pointer;
+}
+
+.dot.active {
+  background-color: #ffcc00;
+}
+
+/* 네비게이션 바 */
+.home-navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 60px;
+  background-color: #111;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  border-bottom: 1px solid #333;
+  z-index: 10;
+}
+
+.home-navbar div {
+  cursor: pointer;
+  color: #fff;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+.home-navbar div:hover {
+  color: #ffcc00;
+  transform: scale(1.05);
+}
+.home-navbar .active {
+  color: #ffd700;
+  font-weight: bold;
+  border-bottom: 2px solid #ffd700;
+}
+
+/* 콘텐츠 영역 */
+.home-content {
+  padding: 2rem;
+  text-align: center;
+}
+
+.home-section {
+  margin-bottom: 3rem;
+}
+
+.home-section h3 {
+  color: #ffcc00;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  border-left: 5px solid #ffcc00;
+  border-right: 5px solid #ffcc00;
+  padding: 0.25rem 1rem;
+  border-radius: 4px;
+  display: inline-block;
+  background: linear-gradient(to right, #333, transparent);
+}
+
+.home-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.home-card {
+  background-color: #000;
+  border: 2px solid #555;
+  border-radius: 8px;
+  padding: 1rem;
+  transition: 0.3s;
+}
+.home-card img {
+  width: 100%;
+  border-radius: 6px;
+}
+.home-card:hover {
+  border-color: #ffcc00;
+  box-shadow: 0 0 10px #ffcc00;
+}
+
+.video-slider {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  overflow: hidden;
+  background-color: black;
+}
+
+.slide {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+  z-index: 0;
+}
+
+.slide iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.slide.active {
+  opacity: 1;
+  z-index: 1;
+}
+
+.slider-controls {
+  position: absolute;
+  bottom: 15px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  z-index: 2;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: none;
+  background-color: #666;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.dot.active {
+  background-color: #ffcc00;
+}

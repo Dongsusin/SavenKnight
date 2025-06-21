@@ -5,6 +5,7 @@ import HeroDetail from "./pages/HeroDetail";
 import Raid from "./pages/Raid";
 import GrowthDungeon from "./pages/GrowthDungeon";
 import SummonSimulation from "./pages/SummonSimulation";
+import Home from "./pages/Home";
 import "./App.css";
 
 function App() {
@@ -12,7 +13,8 @@ function App() {
     <Router>
       <Header />
       <Routes>
-        <Route path="/" element={<Dex />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/dex" element={<Dex />} />
         <Route path="/hero/:name" element={<HeroDetail />} />
         <Route path="/raid" element={<Raid />} />
         <Route path="/growth-dungeon" element={<GrowthDungeon />} />
