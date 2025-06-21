@@ -1,5 +1,3 @@
-/* Home.css */
-
 .home-page {
   background-color: #121212;
   color: #ffffff;
@@ -8,54 +6,6 @@
   font-family: 'Pretendard', sans-serif;
 }
 
-/* 슬라이더 영역 */
-.video-slider {
-  position: relative;
-  width: 100%;
-  height: 400px;
-  overflow: hidden;
-  background-color: black;
-}
-
-.slide {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0;
-  transition: opacity 1s ease-in-out;
-  z-index: 0;
-}
-
-.slide.active {
-  opacity: 1;
-  z-index: 1;
-}
-
-.slider-controls {
-  position: absolute;
-  bottom: 15px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  z-index: 2;
-}
-
-.dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  border: none;
-  background-color: #666;
-  cursor: pointer;
-}
-
-.dot.active {
-  background-color: #ffcc00;
-}
-
-/* 네비게이션 바 */
 .home-navbar {
   position: fixed;
   top: 0;
@@ -88,12 +38,15 @@
 
 /* 콘텐츠 영역 */
 .home-content {
+  display: flex;
+  justify-content: space-between;
   padding: 2rem;
-  text-align: center;
 }
 
 .home-section {
-  margin-bottom: 3rem;
+  flex: 1;
+  padding: 1rem;
+  text-align: center;
 }
 
 .home-section h3 {
@@ -108,78 +61,79 @@
   background: linear-gradient(to right, #333, transparent);
 }
 
-.home-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 1rem;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.home-card {
-  background-color: #000;
-  border: 2px solid #555;
-  border-radius: 8px;
-  padding: 1rem;
-  transition: 0.3s;
-}
-.home-card img {
-  width: 100%;
-  border-radius: 6px;
-}
-.home-card:hover {
-  border-color: #ffcc00;
-  box-shadow: 0 0 10px #ffcc00;
-}
-
-.video-slider {
+/* 영웅 카드 슬라이드 */
+.hero-slider {
   position: relative;
-  width: 100%;
-  height: 400px;
-  overflow: hidden;
-  background-color: black;
-}
-
-.slide {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  transition: opacity 1s ease-in-out;
-  z-index: 0;
-}
-
-.slide iframe {
-  width: 100%;
-  height: 100%;
-  border: none;
-}
-
-.slide.active {
-  opacity: 1;
-  z-index: 1;
-}
-
-.slider-controls {
-  position: absolute;
-  bottom: 15px;
-  width: 100%;
+  overflow-x: auto;
   display: flex;
   justify-content: center;
-  gap: 8px;
-  z-index: 2;
+  align-items: center;
+  cursor: grab;
+}
+.hero-cards {
+  display: flex;
+  transition: transform 0.3s ease;
+  gap: 2rem;
 }
 
-.dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
+.hero-card {
+  flex-shrink: 0;
+  background-color: #222;
+  padding: 1rem;
+  border-radius: 12px;
+  text-align: center;
+  opacity: 0.3;
+  transform: scale(0.9);
+  transition: all 0.3s ease;
+}
+.hero-card.active {
+  opacity: 1;
+  box-shadow: 0 0 15px #ffcc00;
+}
+
+.hero-icon {
+  width: 120px;
+  height: 120px;
+  border-radius: 10px;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.hero-card h4 {
+  font-size: 1.2rem;
+  color: #ffcc00;
+  margin: 0.5rem 0;
+}
+
+.hero-card p {
+  font-size: 1rem;
+  color: #ddd;
+}
+
+/* 슬라이드 네비게이션 버튼 */
+.nav-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(255, 204, 0, 0.7);
+  color: #000;
   border: none;
-  background-color: #666;
+  padding: 0.5rem 1rem;
+  font-size: 2rem;
   cursor: pointer;
+  z-index: 2;
+  border-radius: 4px;
   transition: background-color 0.3s;
 }
 
-.dot.active {
-  background-color: #ffcc00;
+.nav-button:hover {
+  background-color: rgba(255, 204, 0, 1);
+}
+
+.nav-button.left {
+  left: 10px;
+}
+
+.nav-button.right {
+  right: 10px;
 }

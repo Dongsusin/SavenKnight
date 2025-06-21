@@ -1456,7 +1456,7 @@
     "type": "치유",
     "category": "에반원정대",
     "title": "성녀",
-     "youtube": "https://www.youtube.com/embed/LHD6Ib-5M90?si=mVamZGN0XT7-_wGe",
+    "youtube": "https://www.youtube.com/embed/LHD6Ib-5M90?si=mVamZGN0XT7-_wGe",
     "skilltitle": ["기본공격", "회복", "소생", "축복의 소생"],
     "skillcooldown": [0, 83, 90, 0],
     "skills": [
