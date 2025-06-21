@@ -1,3 +1,4 @@
+/* ========== 공통 레이아웃 ========== */
 .hero-dex {
   background-color: #1a1a1a;
   color: #fff;
@@ -5,6 +6,7 @@
   position: relative;
 }
 
+/* ========== 사이드바 (상단 고정 탭) ========== */
 .hero-dex-sidebar {
   display: flex;
   justify-content: center;
@@ -24,12 +26,10 @@
 .hero-dex-sidebar::-webkit-scrollbar {
   height: 6px;
 }
-
 .hero-dex-sidebar::-webkit-scrollbar-thumb {
   background-color: #555;
   border-radius: 10px;
 }
-
 .hero-dex-sidebar::-webkit-scrollbar-track {
   background-color: #222;
 }
@@ -40,12 +40,10 @@
   color: #fff;
   transition: color 0.2s, transform 0.2s;
 }
-
 .hero-dex-sidebar div:hover {
   color: #ffcc00;
   transform: scale(1.05);
 }
-
 .hero-dex-sidebar .active {
   font-weight: bold;
   color: #ffd700;
@@ -53,6 +51,7 @@
   padding-bottom: 0.2rem;
 }
 
+/* ========== 메인 콘텐츠 영역 ========== */
 .hero-dex-content {
   flex: 1;
   padding: 2rem;
@@ -70,6 +69,7 @@
   padding-bottom: 0.5rem;
 }
 
+/* ========== 카테고리 섹션 ========== */
 .category-section {
   width: 100vw;
   margin-left: calc(-50vw + 50%);
@@ -93,6 +93,7 @@
   margin: 0 auto 1rem;
 }
 
+/* ========== 카드 그리드 ========== */
 .hero-cards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -101,12 +102,12 @@
   width: 100%;
   margin: 0 auto 2rem;
 }
-
 .hero-cards a {
   display: flex;
   justify-content: center;
 }
 
+/* ========== 카드 공통 스타일 (영웅/펫) ========== */
 .hero-card {
   width: 150px;
   flex-shrink: 0;
@@ -114,19 +115,47 @@
   box-sizing: border-box;
 }
 
-.hero-card img {
+.hero-card .image {
   width: 100%;
   border-radius: 8px;
   border: 2px solid #555;
   background-color: #000;
   transition: transform 0.2s, border-color 0.2s, box-shadow 0.3s;
+  cursor: pointer;
 }
-
 .hero-card img:hover {
   border-color: #ffd700;
   box-shadow: 0 0 10px #ffd700, 0 0 20px #ffea70;
 }
 
+/* ========== 펫 전용 이름 텍스트 ========== */
+.pet-name {
+  font-size: 1rem;
+  color: #ffcc00;
+  margin-top: 0.3rem;
+}
+
+.pet-skill-icon {
+  width: 40px;
+  height: 40px;
+  margin: 0.5rem auto;
+  display: block;
+  border-radius: 8px;
+  background-color: #111;
+  border: 2px solid #555;
+  object-fit: contain;
+  transition: transform 0.2s ease;
+}
+
+.pet-skill-icon:hover {
+  border-color: #ffcc00;
+  box-shadow: 0 0 6px #ffcc00aa;
+}
+
+
+
+
+/* ========== 반응형 ========== */
 @media (max-width: 426px) {
   .hero-cards {
     grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
@@ -140,6 +169,10 @@
   .category-section {
     padding: 0.2rem 0.5rem;
     margin-bottom: 0.5rem;
+  }
+
+  .pet-name {
+    font-size: 0.8rem;
   }
 }
 
