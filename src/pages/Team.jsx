@@ -3,12 +3,16 @@ import CharacterSelectPopup from "../components/CharacterSelectPopup";
 import baseStatData from "../data/statByGradeAndType.json";
 import maxStatData from "../data/maxStatByGradeAndType.json";
 import enhanceBonusData from "../data/enhanceBonusByGradeAndType.json";
+import equipmentData from "../data/equipment.json";
 import "./Team.css";
 
 export default function Team() {
   const [team, setTeam] = useState(Array(5).fill(null));
   const [selectingIndex, setSelectingIndex] = useState(null);
   const [selectedSkill, setSelectedSkill] = useState(Array(5).fill(null));
+  const [equipmentModalOpen, setEquipmentModalOpen] = useState(false);
+  const [selectedEquipSlot, setSelectedEquipSlot] = useState(null);
+  const [teamEquipments, setTeamEquipments] = useState(Array(5).fill({}));
 
   const handleSelect = (hero) => {
     const updated = [...team];
@@ -168,6 +172,33 @@ export default function Team() {
   };
 
   const [activeTab, setActiveTab] = useState("스킬");
+
+  function getItemStatDescription(item) {
+    if (!item) return "";
+
+    const level = item.level ?? 0;
+    const isWeapon = item.type === "무기";
+    const isArmor = item.type === "방어구";
+    const isAccessory = item.type === "장신구";
+
+    const desc = [];
+
+    if (isWeapon) {
+      desc.push(`공격력 +${64 + 16 * level}`);
+    }
+    if (isArmor) {
+      desc.push(`방어력 +${39 + 10 * level}`);
+      desc.push(`생명력 +${224 + 57 * level}`);
+    }
+    if (isAccessory) {
+      const bonus = 2.5 + 0.5 * level;
+      desc.push(`공격력 +${bonus.toFixed(1)}%`);
+      desc.push(`방어력 +${bonus.toFixed(1)}%`);
+      desc.push(`생명력 +${bonus.toFixed(1)}%`);
+    }
+
+    return desc.join(", ");
+  }
 
   return (
     <div className="team-page page">
@@ -563,9 +594,109 @@ export default function Team() {
                   )}
 
                   {activeTab === "장비" && (
-                    <div>
-                      {/* 나중에 구현 */}
-                      장비 내용 준비 중...
+                    <div className="equipment-grid">
+                      {["무기0", "무기1", "방어구0", "방어구1", "장신구0"].map(
+                        (slotKey) => {
+                          const item = teamEquipments[index]?.[slotKey];
+
+                          return (
+                            <div
+                              key={slotKey}
+                              className="equip-slot"
+                              onClick={() => {
+                                setSelectedEquipSlot({
+                                  memberIndex: index,
+                                  slotKey,
+                                });
+                                setEquipmentModalOpen(true);
+                              }}
+                            >
+                              {item ? (
+                                <div className="equipped-item">
+                                  <img
+                                    src={item.image}
+                                    alt={item.name}
+                                    className="equip-image"
+                                    onContextMenu={(e) => {
+                                      e.preventDefault();
+                                      setTeamEquipments((prev) => {
+                                        const updated = [...prev];
+                                        const current = { ...updated[index] };
+                                        delete current[slotKey];
+                                        updated[index] = current;
+                                        return updated;
+                                      });
+                                    }}
+                                  />
+                                  <div className="equipment-desc">
+                                    <span className="equip-name">
+                                      {item.name}
+                                    </span>
+                                    <div className="equip-stats">
+                                      {getItemStatDescription(item)}
+                                    </div>
+                                    <div className="enhance-controls">
+                                      <button
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          setTeamEquipments((prev) => {
+                                            const updated = [...prev];
+                                            const current = {
+                                              ...updated[index],
+                                            };
+                                            const currentItem = {
+                                              ...current[slotKey],
+                                            };
+                                            currentItem.level = Math.max(
+                                              0,
+                                              (currentItem.level || 0) - 1
+                                            );
+                                            current[slotKey] = currentItem;
+                                            updated[index] = current;
+                                            return updated;
+                                          });
+                                        }}
+                                      >
+                                        -
+                                      </button>
+                                      <span className="equip-level">
+                                        +{item.level ?? 0}
+                                      </span>
+                                      <button
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          setTeamEquipments((prev) => {
+                                            const updated = [...prev];
+                                            const current = {
+                                              ...updated[index],
+                                            };
+                                            const currentItem = {
+                                              ...current[slotKey],
+                                            };
+                                            currentItem.level = Math.min(
+                                              15,
+                                              (currentItem.level || 0) + 1
+                                            );
+                                            current[slotKey] = currentItem;
+                                            updated[index] = current;
+                                            return updated;
+                                          });
+                                        }}
+                                      >
+                                        +
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                              ) : (
+                                <span className="empty-text">
+                                  클릭하여 장비
+                                </span>
+                              )}
+                            </div>
+                          );
+                        }
+                      )}
                     </div>
                   )}
                 </div>
@@ -580,6 +711,82 @@ export default function Team() {
           onSelect={handleSelect}
           onClose={() => setSelectingIndex(null)}
         />
+      )}
+
+      {equipmentModalOpen && selectedEquipSlot && (
+        <div className="equipment-modal-overlay">
+          <div className="equipment-modal">
+            <button
+              className="close-modal"
+              onClick={() => setEquipmentModalOpen(false)}
+            >
+              ✕
+            </button>
+            <h3>
+              {selectedEquipSlot.slotKey.startsWith("무기")
+                ? "무기 장비 선택"
+                : selectedEquipSlot.slotKey.startsWith("방어구")
+                ? "방어구 장비 선택"
+                : "장신구 장비 선택"}
+            </h3>
+            <div className="equipment-list">
+              {equipmentData
+                .filter((item) => {
+                  const key = selectedEquipSlot.slotKey;
+                  const expectedType = key.startsWith("무기")
+                    ? "무기"
+                    : key.startsWith("방어구")
+                    ? "방어구"
+                    : "장신구";
+                  return item.type === expectedType;
+                })
+                .map((item) => {
+                  const key = selectedEquipSlot.slotKey;
+                  const hero = team[selectedEquipSlot.memberIndex];
+                  const isMagic = ["마법", "치유"].includes(hero?.type);
+                  let imagePath = item.image;
+
+                  if (item.type === "무기") {
+                    imagePath = isMagic
+                      ? item.image2 || item.image1 || item.image
+                      : item.image1 || item.image;
+                  }
+
+                  return (
+                    <div
+                      key={item.id}
+                      className="equipment-item"
+                      onClick={() => {
+                        setTeamEquipments((prev) => {
+                          const updated = [...prev];
+                          const displayName =
+                            item.type === "무기"
+                              ? isMagic
+                                ? item.name2 || item.name1
+                                : item.name1
+                              : item.name;
+
+                          updated[selectedEquipSlot.memberIndex] = {
+                            ...updated[selectedEquipSlot.memberIndex],
+                            [selectedEquipSlot.slotKey]: {
+                              ...item,
+                              image: imagePath,
+                              name: displayName, // 무기 타입에 따라 name1 or name2 저장
+                            },
+                          };
+
+                          return updated;
+                        });
+                        setEquipmentModalOpen(false);
+                      }}
+                    >
+                      <img src={imagePath} alt={item.name} />
+                    </div>
+                  );
+                })}
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

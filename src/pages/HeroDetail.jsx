@@ -364,7 +364,6 @@ export default function HeroDetail() {
   };
   const [youtubeOpen, setYoutubeOpen] = useState(false);
 
-
   return (
     <div className="hero-detail page">
       <Link to="/dex" className="back-button">
@@ -954,90 +953,107 @@ export default function HeroDetail() {
                                 handleEquipSlotClick(type, index);
                               }}
                             />
-                            <div className="equipment-stats">
-                              <p className="equipment-name">
-                                <span className="equipment-desc">
-                                  {(() => {
-                                    const level = item.level ?? 0;
-                                    const isWeapon = item.type === "무기";
-                                    const isArmor = item.type === "방어구";
-                                    const desc = [];
+                            <div className="equipment-stats-box">
+                              <div className="equipment-stats">
+                                <p className="equipment-name">
+                                  <span className="equipment-desc">
+                                    {(() => {
+                                      const isWeapon = item.type === "무기";
+                                      const isMagicType = [
+                                        "마법",
+                                        "치유",
+                                      ].includes(hero?.type);
+                                      const itemDisplayName = isWeapon
+                                        ? isMagicType
+                                          ? item.name2 ||
+                                            item.name1 ||
+                                            item.name
+                                          : item.name1 || item.name
+                                        : item.name;
 
-                                    if (isWeapon) {
-                                      desc.push(`공격력 +${64 + level * 16}`);
-                                    }
+                                      const level = item.level ?? 0;
+                                      const isArmor = item.type === "방어구";
+                                      const desc = [];
 
-                                    if (isArmor) {
-                                      desc.push(`방어력 +${39 + level * 10}`);
-                                      desc.push(`생명력 +${224 + level * 57}`);
-                                    }
+                                      if (isWeapon) {
+                                        desc.push(`공격력 +${64 + level * 16}`);
+                                      }
 
-                                    if (accessory) {
-                                      if (accessory.공격력 > 0)
+                                      if (isArmor) {
+                                        desc.push(`방어력 +${39 + level * 10}`);
                                         desc.push(
-                                          `공격력 +${accessory.공격력.toFixed(
-                                            1
-                                          )}%`
+                                          `생명력 +${224 + level * 57}`
                                         );
-                                      if (accessory.방어력 > 0)
-                                        desc.push(
-                                          `방어력 +${accessory.방어력.toFixed(
-                                            1
-                                          )}%`
-                                        );
-                                      if (accessory.생명력 > 0)
-                                        desc.push(
-                                          `생명력 +${accessory.생명력.toFixed(
-                                            1
-                                          )}%`
-                                        );
-                                    }
+                                      }
 
-                                    return `(${desc.join(", ")})`;
-                                  })()}
-                                </span>
-                              </p>
+                                      if (accessory) {
+                                        if (accessory.공격력 > 0)
+                                          desc.push(
+                                            `공격력 +${accessory.공격력.toFixed(
+                                              1
+                                            )}%`
+                                          );
+                                        if (accessory.방어력 > 0)
+                                          desc.push(
+                                            `방어력 +${accessory.방어력.toFixed(
+                                              1
+                                            )}%`
+                                          );
+                                        if (accessory.생명력 > 0)
+                                          desc.push(
+                                            `생명력 +${accessory.생명력.toFixed(
+                                              1
+                                            )}%`
+                                          );
+                                      }
+
+                                      return `${itemDisplayName} (${desc.join(
+                                        ", "
+                                      )})`;
+                                    })()}
+                                  </span>
+                                </p>
+                              </div>
+                              {/* 강화 */}
+                              <div className="enhance-controls">
+                                <button
+                                  onClick={() =>
+                                    setSelectedEquipments((prev) => ({
+                                      ...prev,
+                                      [key]: {
+                                        ...prev[key],
+                                        level: Math.max(
+                                          0,
+                                          (prev[key]?.level || 0) - 1
+                                        ),
+                                      },
+                                    }))
+                                  }
+                                >
+                                  -
+                                </button>
+                                <span>+{item.level ?? 0}</span>
+                                <button
+                                  onClick={() =>
+                                    setSelectedEquipments((prev) => ({
+                                      ...prev,
+                                      [key]: {
+                                        ...prev[key],
+                                        level: Math.min(
+                                          15,
+                                          (prev[key]?.level || 0) + 1
+                                        ),
+                                      },
+                                    }))
+                                  }
+                                >
+                                  +
+                                </button>
+                              </div>
                             </div>
                           </div>
 
                           <div className="equip-bottom">
-                            {/* 강화 */}
-                            <div className="enhance-controls">
-                              <button
-                                onClick={() =>
-                                  setSelectedEquipments((prev) => ({
-                                    ...prev,
-                                    [key]: {
-                                      ...prev[key],
-                                      level: Math.max(
-                                        0,
-                                        (prev[key]?.level || 0) - 1
-                                      ),
-                                    },
-                                  }))
-                                }
-                              >
-                                -
-                              </button>
-                              <span>+{item.level ?? 0}</span>
-                              <button
-                                onClick={() =>
-                                  setSelectedEquipments((prev) => ({
-                                    ...prev,
-                                    [key]: {
-                                      ...prev[key],
-                                      level: Math.min(
-                                        15,
-                                        (prev[key]?.level || 0) + 1
-                                      ),
-                                    },
-                                  }))
-                                }
-                              >
-                                +
-                              </button>
-                            </div>
-
                             {item.type !== "장신구" && (
                               <div className="substat-selection">
                                 <p className="substat-title">부가 스탯 선택</p>
@@ -1065,22 +1081,21 @@ export default function HeroDetail() {
                                       )
                                     )}
                                   </select>
+                                  {substats[key]?.main && (
+                                    <div className="stat-display">
+                                      <span className="stat-label">
+                                        {substats[key].main}
+                                      </span>
+                                      <span className="stat-value">
+                                        {calcMainStat(
+                                          substats[key].main,
+                                          item.level ?? 0,
+                                          item.type === "무기"
+                                        )}
+                                      </span>
+                                    </div>
+                                  )}
                                 </div>
-
-                                {substats[key]?.main && (
-                                  <div className="stat-display">
-                                    <span className="stat-label">
-                                      {substats[key].main}
-                                    </span>
-                                    <span className="stat-value">
-                                      {calcMainStat(
-                                        substats[key].main,
-                                        item.level ?? 0,
-                                        item.type === "무기"
-                                      )}
-                                    </span>
-                                  </div>
-                                )}
 
                                 {[0, 1, 2, 3].map((i) => {
                                   const statName = substats[key]?.subs?.[i];
@@ -1378,22 +1393,32 @@ export default function HeroDetail() {
           )}
 
           {youtubeOpen && (
-              <div className="youtube-popup-overlay" onClick={() => setYoutubeOpen(false)}>
-                <div className="youtube-popup" onClick={(e) => e.stopPropagation()}>
-                  <button className="close-button" onClick={() => setYoutubeOpen(false)}>✖</button>
-                  <iframe
-                    width="560"
-                    height="315"
-                    src={hero.youtube}
-                    title="YouTube video player"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  ></iframe>
-                </div>
+            <div
+              className="youtube-popup-overlay"
+              onClick={() => setYoutubeOpen(false)}
+            >
+              <div
+                className="youtube-popup"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <button
+                  className="close-button"
+                  onClick={() => setYoutubeOpen(false)}
+                >
+                  ✖
+                </button>
+                <iframe
+                  width="560"
+                  height="315"
+                  src={hero.youtube}
+                  title="YouTube video player"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
               </div>
-            )}
-
+            </div>
+          )}
         </div>
       </section>
     </div>

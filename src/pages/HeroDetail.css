@@ -515,7 +515,7 @@
 .equipped-item {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  justify-content: space-between;
   gap: 10px;
   position: relative;
   width: 100%;
@@ -525,6 +525,12 @@
 .equip-top {
   display: flex;
   gap: 10px;
+}
+
+.equipment-stats-box {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
 .equipment-stats {

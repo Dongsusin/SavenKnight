@@ -262,3 +262,117 @@
   color: #ff6666;
   font-weight: bold;
 }
+
+/* --- 장비 탭 전체 컨테이너 --- */
+.equipment-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+/* --- 장비 슬롯 --- */
+.equip-slot {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid #555;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: #1e1e1e;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+
+.equip-slot:hover {
+  background-color: #292929;
+}
+
+.empty-text {
+  color: #888;
+  font-style: italic;
+}
+
+/* --- 장비 아이템 내부 --- */
+.equipped-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+/* --- 장비 아이콘 이미지 --- */
+.equip-image {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border: 1px solid #777;
+  border-radius: 4px;
+}
+
+/* --- 장비 설명 --- */
+.equipment-desc {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+}
+
+.equipment-modal h3 {
+  font-size: 1.4rem;
+  color: #ffcc00;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #444;
+  padding-bottom: 0.5rem;
+  text-align: center;
+}
+
+/* --- 이름과 강화 조절 섹션 --- */
+.equipment-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.equip-name {
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: #ffcc00;
+}
+
+/* --- 강화 수치 및 버튼 --- */
+.enhance-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.enhance-controls button {
+  background-color: #333;
+  color: white;
+  border: none;
+  padding: 2px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.enhance-controls button:hover {
+  background-color: #444;
+}
+
+.equip-level {
+  color: #00ff66;
+  font-weight: bold;
+  font-size: 0.85rem;
+}
+
+/* --- 스탯 설명 --- */
+.equip-stats {
+  font-size: 0.75rem;
+  color: #ccc;
+  white-space: pre-line;
+}
