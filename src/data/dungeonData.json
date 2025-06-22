@@ -8,6 +8,7 @@
     "skills": [
       {
         "name": "기본 공격",
+        "skillcooldown":0,
         "effects": [
           {
             "target": "단일 적군",
@@ -18,6 +19,7 @@
       },
       {
         "name": "화염 도장",
+        "skillcooldown":15,
         "effects": [
           {
             "target": "모든 적군",
@@ -31,6 +33,7 @@
       },
       {
         "name": "용암 메테오",
+        "skillcooldown":30,
         "effects": [
           {
             "target": "모든 적군",
@@ -44,6 +47,7 @@
       },
       {
         "name": "불타는 열정",
+        "skillcooldown":0,
         "effects": [
           {
             "target": "자신",
@@ -207,6 +211,7 @@
     "skills": [
       {
         "name": "기본 공격",
+        "skillcooldown":0,
         "effects": [
           {
             "target": "단일 적군",
@@ -217,6 +222,7 @@
       },
       {
         "name": "물방울 박치기",
+        "skillcooldown":20,
         "effects": [
           {
             "target": "적군 3명",
@@ -232,6 +238,7 @@
       },
       {
         "name": "눈물의 휴가",
+        "skillcooldown":25,
         "effects": [
           {
             "target": "모든 적군",
@@ -245,6 +252,7 @@
       },
       {
         "name": "치명적 귀여움",
+        "skillcooldown":0,
         "effects": [
           {
             "target": "자신",
@@ -408,6 +416,7 @@
     "skills": [
       {
         "name": "기본 공격",
+        "skillcooldown":0,
         "effects": [
           {
             "target": "단일 적군",
@@ -418,6 +427,7 @@
       },
       {
         "name": "돌머리 드릴",
+        "skillcooldown":20,
         "effects": [
           {
             "target": "모든 적군",
@@ -428,6 +438,7 @@
       },
       {
         "name": "낙석주의",
+        "skillcooldown":30,
         "effects": [
           {
             "target": "적군 3명",
@@ -441,6 +452,7 @@
       },
       {
         "name": "바위 갑옷",
+        "skillcooldown":0,
         "effects": [
           {
             "target": "자신",
@@ -604,6 +616,7 @@
     "skills": [
       {
         "name": "기본 공격",
+        "skillcooldown":0,
         "effects": [
           {
             "target": "단일 적군",
@@ -614,6 +627,7 @@
       },
       {
         "name": "푸키 빔",
+        "skillcooldown":60,
         "effects": [
           {
             "target": "적군 4명",
@@ -629,6 +643,7 @@
       },
       {
         "name": "빛의 심판",
+        "skillcooldown":10,
         "effects": [
           {
             "target": "적군 4명",
@@ -642,6 +657,7 @@
       },
       {
         "name": "별의 저주",
+        "skillcooldown":0,
         "effects": [
           {
             "target": "자신",
@@ -805,6 +821,7 @@
     "skills": [
       {
         "name": "기본 공격",
+        "skillcooldown":0,
         "effects": [
           {
             "target": "단일 적군",
@@ -818,6 +835,7 @@
       },
       {
         "name": "저주 강속구",
+        "skillcooldown":10,
         "effects": [
           {
             "target": "단일 적군",
@@ -831,6 +849,7 @@
       },
       {
         "name": "저주의 파도",
+        "skillcooldown":60,
         "effects": [
           {
             "target": "모든 적군",
@@ -844,6 +863,7 @@
       },
       {
         "name": "악동의 복수",
+        "skillcooldown":0,
         "effects": [
           {
             "target": "자신",
@@ -1012,6 +1032,7 @@
     "skills": [
       {
         "name": "황금 수호자",
+        "skillcooldown":0,
         "effects": [
           {
             "target": "단일 적군",
@@ -1022,6 +1043,7 @@
       },
       {
         "name": "젤리 대폭발",
+        "skillcooldown":0,
         "effects": [
           {
             "target": "모든 적군",

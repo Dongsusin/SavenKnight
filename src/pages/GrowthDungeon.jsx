@@ -188,6 +188,7 @@ export default function GrowthDungeon() {
                         />
                         <div className="skill-tooltip">
                           <strong>{skillData.name}</strong>
+                          {skillData.skillcooldown !== 0 && <p>쿨타임: {skillData.skillcooldown}초</p>}
                           {skillData.effects?.map((e, i) => {
                             const targetColor =
                               e.detail === "버프"

@@ -172,6 +172,7 @@ export default function Raid() {
                       />
                       <div className="skill-tooltip">
                         <strong>{skill.name}</strong>
+                        {skill.skillcooldown !== 0 && <p>쿨타임: {skill.skillcooldown}초</p>}
                         {skill.effects?.map((e, i) => {
                           const targetColor =
                             e.detail === "버프"

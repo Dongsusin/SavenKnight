@@ -7,6 +7,7 @@
     "skills": [
       {
         "name": "기본 공격",
+        "skillcooldown": 0,
         "effects": [
           {
             "target": "적군 2명",
@@ -17,6 +18,7 @@
       },
       {
         "name": "파멸의 브레스",
+        "skillcooldown": 46,
         "effects": [
           {
             "target": "모든 적군",
@@ -30,6 +32,7 @@
       },
       {
         "name": "파괴의 지진",
+        "skillcooldown": 54,
         "effects": [
           {
             "target": "모든 적군",
@@ -44,6 +47,7 @@
       },
       {
         "name": "멸망의 돌풍",
+        "skillcooldown": 78,
         "effects": [
           {
             "target": "모든 적군",
@@ -57,6 +61,7 @@
       },
       {
         "name": "복수의 눈",
+        "skillcooldown": 0,
         "effects": [
           {
             "target": "자신",
@@ -227,6 +232,7 @@
     "skills": [
       {
         "name": "기본 공격",
+        "skillcooldown": 0,
         "effects": [
           {
             "target": "단일 적군",
@@ -240,6 +246,7 @@
       },
       {
         "name": "분노의 고함",
+        "skillcooldown":90,
         "effects": [
           {
             "target": "모든 적군",
@@ -258,6 +265,7 @@
       },
       {
         "name": "천지개벽",
+        "skillcooldown":50,
         "effects": [
           {
             "target": "모든 적군",
@@ -271,6 +279,7 @@
       },
       {
         "name": "암산주박",
+        "skillcooldown": 100,
         "effects": [
           {
             "target": "모든 적군",
@@ -284,6 +293,7 @@
       },
       {
         "name": "폭군의 명령",
+        "skillcooldown": 0,
         "effects": [
           {
             "target": "자신",
@@ -450,6 +460,7 @@
     "skills": [
       {
         "name": "기본 공격",
+        "skillcooldown": 0,
         "effects": [
           {
             "target": "단일 적군",
@@ -463,6 +474,7 @@
       },
       {
         "name": "포식하기",
+        "skillcooldown":90,
         "effects": [
           {
             "target": "모든 적군",
@@ -476,6 +488,7 @@
       },
       {
         "name": "바다의 맹독",
+        "skillcooldown": 45,
         "effects": [
           {
             "target": "모든 적군",
@@ -489,6 +502,7 @@
       },
       {
         "name": "숨통조르기",
+        "skillcooldown": 100,
         "effects": [
           {
             "target": "모든 적군",
@@ -502,6 +516,7 @@
       },
       {
         "name": "세개의 머리",
+        "skillcooldown": 0,
         "effects": [
           {
             "target": "자신",
