@@ -14,7 +14,7 @@ export default function Team() {
   };
 
   return (
-    <div className="team-page">
+    <div className="team-page page">
       <h1>팀 편성</h1>
       <div className="team-slots">
         {team.map((member, index) => (
