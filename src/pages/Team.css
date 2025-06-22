@@ -32,7 +32,7 @@
   align-items: center;
   width: 100%;
 }
-.team-slot-top{
+.team-slot-top {
   display: flex;
   flex-direction: row;
   gap: 10px;
@@ -127,7 +127,7 @@
 
 .skill-icons {
   display: grid;
-  grid-template-columns: repeat(4,1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 6px;
   justify-items: center;
 }
@@ -215,6 +215,50 @@
   margin-top: 12px;
 }
 
-.team-info-bottom{
+.team-info-bottom {
   width: 100%;
+}
+
+.stat-table {
+  margin-top: 10px;
+  background: #1c1c1c;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: white;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+  border-bottom: 1px solid #333;
+}
+
+.stat-row:last-child {
+  border-bottom: none;
+}
+
+.stat-name {
+  color: #ccc;
+}
+
+.stat-value .total {
+  color: #ffd700;
+  font-weight: bold;
+}
+
+.stat-value .detail {
+  color: #fff; /* 괄호 전체는 흰색 */
+  margin-left: 4px;
+}
+
+.stat-value .enhance-bonus {
+  color: #00ff66;
+  font-weight: bold;
+}
+
+.stat-value .transcend-bonus {
+  color: #ff6666;
+  font-weight: bold;
 }

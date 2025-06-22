@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import CharacterSelectPopup from "../components/CharacterSelectPopup";
+import baseStatData from "../data/statByGradeAndType.json";
+import maxStatData from "../data/maxStatByGradeAndType.json";
+import enhanceBonusData from "../data/enhanceBonusByGradeAndType.json";
 import "./Team.css";
 
 export default function Team() {
@@ -14,6 +17,7 @@ export default function Team() {
       level: 1,
       enhance: 0,
       transcend: 0,
+      transcendBonus: hero.transcendBonus ?? [], // ⬅️ 여기가 중요!
     };
     setTeam(updated);
     setSelectingIndex(null);
@@ -158,7 +162,10 @@ export default function Team() {
     return highlighted;
   };
 
-  
+  const interpolateStat = (base, max, level) => {
+    const ratio = (level - 1) / (30 - 1); // 1레벨~30레벨 선형 비율
+    return Math.round(base + (max - base) * ratio);
+  };
 
   const [activeTab, setActiveTab] = useState("스킬");
 
@@ -171,7 +178,10 @@ export default function Team() {
           if (!member) {
             return (
               <div key={index} className="team-slot-wrapper">
-                <div className="team-slot" onClick={() => handleSlotClick(index)}>
+                <div
+                  className="team-slot"
+                  onClick={() => handleSlotClick(index)}
+                >
                   <span className="empty">캐릭터 선택</span>
                 </div>
               </div>
@@ -184,47 +194,77 @@ export default function Team() {
           return (
             <div key={index} className="team-slot-wrapper">
               <div className="team-slot-top">
-                <div className="team-slot" onClick={() => handleSlotClick(index)}>
-                  <img src={`/도감/${member.group}/아이콘/${member.name}.png`} alt={member.name} />
+                <div
+                  className="team-slot"
+                  onClick={() => handleSlotClick(index)}
+                >
+                  <img
+                    src={`/도감/${member.group}/아이콘/${member.name}.png`}
+                    alt={member.name}
+                  />
                 </div>
 
                 <div className="stat-settings">
-                  {[{
-                    label: "레벨",
-                    toggle: true
-                  }, {
-                    label: "강화",
-                    value: enhance,
-                    setValue: (v) => updateStat(index, "enhance", v),
-                    min: 0,
-                    max: 5
-                  }, {
-                    label: "초월",
-                    value: transcend,
-                    setValue: (v) => updateStat(index, "transcend", v),
-                    min: 0,
-                    max: 12
-                  }].map(({ label, value, setValue, min, max, toggle }) => (
+                  {[
+                    {
+                      label: "레벨",
+                      toggle: true,
+                    },
+                    {
+                      label: "강화",
+                      value: enhance,
+                      setValue: (v) => updateStat(index, "enhance", v),
+                      min: 0,
+                      max: 5,
+                    },
+                    {
+                      label: "초월",
+                      value: transcend,
+                      setValue: (v) => updateStat(index, "transcend", v),
+                      min: 0,
+                      max: 12,
+                    },
+                  ].map(({ label, value, setValue, min, max, toggle }) => (
                     <div className="stat-adjust-box" key={label}>
                       <span className="stat-label">{label}</span>
                       {toggle && label === "레벨" ? (
                         <div className="level-toggle-buttons">
-                          <button className={level === 1 ? "active" : ""} onClick={() => updateStat(index, "level", 1)}>기본</button>
-                          <button className={level === 30 ? "active" : ""} onClick={() => updateStat(index, "level", 30)}>최대</button>
+                          <button
+                            className={level === 1 ? "active" : ""}
+                            onClick={() => updateStat(index, "level", 1)}
+                          >
+                            기본
+                          </button>
+                          <button
+                            className={level === 30 ? "active" : ""}
+                            onClick={() => updateStat(index, "level", 30)}
+                          >
+                            최대
+                          </button>
                         </div>
                       ) : (
                         <div className="stat-stepper">
-                          <button onClick={() => setValue(Math.max(min, value - 1))} disabled={value <= min}>◀</button>
-                          <span className="stat-value-text">{label === "강화" ? `+${value}` : value}</span>
-                          <button onClick={() => setValue(Math.min(max, value + 1))} disabled={value >= max}>▶</button>
+                          <button
+                            onClick={() => setValue(Math.max(min, value - 1))}
+                            disabled={value <= min}
+                          >
+                            ◀
+                          </button>
+                          <span className="stat-value-text">
+                            {label === "강화" ? `+${value}` : value}
+                          </span>
+                          <button
+                            onClick={() => setValue(Math.min(max, value + 1))}
+                            disabled={value >= max}
+                          >
+                            ▶
+                          </button>
                         </div>
                       )}
                     </div>
                   ))}
                 </div>
               </div>
-
-              
 
               <div className="team-info-bottom">
                 <div className="tab-buttons">
@@ -241,83 +281,287 @@ export default function Team() {
 
                 <div className="tab-content">
                   {activeTab === "스킬" && (
-                  <div className="skill-window">
-                          <div className="skill-icons">
-                            {[...Array(4)].map((_, i) => (
-                              <img
-                                key={i}
-                                src={`/도감/${member.group}/스킬/${member.name}-${i + 1}.png`}
-                                alt={`스킬 ${i + 1}`}
-                                className={`skill-icon ${skillIndex === i ? "selected" : ""}`}
-                                onClick={() => {
-                                  const updated = [...selectedSkill];
-                                  updated[index] = i;
-                                  setSelectedSkill(updated);
-                                }}
-                                onError={(e) => (e.target.style.display = "none")}
-                              />
-                            ))}
-                          </div>
+                    <div className="skill-window">
+                      <div className="skill-icons">
+                        {[...Array(4)].map((_, i) => (
+                          <img
+                            key={i}
+                            src={`/도감/${member.group}/스킬/${member.name}-${
+                              i + 1
+                            }.png`}
+                            alt={`스킬 ${i + 1}`}
+                            className={`skill-icon ${
+                              skillIndex === i ? "selected" : ""
+                            }`}
+                            onClick={() => {
+                              const updated = [...selectedSkill];
+                              updated[index] = i;
+                              setSelectedSkill(updated);
+                            }}
+                            onError={(e) => (e.target.style.display = "none")}
+                          />
+                        ))}
+                      </div>
 
-                          {skillIndex !== null && member.skills?.[skillIndex] && (
-                            <div className="selected-skill-box">
-                              <p className="skill-title">
-                                <strong>{member.skilltitle?.[skillIndex]}</strong>
-                                {member.skillcooldown?.[skillIndex] > 0 && ` (쿨타임 ${member.skillcooldown[skillIndex]}초)`}
-                              </p>
+                      {skillIndex !== null && member.skills?.[skillIndex] && (
+                        <div className="selected-skill-box">
+                          <p className="skill-title">
+                            <strong>{member.skilltitle?.[skillIndex]}</strong>
+                            {member.skillcooldown?.[skillIndex] > 0 &&
+                              ` (쿨타임 ${member.skillcooldown[skillIndex]}초)`}
+                          </p>
 
-                              {member.skills[skillIndex].map((line, i) => {
-                                let targetColor = "#ffcc00";
-                                if (line.detail === "버프") targetColor = "#00ccff";
-                                else if (line.detail === "공격") targetColor = "#ff3300";
-                                return (
-                                  <div key={i}>
-                                    {line.target && <p className="skill-target" style={{ color: targetColor }}>{line.target}</p>}-
-                                    <span dangerouslySetInnerHTML={{ __html: highlightKeywords(line.effect) }} />
-                                  </div>
-                                );
-                              })}
+                          {member.skills[skillIndex].map((line, i) => {
+                            let targetColor = "#ffcc00";
+                            if (line.detail === "버프") targetColor = "#00ccff";
+                            else if (line.detail === "공격")
+                              targetColor = "#ff3300";
+                            return (
+                              <div key={i}>
+                                {line.target && (
+                                  <p
+                                    className="skill-target"
+                                    style={{ color: targetColor }}
+                                  >
+                                    {line.target}
+                                  </p>
+                                )}
+                                -
+                                <span
+                                  dangerouslySetInnerHTML={{
+                                    __html: highlightKeywords(line.effect),
+                                  }}
+                                />
+                              </div>
+                            );
+                          })}
 
-                              {member.skillup?.[skillIndex] && (
-                                <div className="skill-upgrade-box">
-                                  <div className="skill-upgrade-title">스킬 강화 효과</div>
-                                  {member.skillup[skillIndex].map((line, i) => (
-                                    <p key={i} dangerouslySetInnerHTML={{ __html: highlightKeywords(line) }} />
+                          {member.skillup?.[skillIndex] && (
+                            <div className="skill-upgrade-box">
+                              <div className="skill-upgrade-title">
+                                스킬 강화 효과
+                              </div>
+                              {member.skillup[skillIndex].map((line, i) => (
+                                <p
+                                  key={i}
+                                  dangerouslySetInnerHTML={{
+                                    __html: highlightKeywords(line),
+                                  }}
+                                />
+                              ))}
+                            </div>
+                          )}
+
+                          {(member.twotranscendenceSkillUp?.[skillIndex]
+                            ?.length > 0 ||
+                            member.sixtranscendenceSkillUp?.[skillIndex]
+                              ?.length > 0) && (
+                            <div className="skill-transcendence-section">
+                              {member.twotranscendenceSkillUp?.[skillIndex]
+                                ?.length > 0 && (
+                                <div
+                                  className={`skill-transcendence-box ${
+                                    transcend >= 2 ? "active" : "inactive"
+                                  }`}
+                                >
+                                  <p className="skill-transcendence-title">
+                                    2초월 효과
+                                  </p>
+                                  {member.twotranscendenceSkillUp[
+                                    skillIndex
+                                  ].map((line, i) => (
+                                    <p
+                                      key={i}
+                                      dangerouslySetInnerHTML={{
+                                        __html: highlightKeywords(line),
+                                      }}
+                                    />
                                   ))}
                                 </div>
                               )}
-
-                              {(member.twotranscendenceSkillUp?.[skillIndex]?.length > 0 ||
-                                member.sixtranscendenceSkillUp?.[skillIndex]?.length > 0) && (
-                                <div className="skill-transcendence-section">
-                                  {member.twotranscendenceSkillUp?.[skillIndex]?.length > 0 && (
-                                    <div className={`skill-transcendence-box ${transcend >= 2 ? "active" : "inactive"}`}>
-                                      <p className="skill-transcendence-title">2초월 효과</p>
-                                      {member.twotranscendenceSkillUp[skillIndex].map((line, i) => (
-                                        <p key={i} dangerouslySetInnerHTML={{ __html: highlightKeywords(line) }} />
-                                      ))}
-                                    </div>
-                                  )}
-                                  {member.sixtranscendenceSkillUp?.[skillIndex]?.length > 0 && (
-                                    <div className={`skill-transcendence-box ${transcend >= 6 ? "active" : "inactive"}`}>
-                                      <p className="skill-transcendence-title">6초월 효과</p>
-                                      {member.sixtranscendenceSkillUp[skillIndex].map((line, i) => (
-                                        <p key={i} dangerouslySetInnerHTML={{ __html: highlightKeywords(line) }} />
-                                      ))}
-                                    </div>
-                                  )}
+                              {member.sixtranscendenceSkillUp?.[skillIndex]
+                                ?.length > 0 && (
+                                <div
+                                  className={`skill-transcendence-box ${
+                                    transcend >= 6 ? "active" : "inactive"
+                                  }`}
+                                >
+                                  <p className="skill-transcendence-title">
+                                    6초월 효과
+                                  </p>
+                                  {member.sixtranscendenceSkillUp[
+                                    skillIndex
+                                  ].map((line, i) => (
+                                    <p
+                                      key={i}
+                                      dangerouslySetInnerHTML={{
+                                        __html: highlightKeywords(line),
+                                      }}
+                                    />
+                                  ))}
                                 </div>
                               )}
                             </div>
                           )}
                         </div>
-                  )}
-                  {activeTab === "스탯" && (
-                    <div>
-                      {/* 나중에 구현 */}
-                      스탯 내용 준비 중...
+                      )}
                     </div>
                   )}
+                  {activeTab === "스탯" && (
+                    <div className="stat-table">
+                      {(() => {
+                        const {
+                          grade,
+                          type,
+                          level = 1,
+                          enhance = 0,
+                          transcend = 0,
+                          transcendBonus = [],
+                        } = member;
+
+                        // 기본/최대/강화 스탯
+                        const baseStats = baseStatData?.[grade]?.[type] || {};
+                        const maxStats = maxStatData?.[grade]?.[type] || {};
+                        const enhanceStats =
+                          enhanceBonusData?.[grade]?.[type] || {};
+
+                        const statKeys = ["공격력", "방어력", "생명력", "속공"];
+
+                        // 1. 레벨 스탯 계산 (선형 보간)
+                        const interpolatedStats = statKeys.reduce(
+                          (acc, key) => {
+                            const base = baseStats[key] ?? 0;
+                            const max = maxStats[key] ?? base;
+                            acc[key] = interpolateStat(base, max, level);
+                            return acc;
+                          },
+                          {}
+                        );
+
+                        // 2. 초월 스탯 누적 계산 (이제 % 계산 적용)
+                        const transcendStatMap = {};
+                        transcendBonus
+                          .slice(0, transcend)
+                          .forEach(({ stat, value }) => {
+                            const base = interpolatedStats[stat] ?? 0;
+                            const bonus = Math.round(base * (value / 100));
+                            transcendStatMap[stat] =
+                              (transcendStatMap[stat] || 0) + bonus;
+                          });
+
+                        // 3. 모든 스탯 계산: 레벨 + 강화 + 초월
+                        const fullStats = {
+                          ...statKeys.reduce((acc, key) => {
+                            const levelStat = interpolatedStats[key] ?? 0;
+                            const enhanceBonus = Math.round(
+                              (enhanceStats[key] ?? 0) * (enhance / 5)
+                            );
+                            const transcendBonusVal =
+                              transcendStatMap[key] ?? 0;
+                            const total =
+                              levelStat + enhanceBonus + transcendBonusVal;
+
+                            acc[key] = {
+                              total,
+                              levelStat,
+                              enhanceBonus,
+                              transcendBonus: transcendBonusVal,
+                            };
+                            return acc;
+                          }, {}),
+
+                          // 나머지 고정형 스탯
+                          "치명타 확률": {
+                            total: "5.0%",
+                            levelStat: "5.0%",
+                            enhanceBonus: null,
+                            transcendBonus: null,
+                          },
+                          "치명타 피해": {
+                            total: "150.0%",
+                            levelStat: "150.0%",
+                            enhanceBonus: null,
+                            transcendBonus: null,
+                          },
+                          "약점 공격 확률": {
+                            total: "0.0%",
+                            levelStat: "0.0%",
+                            enhanceBonus: null,
+                            transcendBonus: null,
+                          },
+                          "막기 확률": {
+                            total: (transcendStatMap["막기 확률"] ?? 0) + "%",
+                            levelStat: "0.0%",
+                            enhanceBonus: null,
+                            transcendBonus: transcendStatMap["막기 확률"] ?? 0,
+                          },
+                          "받는 피해 감소": {
+                            total: "0.0%",
+                            levelStat: "0.0%",
+                            enhanceBonus: null,
+                            transcendBonus: null,
+                          },
+                          "농락 저주": {
+                            total: "0.0%",
+                            levelStat: "0.0%",
+                            enhanceBonus: null,
+                            transcendBonus: null,
+                          },
+                        };
+
+                        // 4. 렌더링
+                        return Object.entries(fullStats).map(
+                          (
+                            [
+                              label,
+                              {
+                                total,
+                                levelStat,
+                                enhanceBonus,
+                                transcendBonus,
+                              },
+                            ],
+                            i
+                          ) => (
+                            <div key={i} className="stat-row">
+                              <span className="stat-name">{label}</span>
+                              <span className="stat-value">
+                                <span className="total">{total}</span>
+                                <span className="detail">
+                                  {typeof levelStat === "number" ? (
+                                    <>
+                                      {" ("}
+                                      {levelStat}
+                                      {enhanceBonus ? (
+                                        <>
+                                          {" +"}
+                                          <span className="enhance-bonus">
+                                            {enhanceBonus}
+                                          </span>
+                                        </>
+                                      ) : null}
+                                      {transcendBonus ? (
+                                        <>
+                                          {" +"}
+                                          <span className="transcend-bonus">
+                                            {transcendBonus}
+                                          </span>
+                                        </>
+                                      ) : null}
+                                      {")"}
+                                    </>
+                                  ) : (
+                                    ` (${levelStat})`
+                                  )}
+                                </span>
+                              </span>
+                            </div>
+                          )
+                        );
+                      })()}
+                    </div>
+                  )}
+
                   {activeTab === "장비" && (
                     <div>
                       {/* 나중에 구현 */}
@@ -332,7 +576,10 @@ export default function Team() {
       </div>
 
       {selectingIndex !== null && (
-        <CharacterSelectPopup onSelect={handleSelect} onClose={() => setSelectingIndex(null)} />
+        <CharacterSelectPopup
+          onSelect={handleSelect}
+          onClose={() => setSelectingIndex(null)}
+        />
       )}
     </div>
   );
