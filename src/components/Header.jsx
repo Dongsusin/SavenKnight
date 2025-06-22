@@ -41,6 +41,9 @@ export default function Header() {
           <NavLink to="/summon" onClick={closeMenu}>
             소환
           </NavLink>
+           <NavLink to="/team" onClick={closeMenu}>
+            팀 편성
+          </NavLink>
         </nav>
       </header>
 

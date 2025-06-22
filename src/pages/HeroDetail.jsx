@@ -345,9 +345,6 @@ export default function HeroDetail() {
     return { flatBonus, percentBonus };
   }
 
-  const isStatKeyword = (text) =>
-    ["공격력", "방어력", "생명력"].some((k) => text.includes(k));
-
   const getAccessoryStats = (level = 0) => {
     const base = 2.5;
     const per = 0.5;
