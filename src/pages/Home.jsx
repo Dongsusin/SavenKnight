@@ -77,7 +77,7 @@ export default function Home() {
       <aside className="home-sidebar">
         <section className="home-panel">
           <h2>레이드</h2>
-          <ul className="raid-list">
+          <ul className="home-raid-list">
             {[
               { name: "파멸의눈동자", img: "/레이드/선택/파멸의눈동자.png" },
               { name: "우마왕", img: "/레이드/선택/우마왕.png" },
@@ -85,7 +85,7 @@ export default function Home() {
             ].map((raid, i) => (
               <li
                 key={raid.name}
-                className={`raid-card ${i === 0 ? "selected" : ""}`}
+                className={`home-raid-card ${i === 0 ? "selected" : ""}`}
                 onClick={() => navigate("/raid")}
               >
                 <img src={raid.img} alt={raid.name} />
