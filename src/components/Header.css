@@ -28,14 +28,22 @@
   color: white;
   text-decoration: none;
   font-weight: 500;
-  text-wrap: nowrap;
+  white-space: nowrap;
   font-size: 1.1rem;
   transition: color 0.2s, transform 0.2s;
+  padding: 4px 8px;
+  border-radius: 6px;
 }
 
 .nav-right a:hover,
 .nav-right a:active {
   color: gold;
+}
+
+.nav-right a.active {
+  color: gold;
+  font-weight: 700;
+  transform: scale(1.05);
 }
 
 .menu-toggle {
@@ -63,14 +71,6 @@
 .mobile-overlay.show {
   opacity: 1;
   visibility: visible;
-}
-.nav-right a {
-  transition: color 0.2s, transform 0.2s;
-}
-
-.nav-right a.active {
-  color: gold;
-  font-weight: 700;
 }
 
 @media (max-width: 426px) {
@@ -114,8 +114,15 @@
 
   .nav-right a {
     width: 100%;
-    padding: 12px 0;
+    padding: 12px 16px;
     font-size: 1rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0;
+  }
+
+  .nav-right a.active {
+    color: black;
+    font-weight: 700;
+    transform: none;
   }
 }

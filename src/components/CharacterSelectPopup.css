@@ -102,10 +102,9 @@
   right: 12px;
   background: #ffcc00;
   color: black;
-  border: none;
-  border-radius: 50%;
   width: auto;
   font-size: 18px;
+  padding: 10px;
   font-weight: bold;
   cursor: pointer;
   display: flex;
