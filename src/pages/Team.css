@@ -3,13 +3,13 @@
 .team-page {
   color: #fff;
   text-align: center;
+  padding: 10px;
 }
 
 .team-slots {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 32px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 5px;
 }
 
 .team-slot-wrapper {
@@ -17,9 +17,14 @@
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  width: 100%;
+  width: auto;
   max-width: 800px;
-  border: 1px solid #555;
+  min-width: 120px;
+  min-height: 150px;
+  max-height: 750px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border: 1px dashed #777;
   border-radius: 10px;
   padding: 6px;
   background-color: #222;
@@ -35,20 +40,26 @@
 }
 .team-slot-top {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   gap: 10px;
   width: 100%;
 }
+.team-stat-settings {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
 
 .team-slot {
-  border: 2px solid #ccc;
   border-radius: 8px;
-  background-color: #f8f8f8;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   overflow: hidden;
+  color: white;
+  width: 100%;
+  height: 100%;
 }
 
 .team-slot img {
@@ -62,7 +73,7 @@
 
 .stat-value-text {
   color: #fff;
-  font-weight: bold;
+  font-size: 12px;
 }
 
 .skill-window {
@@ -97,10 +108,6 @@
   border: 1px solid #666;
   cursor: pointer;
   transition: transform 0.1s ease;
-}
-
-.skill-icon:hover {
-  transform: scale(1.1);
 }
 
 .skill-icon.selected {
@@ -197,6 +204,7 @@
 
 .stat-name {
   color: #ccc;
+  text-wrap: nowrap;
 }
 
 /* 총합: 노란색 */
@@ -356,12 +364,212 @@
   justify-content: space-between;
 }
 
+.pet-select-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.pet-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 15, 15, 0.9);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  padding-top: 80px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.pet-popup {
+  background: #222;
+  color: white;
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 90vw;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.pet-popup h3 {
+  font-size: 1.2rem;
+  color: #ffcc00;
+  margin-bottom: 12px;
+  text-align: center;
+  border-bottom: 1px solid #444;
+  padding-bottom: 6px;
+}
+
+.pet-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 12px;
+  justify-items: center;
+}
+
+.pet-card {
+  background: #333;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 6px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 80px;
+  cursor: pointer;
+}
+
+.pet-card:hover {
+  background: #444;
+  border: #ffcc00 1px solid;
+}
+
+.pet-card img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
+.pet-card span {
+  margin-top: 6px;
+  font-size: 0.85rem;
+  color: #fff;
+  word-break: break-word;
+  line-height: 1.2;
+}
+
+.pet-popup .close-btn {
+  position: absolute;
+  top: 5px;
+  right: 12px;
+  background: #ffcc00;
+  color: black;
+  font-size: 18px;
+  padding: 10px;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  z-index: 10;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.selected-pet-box {
+  background: #2a2a2a;
+  border: 1px solid #555;
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 120px;
+  width: auto;
+  font-size: 13px;
+  position: relative;
+  transition: box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.selected-pet-box img {
+  width: 100%;
+  border-radius: 6px;
+  margin-bottom: 6px;
+}
+
+.selected-pet-name {
+  font-weight: bold;
+  color: #ffcc00;
+  margin-bottom: 4px;
+  text-align: center;
+}
+
+.selected-pet-effect {
+  color: #ccc;
+  font-size: 12px;
+  line-height: 1.4;
+  text-align: center;
+  text-wrap: nowrap;
+}
+
+.pet-clear-button {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background-color: #444;
+  border: none;
+  color: #fff;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.pet-clear-button:hover {
+  background-color: #666;
+}
+
+.empty-pet-box {
+  background: #1e1e1e;
+  border: 1px dashed #777;
+  border-radius: 10px;
+  width: 120px;
+  height: 144px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #aaa;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.empty-pet-box span {
+  font-size: 14px;
+  text-align: center;
+  padding: 0 4px;
+  line-height: 1.4;
+}
+
+.text-stat {
+  font-size: 12px;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+}
+
 @media (max-width: 786px) {
+  .team-slot-wrapper {
+    justify-content: center;
+  }
   .team-slot-top {
     flex-direction: column;
     align-items: center;
   }
-  .team-slot img {
-    width: 100%;
+  .team-slots {
+    display: flex;
+    flex-direction: column;
+  }
+  .team-stat-settings {
+    flex-direction: row;
+  }
+}
+
+@media (max-width: 480px) {
+  .pet-list {
+    grid-template-columns: repeat(2, 1fr);
   }
 }

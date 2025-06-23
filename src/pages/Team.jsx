@@ -8,6 +8,7 @@ import weaponMainStatTable from "../data/weaponMainStatTable.json";
 import armorMainStatTable from "../data/armorMainStatTable.json";
 import subStatTable from "../data/subStatTable.json";
 import setEffectTable from "../data/setEffectTable.json";
+import pets from "../data/pets.json";
 import "./Team.css";
 
 export default function Team() {
@@ -18,6 +19,8 @@ export default function Team() {
   const [selectedEquipSlot, setSelectedEquipSlot] = useState(null);
   const [teamEquipments, setTeamEquipments] = useState(Array(5).fill({}));
   const [teamSubstats, setTeamSubstats] = useState(Array(5).fill({}));
+  const [selectedPet, setSelectedPet] = useState(null);
+  const [isPetPopupOpen, setIsPetPopupOpen] = useState(false);
 
   const [teamSubstatUpgrades, setTeamSubstatUpgrades] = useState(
     Array(5).fill({})
@@ -437,7 +440,7 @@ export default function Team() {
     };
   }
 
-  function getTotalPassiveBonuses(team, index = null) {
+  function getTotalPassiveBonuses(team, index = null, pet = null) {
     const selfOnly = {};
     const teamWide = {};
 
@@ -451,13 +454,29 @@ export default function Team() {
         const { stat, value, type } = parsed;
         const targetMap = target === "self" ? selfOnly : teamWide;
 
-        // self 타겟은 해당 인덱스일 때만 포함
         if (target === "self" && index !== null && i !== index) return;
 
         if (!targetMap[stat]) targetMap[stat] = { flat: 0, percent: 0 };
         targetMap[stat][type] += value;
       });
     });
+
+    // ✅ 펫 효과도 포함
+    if (pet?.skillDescription) {
+      const descList = Array.isArray(pet.skillDescription)
+        ? pet.skillDescription
+        : [pet.skillDescription];
+      descList.forEach((desc) => {
+        const parsed = parsePassiveEffectLine(
+          desc.replace(/\[.*?\]/g, "").trim()
+        );
+        if (!parsed) return;
+        const { stat, value, type } = parsed;
+
+        if (!teamWide[stat]) teamWide[stat] = { flat: 0, percent: 0 };
+        teamWide[stat][type] += value;
+      });
+    }
 
     const result = {};
     const allStats = new Set([
@@ -480,15 +499,49 @@ export default function Team() {
     <div className="team-page page">
       <h1>팀 편성</h1>
 
+      <div className="pet-select-wrapper">
+        {selectedPet ? (
+          <div className="selected-pet-box">
+            <button
+              className="pet-clear-button"
+              onClick={() => setSelectedPet(null)}
+            >
+              ✕
+            </button>
+            <img
+              src={`/도감/펫/아이콘/${selectedPet.name}.png`}
+              alt={selectedPet.name}
+              onClick={() => setIsPetPopupOpen(true)}
+            />
+            <div className="selected-pet-name">{selectedPet.name}</div>
+            <div className="selected-pet-effect">
+              {Array.isArray(selectedPet.skillDescription)
+                ? selectedPet.skillDescription.map((line, i) => (
+                    <div key={i}>{line}</div>
+                  ))
+                : selectedPet.skillDescription}
+            </div>
+          </div>
+        ) : (
+          <div
+            className="empty-pet-box"
+            onClick={() => setIsPetPopupOpen(true)}
+          >
+            <span>펫 선택</span>
+          </div>
+        )}
+      </div>
+
       <div className="team-slots">
         {team.map((member, index) => {
           if (!member) {
             return (
-              <div key={index} className="team-slot-wrapper">
-                <div
-                  className="team-slot"
-                  onClick={() => handleSlotClick(index)}
-                >
+              <div
+                key={index}
+                className="team-slot-wrapper"
+                onClick={() => handleSlotClick(index)}
+              >
+                <div className="team-slot">
                   <span className="empty">캐릭터 선택</span>
                 </div>
               </div>
@@ -520,7 +573,7 @@ export default function Team() {
                   />
                 </div>
 
-                <div className="stat-settings">
+                <div className="team-stat-settings">
                   {[
                     {
                       label: "레벨",
@@ -594,7 +647,6 @@ export default function Team() {
                     </button>
                   ))}
                 </div>
-
                 <div className="tab-content">
                   {activeTab === "스킬" && (
                     <div className="skill-window">
@@ -667,7 +719,6 @@ export default function Team() {
                               ))}
                             </div>
                           )}
-
                           {(member.twotranscendenceSkillUp?.[skillIndex]
                             ?.length > 0 ||
                             member.sixtranscendenceSkillUp?.[skillIndex]
@@ -930,7 +981,7 @@ export default function Team() {
                               ) => (
                                 <div key={i} className="stat-row">
                                   <span className="stat-name">{label}</span>
-                                  <span className="stat-value">
+                                  <span className="stat-value-text">
                                     <span className="text-yellow-400 font-bold">
                                       {total}
                                     </span>
@@ -1005,21 +1056,13 @@ export default function Team() {
                             )}
 
                             {/* 범례 */}
-                            <div className="text-xs text-gray-400 mt-2">
-                              <span className="text-yellow-400 font-bold">
-                                ●
-                              </span>{" "}
-                              총합&nbsp;&nbsp;
+                            <div className="text-stat">
+                              <span className="text-yellow-400">●</span> 총합
                               <span className="text-gray-400">●</span> 기본
-                              수치&nbsp;&nbsp;
                               <span className="text-green-400">●</span> 강화
-                              수치&nbsp;&nbsp;
                               <span className="text-red-400">●</span> 초월
-                              수치&nbsp;&nbsp;
                               <span className="text-blue-400">●</span> 장비
-                              수치&nbsp;&nbsp;
-                              <span className="text-purple-400">●</span>{" "}
-                              패시브[상시] 수치
+                              <span className="text-purple-400">●</span> 스킬
                             </div>
 
                             {/* 장신구 특수효과 */}
@@ -1063,7 +1106,6 @@ export default function Team() {
                       })()}
                     </div>
                   )}
-
                   {activeTab === "장비" && (
                     <div className="equipment-grid">
                       {["무기0", "무기1", "방어구0", "방어구1", "장신구0"].map(
@@ -1212,7 +1254,7 @@ export default function Team() {
                                           )}
                                         </select>
                                         {substat.main && (
-                                          <span className="stat-value">
+                                          <span className="stat-value-text">
                                             {calcMainStat(
                                               index,
                                               slotKey,
@@ -1344,7 +1386,7 @@ export default function Team() {
                                                 >
                                                   +
                                                 </button>
-                                                <span className="stat-value">
+                                                <span className="stat-value-text">
                                                   {calcSubStat(
                                                     subName,
                                                     points * 3
@@ -1496,6 +1538,35 @@ export default function Team() {
           );
         })}
       </div>
+
+      {isPetPopupOpen && (
+        <div className="pet-popup-overlay">
+          <div className="pet-popup">
+            <button
+              className="close-btn"
+              onClick={() => setIsPetPopupOpen(false)}
+            >
+              ✕
+            </button>
+            <h3>펫 선택</h3>
+            <div className="pet-list">
+              {pets.map((pet) => (
+                <div
+                  key={pet.id}
+                  className="pet-card"
+                  onClick={() => {
+                    setSelectedPet(pet);
+                    setIsPetPopupOpen(false);
+                  }}
+                >
+                  <img src={`/도감/펫/아이콘/${pet.name}.png`} alt={pet.name} />
+                  <span>{pet.name}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       {selectingIndex !== null && (
         <CharacterSelectPopup
