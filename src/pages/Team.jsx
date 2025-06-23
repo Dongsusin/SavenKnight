@@ -301,6 +301,12 @@ export default function Team() {
       "효과 저항%": "효과 저항",
     };
 
+    // ✅ 물리/마법 공격력은 내부 비교 시 "공격력"으로 매핑
+    const matchStatKey =
+      statKey === "물리 공격력" || statKey === "마법 공격력"
+        ? "공격력"
+        : statKey;
+
     const equips = teamEquipments[index] || {};
     const subs = teamSubstats[index] || {};
     const upgrades = teamSubstatUpgrades[index] || {};
@@ -314,13 +320,13 @@ export default function Team() {
       const level = equip.level ?? 0;
 
       // 1. 기본 장비 평면 보너스
-      if (isWeapon && statKey === "공격력") {
+      if (isWeapon && matchStatKey === "공격력") {
         flatBonus += 64 + 16 * level;
       }
 
       if (isArmor) {
-        if (statKey === "방어력") flatBonus += 39 + 10 * level;
-        if (statKey === "생명력") flatBonus += 224 + 57 * level;
+        if (matchStatKey === "방어력") flatBonus += 39 + 10 * level;
+        if (matchStatKey === "생명력") flatBonus += 224 + 57 * level;
       }
 
       // 2. 주 스탯
@@ -328,7 +334,7 @@ export default function Team() {
       if (mainStat) {
         const val = getMainStatValue(mainStat, level, isWeapon);
         const mappedKey = percentToBaseStatMap[mainStat] || mainStat;
-        if (mappedKey === statKey) {
+        if (mappedKey === matchStatKey) {
           if (typeof val === "string" && val.endsWith("%")) {
             percentBonus += parseFloat(val);
           } else {
@@ -337,7 +343,7 @@ export default function Team() {
         }
       }
 
-      // 3. 부 스탯 (HeroDetail 방식과 동일하게)
+      // 3. 부 스탯
       const subList = subs?.[key]?.subs || [];
       const upgradeList = upgrades?.[key] || {};
       subList.forEach((sub, i) => {
@@ -346,12 +352,12 @@ export default function Team() {
         if (!entry) return;
 
         const points = upgradeList[i] || 0;
-        const level = points * 3; // ✅ HeroDetail 기준: 포인트 1당 레벨 3
+        const level = points * 3;
         const bonusSteps = Math.floor(level / 3);
         const total = entry.base + bonusSteps * entry.per3Level;
 
         const mappedKey = percentToBaseStatMap[sub] || sub;
-        if (mappedKey === statKey) {
+        if (mappedKey === matchStatKey) {
           if (entry.isPercent) {
             percentBonus += total;
           } else {
@@ -363,13 +369,13 @@ export default function Team() {
       // 4. 장신구 퍼센트 보너스
       if (equip.type === "장신구") {
         const bonus = 2.5 + 0.5 * level;
-        if (statKey === "공격력") percentBonus += bonus;
-        if (statKey === "방어력") percentBonus += bonus;
-        if (statKey === "생명력") percentBonus += bonus;
+        if (matchStatKey === "공격력") percentBonus += bonus;
+        if (matchStatKey === "방어력") percentBonus += bonus;
+        if (matchStatKey === "생명력") percentBonus += bonus;
       }
     });
 
-    // 세트 효과 적용
+    // 5. 세트 효과
     Object.entries(setCounts).forEach(([setName, count]) => {
       const effect = setEffectTable[setName];
       if (!effect) return;
@@ -381,7 +387,7 @@ export default function Team() {
           : [];
       chosen.forEach(({ stat, value }) => {
         const mapped = percentToBaseStatMap[stat] || stat.replace("%", "");
-        if (mapped === statKey) percentBonus += value;
+        if (mapped === matchStatKey) percentBonus += value;
       });
     });
 
@@ -734,11 +740,38 @@ export default function Team() {
                         const enhanceStats =
                           enhanceBonusData?.[grade]?.[type] || {};
 
-                        const statKeys = ["공격력", "방어력", "생명력", "속공"];
                         const effectiveAtkStat =
                           type === "마법" || type === "치유"
                             ? "마법 공격력"
                             : "물리 공격력";
+
+                        if (baseStats["공격력"] !== undefined) {
+                          baseStats[effectiveAtkStat] = baseStats["공격력"];
+                        }
+                        if (maxStats["공격력"] !== undefined) {
+                          maxStats[effectiveAtkStat] = maxStats["공격력"];
+                        }
+                        if (enhanceStats["공격력"] !== undefined) {
+                          enhanceStats[effectiveAtkStat] =
+                            enhanceStats["공격력"];
+                        }
+
+                        const statKeys = [
+                          effectiveAtkStat,
+                          "방어력",
+                          "생명력",
+                          "속공",
+                        ];
+
+                        const percentStats = [
+                          "치명타 확률",
+                          "치명타 피해",
+                          "약점 공격 확률",
+                          "막기 확률",
+                          "받는 피해 감소",
+                          "효과 적중",
+                          "효과 저항",
+                        ];
 
                         const interpolatedStats = statKeys.reduce(
                           (acc, key) => {
@@ -754,30 +787,36 @@ export default function Team() {
                         transcendBonus
                           .slice(0, Math.min(transcend, 6))
                           .forEach(({ stat, value }) => {
-                            const levelBase = interpolatedStats[stat] ?? 0;
+                            const targetStat =
+                              stat === "공격력" ? effectiveAtkStat : stat;
+                            const levelBase =
+                              interpolatedStats[targetStat] ?? 0;
                             const enhanceBonus =
-                              (enhanceStats[stat] ?? 0) * enhance;
+                              (enhanceStats[targetStat] ?? 0) * enhance;
                             const baseWithEnhance = levelBase + enhanceBonus;
                             const bonus = Math.round(
                               baseWithEnhance * (value / 100)
                             );
-                            transcendStatMap[stat] =
-                              (transcendStatMap[stat] || 0) + bonus;
+                            transcendStatMap[targetStat] =
+                              (transcendStatMap[targetStat] || 0) + bonus;
                           });
 
                         const extraPercent =
                           transcend > 6 ? (transcend - 6) * 2 : 0;
                         ["공격력", "방어력", "생명력"].forEach((statKey) => {
+                          const targetStat =
+                            statKey === "공격력" ? effectiveAtkStat : statKey;
                           if (extraPercent > 0) {
-                            const levelBase = interpolatedStats[statKey] ?? 0;
+                            const levelBase =
+                              interpolatedStats[targetStat] ?? 0;
                             const enhanceBonus =
-                              (enhanceStats[statKey] ?? 0) * enhance;
+                              (enhanceStats[targetStat] ?? 0) * enhance;
                             const baseWithEnhance = levelBase + enhanceBonus;
                             const bonus = Math.floor(
                               baseWithEnhance * (extraPercent / 100)
                             );
-                            transcendStatMap[statKey] =
-                              (transcendStatMap[statKey] || 0) + bonus;
+                            transcendStatMap[targetStat] =
+                              (transcendStatMap[targetStat] || 0) + bonus;
                           }
                         });
 
@@ -797,55 +836,42 @@ export default function Team() {
                               index,
                               key
                             );
-
                             const passiveFlat = passiveBonuses[key]?.flat ?? 0;
                             const passivePercent =
-                              key === "공격력"
-                                ? passiveBonuses[effectiveAtkStat]?.percent ?? 0
-                                : passiveBonuses[key]?.percent ?? 0;
+                              passiveBonuses[key]?.percent ?? 0;
 
                             const baseWithEnhance = levelStat + enhanceBonus;
-
-                            const percentFromEquip = Math.floor(
-                              baseWithEnhance *
-                                (equipmentBonus.percentBonus / 100)
+                            const fromEquipPercent = Math.floor(
+                              (baseWithEnhance *
+                                (equipmentBonus.percentBonus || 0)) /
+                                100
                             );
-                            const percentFromPassive = Math.floor(
-                              baseWithEnhance * (passivePercent / 100)
+                            const fromPassivePercent = Math.floor(
+                              (baseWithEnhance * (passivePercent || 0)) / 100
                             );
 
                             const total =
                               baseWithEnhance +
                               transcendBonusVal +
                               equipmentBonus.flatBonus +
-                              percentFromEquip +
+                              fromEquipPercent +
                               passiveFlat +
-                              percentFromPassive;
+                              fromPassivePercent;
 
                             acc[key] = {
                               total,
                               levelStat,
                               enhanceBonus,
                               transcendBonus: transcendBonusVal,
-                              equipmentBonus,
-                              passiveBonus: {
-                                flat: passiveFlat,
-                                percent: passivePercent,
-                                calculated: percentFromPassive,
-                              },
+                              equipmentBonusTotal:
+                                equipmentBonus.flatBonus + fromEquipPercent,
+                              passiveBonusTotal:
+                                passiveFlat + fromPassivePercent,
                             };
                             return acc;
                           }, {}),
 
-                          ...[
-                            "치명타 확률",
-                            "치명타 피해",
-                            "약점 공격 확률",
-                            "막기 확률",
-                            "받는 피해 감소",
-                            "효과 적중",
-                            "효과 저항",
-                          ].reduce((acc, key) => {
+                          ...percentStats.reduce((acc, key) => {
                             const base = {
                               "치명타 확률": 5.0,
                               "치명타 피해": 150.0,
@@ -876,13 +902,11 @@ export default function Team() {
                               levelStat: `${base.toFixed(1)}%`,
                               enhanceBonus: null,
                               transcendBonus: null,
-                              equipmentBonus,
-                              passiveBonus: {
-                                flat: passiveFlat,
-                                percent: passivePercent,
-                              },
+                              equipmentBonusTotal:
+                                equipmentBonus.flatBonus +
+                                equipmentBonus.percentBonus,
+                              passiveBonusTotal: passiveFlat + passivePercent,
                             };
-
                             return acc;
                           }, {}),
                         };
@@ -898,97 +922,89 @@ export default function Team() {
                                     levelStat,
                                     enhanceBonus,
                                     transcendBonus,
-                                    equipmentBonus,
-                                    passiveBonus,
+                                    equipmentBonusTotal,
+                                    passiveBonusTotal,
                                   },
                                 ],
                                 i
-                              ) => {
-                                const statLabel =
-                                  label === "공격력"
-                                    ? type === "마법" || type === "치유"
-                                      ? "마법 공격력"
-                                      : "물리 공격력"
-                                    : label;
-
-                                return (
-                                  <div key={i} className="stat-row">
-                                    <span className="stat-name">
-                                      {statLabel}
+                              ) => (
+                                <div key={i} className="stat-row">
+                                  <span className="stat-name">{label}</span>
+                                  <span className="stat-value">
+                                    <span className="text-yellow-400 font-bold">
+                                      {total}
                                     </span>
-                                    <span className="stat-value">
-                                      <span className="text-yellow-400 font-bold">
-                                        {total}
-                                      </span>
-                                      {(typeof levelStat === "number" ||
-                                        typeof levelStat === "string") && (
-                                        <span className="text-sm text-gray-400">
-                                          {" ("}
-                                          <span className="text-gray-400">
-                                            {levelStat}
-                                          </span>
-                                          {enhanceBonus > 0 && (
-                                            <>
-                                              {" + "}
-                                              <span className="text-green-400">
-                                                {enhanceBonus}
-                                              </span>
-                                            </>
-                                          )}
-                                          {transcendBonus > 0 && (
-                                            <>
-                                              {" + "}
-                                              <span className="text-red-400">
-                                                {transcendBonus}
-                                              </span>
-                                            </>
-                                          )}
-                                          {equipmentBonus &&
-                                            (equipmentBonus.flatBonus > 0 ||
-                                              equipmentBonus.percentBonus >
-                                                0) && (
-                                              <>
-                                                {" + "}
-                                                <span className="text-blue-400">
-                                                  {equipmentBonus.flatBonus >
-                                                    0 &&
-                                                    `${equipmentBonus.flatBonus}`}
-                                                  {equipmentBonus.flatBonus >
-                                                    0 &&
-                                                    equipmentBonus.percentBonus >
-                                                      0 &&
-                                                    " + "}
-                                                  {equipmentBonus.percentBonus >
-                                                    0 &&
-                                                    `${equipmentBonus.percentBonus}%`}
-                                                </span>
-                                              </>
-                                            )}
-                                          {passiveBonus &&
-                                            (passiveBonus.flat > 0 ||
-                                              passiveBonus.percent > 0) && (
-                                              <>
-                                                {" + "}
-                                                <span className="text-purple-400">
-                                                  {passiveBonus.flat > 0 &&
-                                                    `${passiveBonus.flat}`}
-                                                  {passiveBonus.flat > 0 &&
-                                                    passiveBonus.percent > 0 &&
-                                                    " + "}
-                                                  {passiveBonus.percent > 0 &&
-                                                    `${passiveBonus.percent}%`}
-                                                </span>
-                                              </>
-                                            )}
-                                          {")"}
+                                    {percentStats.includes(label) ? (
+                                      <span className="text-sm text-gray-400">
+                                        {" ("}
+                                        <span className="text-gray-400">
+                                          {levelStat}
                                         </span>
-                                      )}
-                                    </span>
-                                  </div>
-                                );
-                              }
+                                        {equipmentBonusTotal > 0 && (
+                                          <>
+                                            {" + "}
+                                            <span className="text-blue-400">
+                                              {equipmentBonusTotal.toFixed(1)}%
+                                            </span>
+                                          </>
+                                        )}
+                                        {passiveBonusTotal > 0 && (
+                                          <>
+                                            {" + "}
+                                            <span className="text-purple-400">
+                                              {passiveBonusTotal.toFixed(1)}%
+                                            </span>
+                                          </>
+                                        )}
+                                        {")"}
+                                      </span>
+                                    ) : (
+                                      <span className="text-sm text-gray-400">
+                                        {" ("}
+                                        <span className="text-gray-400">
+                                          {levelStat}
+                                        </span>
+                                        {enhanceBonus > 0 && (
+                                          <>
+                                            {" + "}
+                                            <span className="text-green-400">
+                                              {enhanceBonus}
+                                            </span>
+                                          </>
+                                        )}
+                                        {transcendBonus > 0 && (
+                                          <>
+                                            {" + "}
+                                            <span className="text-red-400">
+                                              {transcendBonus}
+                                            </span>
+                                          </>
+                                        )}
+                                        {equipmentBonusTotal > 0 && (
+                                          <>
+                                            {" + "}
+                                            <span className="text-blue-400">
+                                              {equipmentBonusTotal}
+                                            </span>
+                                          </>
+                                        )}
+                                        {passiveBonusTotal > 0 && (
+                                          <>
+                                            {" + "}
+                                            <span className="text-purple-400">
+                                              {passiveBonusTotal}
+                                            </span>
+                                          </>
+                                        )}
+                                        {")"}
+                                      </span>
+                                    )}
+                                  </span>
+                                </div>
+                              )
                             )}
 
+                            {/* 범례 */}
                             <div className="text-xs text-gray-400 mt-2">
                               <span className="text-yellow-400 font-bold">
                                 ●
@@ -1005,6 +1021,43 @@ export default function Team() {
                               <span className="text-purple-400">●</span>{" "}
                               패시브[상시] 수치
                             </div>
+
+                            {/* 장신구 특수효과 */}
+                            {(() => {
+                              const accessories = Object.values(
+                                team[index]?.equipments || {}
+                              ).filter((item) => item?.type === "장신구");
+                              const effects = accessories
+                                .map((item) => item.specialEffect)
+                                .filter(Boolean);
+
+                              return effects.length > 0 ? (
+                                <div
+                                  style={{
+                                    marginTop: "8px",
+                                    padding: "6px 10px",
+                                    border: "1px dashed #888",
+                                    borderRadius: "8px",
+                                    backgroundColor: "#222",
+                                    color: "#FFD700",
+                                    fontSize: "0.85rem",
+                                  }}
+                                >
+                                  <strong>장신구 특수효과</strong>
+                                  <ul
+                                    style={{
+                                      marginTop: "4px",
+                                      color: "#fff",
+                                      paddingLeft: "20px",
+                                    }}
+                                  >
+                                    {effects.map((label, idx) => (
+                                      <li key={idx}>{label}</li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              ) : null;
+                            })()}
                           </>
                         );
                       })()}
@@ -1045,82 +1098,83 @@ export default function Team() {
                             >
                               {item ? (
                                 <div className="equipped-item">
-                                  <img
-                                    src={item.image}
-                                    alt={item.name}
-                                    className="equip-image"
-                                    onContextMenu={(e) => {
-                                      e.preventDefault();
-                                      setTeamEquipments((prev) => {
-                                        const updated = [...prev];
-                                        const current = { ...updated[index] };
-                                        delete current[slotKey];
-                                        updated[index] = current;
-                                        return updated;
-                                      });
-                                    }}
-                                  />
+                                  <div className="equipped-item-top">
+                                    <img
+                                      src={item.image}
+                                      alt={item.name}
+                                      className="equip-image"
+                                      onContextMenu={(e) => {
+                                        e.preventDefault();
+                                        setTeamEquipments((prev) => {
+                                          const updated = [...prev];
+                                          const current = { ...updated[index] };
+                                          delete current[slotKey];
+                                          updated[index] = current;
+                                          return updated;
+                                        });
+                                      }}
+                                    />
 
-                                  <div className="equipment-desc">
-                                    <span className="equip-name">
-                                      {item.name}
-                                    </span>
-                                    <div className="equip-stats">
-                                      {getItemStatDescription(item)}
-                                    </div>
-                                    <div className="enhance-controls">
-                                      <button
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          setTeamEquipments((prev) => {
-                                            const updated = [...prev];
-                                            const current = {
-                                              ...updated[index],
-                                            };
-                                            const currentItem = {
-                                              ...current[slotKey],
-                                            };
-                                            currentItem.level = Math.max(
-                                              0,
-                                              (currentItem.level || 0) - 1
-                                            );
-                                            current[slotKey] = currentItem;
-                                            updated[index] = current;
-                                            return updated;
-                                          });
-                                        }}
-                                      >
-                                        -
-                                      </button>
-                                      <span className="equip-level">
-                                        +{item.level ?? 0}
+                                    <div className="equipment-desc">
+                                      <span className="equip-name">
+                                        {item.name}
                                       </span>
-                                      <button
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          setTeamEquipments((prev) => {
-                                            const updated = [...prev];
-                                            const current = {
-                                              ...updated[index],
-                                            };
-                                            const currentItem = {
-                                              ...current[slotKey],
-                                            };
-                                            currentItem.level = Math.min(
-                                              15,
-                                              (currentItem.level || 0) + 1
-                                            );
-                                            current[slotKey] = currentItem;
-                                            updated[index] = current;
-                                            return updated;
-                                          });
-                                        }}
-                                      >
-                                        +
-                                      </button>
+                                      <div className="equip-stats">
+                                        {getItemStatDescription(item)}
+                                      </div>
+                                      <div className="enhance-controls">
+                                        <button
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            setTeamEquipments((prev) => {
+                                              const updated = [...prev];
+                                              const current = {
+                                                ...updated[index],
+                                              };
+                                              const currentItem = {
+                                                ...current[slotKey],
+                                              };
+                                              currentItem.level = Math.max(
+                                                0,
+                                                (currentItem.level || 0) - 1
+                                              );
+                                              current[slotKey] = currentItem;
+                                              updated[index] = current;
+                                              return updated;
+                                            });
+                                          }}
+                                        >
+                                          -
+                                        </button>
+                                        <span className="equip-level">
+                                          +{item.level ?? 0}
+                                        </span>
+                                        <button
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            setTeamEquipments((prev) => {
+                                              const updated = [...prev];
+                                              const current = {
+                                                ...updated[index],
+                                              };
+                                              const currentItem = {
+                                                ...current[slotKey],
+                                              };
+                                              currentItem.level = Math.min(
+                                                15,
+                                                (currentItem.level || 0) + 1
+                                              );
+                                              current[slotKey] = currentItem;
+                                              updated[index] = current;
+                                              return updated;
+                                            });
+                                          }}
+                                        >
+                                          +
+                                        </button>
+                                      </div>
                                     </div>
                                   </div>
-
                                   {/* 💡 부가옵션 설정 UI 추가 */}
                                   {item.type !== "장신구" && (
                                     <div className="substat-selection">
