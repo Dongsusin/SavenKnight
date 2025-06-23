@@ -51,7 +51,6 @@
   cursor: not-allowed;
 }
 
-
 .card-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -110,21 +109,10 @@
   border-radius: 8px;
 }
 .card.grade-S {
-  border: 3px solid gold;
   box-shadow: 0 0 15px 5px rgba(255, 215, 0, 0.8);
   animation: glow 1.5s infinite alternate;
   border-radius: 12px;
 }
-
-@keyframes glow {
-  0% {
-    box-shadow: 0 0 10px 3px rgba(255, 215, 0, 0.6);
-  }
-  100% {
-    box-shadow: 0 0 20px 6px rgba(255, 215, 0, 1);
-  }
-}
-
 
 @keyframes glow {
   0% {

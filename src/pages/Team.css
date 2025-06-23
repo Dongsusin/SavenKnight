@@ -243,24 +243,34 @@
   color: #ccc;
 }
 
-.stat-value .total {
+/* 총합: 노란색 */
+.text-yellow-400 {
   color: #ffd700;
   font-weight: bold;
 }
 
-.stat-value .detail {
-  color: #fff; /* 괄호 전체는 흰색 */
-  margin-left: 4px;
+/* 기본 스탯: 회색 */
+.text-gray {
+  color: white;
 }
 
-.stat-value .enhance-bonus {
-  color: #00ff66;
-  font-weight: bold;
+/* 강화: 초록 */
+.text-green-400 {
+  color: #00cc66;
 }
 
-.stat-value .transcend-bonus {
+/* 초월: 빨강 */
+.text-red-400 {
   color: #ff6666;
-  font-weight: bold;
+}
+
+/* 장비: 파랑 */
+.text-blue-400 {
+  color: #3399ff;
+}
+
+.text-purple-400 {
+  color: rgb(151, 39, 255);
 }
 
 /* --- 장비 탭 전체 컨테이너 --- */
@@ -292,15 +302,6 @@
 .empty-text {
   color: #888;
   font-style: italic;
-}
-
-/* --- 장비 아이템 내부 --- */
-.equipped-item {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
 }
 
 /* --- 장비 아이콘 이미지 --- */
@@ -375,4 +376,19 @@
   font-size: 0.75rem;
   color: #ccc;
   white-space: pre-line;
+}
+
+.clear-character-button {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #444;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  font-size: 16px;
+  cursor: pointer;
+  z-index: 10;
 }
