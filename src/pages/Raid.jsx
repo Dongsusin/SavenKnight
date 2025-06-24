@@ -6,8 +6,6 @@ import "./Raid.css";
 export default function Raid() {
   const location = useLocation();
   const selectedNameFromHome = location.state?.name;
-
-  // ✅ 전달된 name 기반으로 초기 선택 ID 결정
   const initialId = selectedNameFromHome
     ? raidData.find((r) => r.name === selectedNameFromHome)?.id ||
       raidData[0].id
@@ -19,16 +17,18 @@ export default function Raid() {
 
   const selectedRaid = raidData.find((r) => r.id === selectedId);
   const boss = selectedRaid?.bossStatsByStage?.[selectedStage - 1];
+  const selectedSkills =
+    selectedRaid?.skillsByStage?.[selectedStage - 1] ||
+    selectedRaid?.skills ||
+    [];
 
   useEffect(() => {
-    const count = selectedRaid?.skills?.length || 0;
-    setVisibleSkills(Array(count).fill(true));
+    setVisibleSkills(Array(selectedSkills.length).fill(true));
   }, [selectedId, selectedStage]);
 
   const highlightKeywords = (text) => {
     const goldColor = "#ffcc00";
     const blueColor = "#00ccff";
-
     const numberPatterns = [
       /\d+턴/g,
       /\d+회/g,
@@ -37,7 +37,6 @@ export default function Raid() {
       /\b\d{1,3}(,\d{3})*\b/g,
       /\b\d+\b/g,
     ];
-
     const buffKeywords = [
       "화상",
       "기절",
@@ -57,7 +56,6 @@ export default function Raid() {
     ];
 
     let highlighted = text;
-
     numberPatterns.forEach((regex) => {
       highlighted = highlighted.replace(
         regex,
@@ -65,7 +63,6 @@ export default function Raid() {
           `<span style="color: ${goldColor}; font-weight: bold;">${match}</span>`
       );
     });
-
     buffKeywords
       .sort((a, b) => b.length - a.length)
       .forEach((keyword) => {
@@ -75,7 +72,6 @@ export default function Raid() {
           `<span style="color: ${blueColor}; font-weight: bold;">${keyword}</span>`
         );
       });
-
     return highlighted;
   };
 
@@ -168,7 +164,7 @@ export default function Raid() {
             <div className="skill-section">
               <p>보스 스킬</p>
               <div className="raid-skill-images">
-                {(selectedRaid.skills || []).map((skill, idx) =>
+                {selectedSkills.map((skill, idx) =>
                   visibleSkills[idx] ? (
                     <div key={idx} className="skill-tooltip-wrapper">
                       <img
