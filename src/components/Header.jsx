@@ -41,6 +41,24 @@ export default function Header() {
         </button>
 
         <nav className={`nav-right ${menuOpen ? "open" : ""}`}>
+          {/* ✅ 모바일 메뉴 최상단에 로그인 UI 배치 */}
+          <div className="auth-buttons mobile-only">
+            {user ? (
+              <div className="user-box">
+                <img src={user.photoURL} alt="user" className="user-avatar" />
+                <span className="user-name">{user.displayName}</span>
+                <button className="logout-button" onClick={handleLogout}>
+                  로그아웃
+                </button>
+              </div>
+            ) : (
+              <button className="login-button" onClick={handleLogin}>
+                로그인
+              </button>
+            )}
+          </div>
+
+          {/* ✅ 메뉴 항목들 */}
           <NavLink to="/" onClick={closeMenu}>
             홈
           </NavLink>
@@ -60,7 +78,8 @@ export default function Header() {
             팀 편성
           </NavLink>
         </nav>
-        <div className="auth-buttons">
+
+        <div className="auth-buttons desktop-only">
           {user ? (
             <div className="user-box">
               <img src={user.photoURL} alt="user" className="user-avatar" />
