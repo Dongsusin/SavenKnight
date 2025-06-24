@@ -1,8 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import HeroSlide from "../components/HeroSlide";
 import PetSlide from "../components/PetSlide";
 import CharacterSelectPopup from "../components/CharacterSelectPopup";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth, db } from "../firebase";
+import { doc, getDoc, setDoc, onSnapshot } from "firebase/firestore";
+import heroes from "../data/heroes.json";
+import pets from "../data/pets.json";
 import "./Home.css";
 
 const ABILITY_SEARCH_KEYWORDS = [
@@ -114,6 +119,55 @@ export default function Home() {
   const navigate = useNavigate();
   const [previewTeam, setPreviewTeam] = useState(Array(5).fill(null));
   const [selectingIndex, setSelectingIndex] = useState(null);
+  const [user] = useAuthState(auth);
+  const [likes, setLikes] = useState({});
+
+  useEffect(() => {
+    const heroUnsubs = heroes.map((hero) => {
+      const ref = doc(db, "likes", hero.id.toString());
+      return onSnapshot(ref, (snap) => {
+        setLikes((prev) => ({
+          ...prev,
+          [hero.id]: snap.exists() ? snap.data() : { count: 0, users: [] },
+        }));
+      });
+    });
+
+    const petUnsubs = pets.map((pet) => {
+      const ref = doc(db, "likes", pet.id.toString());
+      return onSnapshot(ref, (snap) => {
+        setLikes((prev) => ({
+          ...prev,
+          [pet.id]: snap.exists() ? snap.data() : { count: 0, users: [] },
+        }));
+      });
+    });
+
+    return () => {
+      [...heroUnsubs, ...petUnsubs].forEach((unsub) => unsub());
+    };
+  }, []);
+
+  const handleLike = async (id) => {
+    if (!user) return alert("로그인이 필요합니다.");
+
+    const ref = doc(db, "likes", id.toString());
+    const snap = await getDoc(ref);
+    const data = snap.exists() ? snap.data() : { count: 0, users: [] };
+    const alreadyLiked = data.users.includes(user.uid);
+
+    const updated = alreadyLiked
+      ? {
+          count: Math.max(0, data.count - 1),
+          users: data.users.filter((uid) => uid !== user.uid),
+        }
+      : {
+          count: data.count + 1,
+          users: [...data.users, user.uid],
+        };
+
+    await setDoc(ref, updated);
+  };
 
   return (
     <div className="page home-layout">
@@ -194,19 +248,18 @@ export default function Home() {
       <main className="home-main">
         <section className="home-panel">
           <h2>영웅 도감</h2>
-          <HeroSlide />
+          <HeroSlide likes={likes} handleLike={handleLike} user={user} />
         </section>
 
         <section className="home-panel">
           <h2>펫 도감</h2>
           <div>
-            <PetSlide />
+            <PetSlide likes={likes} handleLike={handleLike} user={user} />
           </div>
         </section>
 
         <section className="home-panel">
           <h2>팀 편성</h2>
-          {/* 🧩 미니 팀 편성 UI */}
           <div className="mini-team-preview">
             {previewTeam.map((member, index) => (
               <div

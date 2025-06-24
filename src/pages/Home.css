@@ -217,6 +217,10 @@
   font-weight: bold;
 }
 
+.hero-slide-card {
+  position: relative;
+}
+
 /* 반응형 대응 */
 @media (max-width: 768px) {
   .home-layout {
