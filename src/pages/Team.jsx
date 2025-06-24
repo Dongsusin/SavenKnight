@@ -21,10 +21,57 @@ export default function Team() {
   const [teamSubstats, setTeamSubstats] = useState(Array(5).fill({}));
   const [selectedPet, setSelectedPet] = useState(null);
   const [isPetPopupOpen, setIsPetPopupOpen] = useState(false);
-
+  const [formation, setFormation] = useState("기본 진형");
   const [teamSubstatUpgrades, setTeamSubstatUpgrades] = useState(
     Array(5).fill({})
   );
+
+  const getPositionForFormation = (index) => {
+    const formations = {
+      "기본 진형": ["후열", "전열", "후열", "전열", "후열"],
+      "밸런스 진형": ["전열", "후열", "전열", "후열", "전열"],
+      "공격 진형": ["후열", "후열", "전열", "후열", "후열"],
+      "보호 진형": ["전열", "전열", "후열", "전열", "전열"],
+    };
+    return formations[formation]?.[index] ?? "";
+  };
+
+  const [formationLevels, setFormationLevels] = useState({
+    "기본 진형": 1,
+    "밸런스 진형": 1,
+    "공격 진형": 1,
+    "보호 진형": 1,
+  });
+
+  const formationEffects = {
+    "기본 진형": {
+      전열: (level) => 5.4 + 0.4 * (level - 1),
+      후열: (level) => 2.3 + 0.3 * (level - 1),
+    },
+    "밸런스 진형": {
+      전열: (level) => 2.3 + 0.3 * (level - 1),
+      후열: (level) => 5.4 + 0.4 * (level - 1),
+    },
+    "공격 진형": {
+      전열: (level) => 10.8 + 0.8 * (level - 1),
+      후열: (level) => 2.7 + 0.2 * (level - 1),
+    },
+    "보호 진형": {
+      전열: (level) => 2.7 + 0.2 * (level - 1),
+      후열: (level) => 10.8 + 0.8 * (level - 1),
+    },
+  };
+
+  const updateFormationLevel = (delta) => {
+    setFormationLevels((prev) => {
+      const current = prev[formation] || 1;
+      const next = Math.max(1, Math.min(40, current + delta));
+      return {
+        ...prev,
+        [formation]: next,
+      };
+    });
+  };
 
   const handleSelect = (hero) => {
     const updated = [...team];
@@ -527,9 +574,84 @@ export default function Team() {
     };
   }
 
+  function getFormationBonus(index, statKey) {
+    const position = getPositionForFormation(index);
+    const level = formationLevels[formation] ?? 1;
+    const isDefense = statKey === "방어력";
+    const isAttack = statKey === "물리 공격력" || statKey === "마법 공격력";
+
+    let percent = 0;
+    if (position === "전열" && isDefense) {
+      percent = formationEffects[formation]?.전열?.(level) ?? 0;
+    } else if (position === "후열" && isAttack) {
+      percent = formationEffects[formation]?.후열?.(level) ?? 0;
+    }
+
+    return { flat: 0, percent };
+  }
+
   return (
     <div className="team-page page">
       <h1>팀 편성</h1>
+
+      {/* ✅ 진형 선택 드롭다운 */}
+      <div className="formation-select">
+        <label style={{ marginRight: "8px" }}>진형:</label>
+        <select
+          value={formation}
+          onChange={(e) => setFormation(e.target.value)}
+        >
+          <option>기본 진형</option>
+          <option>밸런스 진형</option>
+          <option>공격 진형</option>
+          <option>보호 진형</option>
+        </select>
+      </div>
+
+      <div
+        className="formation-level-control"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "8px",
+          marginTop: "10px",
+        }}
+      >
+        <span style={{ color: "#fff" }}>
+          {formation} 레벨:{" "}
+          <span style={{ color: "#ffcc00" }}>{formationLevels[formation]}</span>
+        </span>
+        <button
+          onClick={() => updateFormationLevel(-1)}
+          disabled={formationLevels[formation] <= 1}
+          style={{
+            backgroundColor: "#333",
+            color: "#fff",
+            border: "1px solid #666",
+            padding: "2px 6px",
+            borderRadius: "4px",
+            cursor: "pointer",
+            opacity: formationLevels[formation] <= 1 ? 0.5 : 1,
+          }}
+        >
+          -
+        </button>
+        <button
+          onClick={() => updateFormationLevel(1)}
+          disabled={formationLevels[formation] >= 40}
+          style={{
+            backgroundColor: "#333",
+            color: "#fff",
+            border: "1px solid #666",
+            padding: "2px 6px",
+            borderRadius: "4px",
+            cursor: "pointer",
+            opacity: formationLevels[formation] >= 40 ? 0.5 : 1,
+          }}
+        >
+          +
+        </button>
+      </div>
 
       <div className="pet-select-wrapper">
         {selectedPet ? (
@@ -577,6 +699,14 @@ export default function Team() {
 
       <div className="team-slots">
         {team.map((member, index) => {
+          const position = getPositionForFormation(index); // ✅ 진형 기반 포지션
+          const positionColor =
+            position === "전열"
+              ? "#66ccff" // 파란색
+              : position === "후열"
+              ? "#ff6666" // 빨간색
+              : "#cccccc"; // 기본
+
           if (!member) {
             return (
               <div
@@ -595,8 +725,23 @@ export default function Team() {
           const skillIndex = selectedSkill[index];
 
           return (
-            <div key={index} className="team-slot-wrapper">
+            <div
+              key={index}
+              className={`team-slot-wrapper ${
+                position === "전열" ? "front-line" : "back-line"
+              }`}
+            >
               <div className="team-slot-top" style={{ position: "relative" }}>
+                <div
+                  style={{
+                    textAlign: "center",
+                    fontSize: "12px",
+                    fontWeight: "bold",
+                    color: positionColor,
+                  }}
+                >
+                  {position}
+                </div>
                 {/* ✕ 버튼 추가 */}
                 <button
                   className="clear-character-button"
@@ -936,6 +1081,14 @@ export default function Team() {
                             const petBonusFlat = petBonusesRaw[key]?.flat ?? 0;
                             const petBonusPercent =
                               petBonusesRaw[key]?.percent ?? 0;
+                            const formationFlat = getFormationBonus(
+                              index,
+                              key
+                            ).flat;
+                            const formationPercent = getFormationBonus(
+                              index,
+                              key
+                            ).percent;
 
                             const baseWithEnhance = levelStat + enhanceBonus;
                             const fromEquipPercent = Math.floor(
@@ -949,6 +1102,9 @@ export default function Team() {
                             const fromPetPercent = Math.floor(
                               (baseWithEnhance * petBonusPercent) / 100
                             );
+                            const fromFormationPercent = Math.floor(
+                              (baseWithEnhance * formationPercent) / 100
+                            );
 
                             const total =
                               baseWithEnhance +
@@ -958,7 +1114,9 @@ export default function Team() {
                               passiveFlat +
                               fromPassivePercent +
                               petBonusFlat +
-                              fromPetPercent;
+                              fromPetPercent +
+                              formationFlat +
+                              fromFormationPercent;
 
                             acc[key] = {
                               total,
@@ -970,6 +1128,8 @@ export default function Team() {
                               passiveBonusTotal:
                                 passiveFlat + fromPassivePercent,
                               petBonusTotal: petBonusFlat + fromPetPercent,
+                              formationBonusTotal:
+                                formationFlat + fromFormationPercent,
                             };
                             return acc;
                           }, {}),
@@ -1014,6 +1174,7 @@ export default function Team() {
                                 equipmentBonus.percentBonus,
                               passiveBonusTotal: passiveFlat + passivePercent,
                               petBonusTotal: petFlat + petPercent,
+                              formationBonusTotal: 0,
                             };
                             return acc;
                           }, {}),
@@ -1033,6 +1194,7 @@ export default function Team() {
                                     equipmentBonusTotal,
                                     passiveBonusTotal,
                                     petBonusTotal,
+                                    formationBonusTotal,
                                   },
                                 ],
                                 i
@@ -1088,6 +1250,14 @@ export default function Team() {
                                           </span>
                                         </>
                                       )}
+                                      {formationBonusTotal > 0 && (
+                                        <>
+                                          {" + "}
+                                          <span className="text-cyan-400">
+                                            {formationBonusTotal}
+                                          </span>
+                                        </>
+                                      )}
                                       {")"}
                                     </span>
                                   </span>
@@ -1105,6 +1275,7 @@ export default function Team() {
                               <span className="text-purple-400">●</span>{" "}
                               스킬[상시]
                               <span className="text-orange-400">●</span> 펫
+                              <span className="text-cyan-400">●</span> 진형
                             </div>
 
                             {/* 장신구 특수효과 */}

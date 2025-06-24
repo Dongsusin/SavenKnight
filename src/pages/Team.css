@@ -6,6 +6,45 @@
   padding: 10px;
 }
 
+.formation-select {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2.5px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  color: #fff;
+  margin-right: 45px;
+}
+
+.formation-select label {
+  font-weight: bold;
+  color: #ffcc00;
+}
+
+.formation-select select {
+  background-color: #2c2c2c;
+  color: #fff;
+  border: 1px solid #888;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.formation-select select:hover,
+.formation-select select:focus {
+  border-color: #ffcc00;
+  box-shadow: 0 0 6px rgba(255, 204, 0, 0.5);
+}
+
+.formation-level-control {
+  width: 100%;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
 .team-slots {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -26,6 +65,17 @@
   padding: 6px;
   background-color: #222;
   box-sizing: border-box;
+  transition: all 0.5s;
+}
+
+.team-slot-wrapper.front-line {
+  border: 2px solid #66ccff;
+  border-radius: 8px;
+}
+
+.team-slot-wrapper.back-line {
+  border: 2px solid #ff6666;
+  border-radius: 8px;
 }
 
 .character-top-section {
@@ -235,6 +285,10 @@
 
 .text-orange-400 {
   color: #ffa500;
+}
+
+.text-cyan-400 {
+  color: #26c6da;
 }
 
 /* --- 장비 탭 전체 컨테이너 --- */
