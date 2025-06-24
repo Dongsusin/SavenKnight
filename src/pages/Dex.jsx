@@ -171,7 +171,7 @@ export default function Dex() {
     : [];
 
   useEffect(() => {
-    const unsubscribes = heroes.map((hero) => {
+    const heroUnsubs = heroes.map((hero) => {
       const ref = doc(db, "likes", hero.id.toString());
       return onSnapshot(ref, (snap) => {
         setLikes((prev) => ({
@@ -180,7 +180,20 @@ export default function Dex() {
         }));
       });
     });
-    return () => unsubscribes.forEach((unsub) => unsub());
+
+    const petUnsubs = pets.map((pet) => {
+      const ref = doc(db, "likes", pet.id.toString());
+      return onSnapshot(ref, (snap) => {
+        setLikes((prev) => ({
+          ...prev,
+          [pet.id]: snap.exists() ? snap.data() : { count: 0, users: [] },
+        }));
+      });
+    });
+
+    return () => {
+      [...heroUnsubs, ...petUnsubs].forEach((unsub) => unsub());
+    };
   }, []);
 
   const handleLike = async (heroId) => {
@@ -312,6 +325,24 @@ export default function Dex() {
                       : null;
                     return isPetGroup ? (
                       <div key={entry.id} className="hero-card">
+                        <button
+                          className={`like-button ${
+                            user && likes[entry.id]?.users?.includes(user.uid)
+                              ? "liked"
+                              : ""
+                          }`}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            if (!user) {
+                              alert("로그인이 필요합니다.");
+                              return;
+                            }
+                            handleLike(entry.id);
+                          }}
+                        >
+                          추천 {likes[entry.id]?.count || 0}
+                        </button>
+
                         <img
                           src={imagePath}
                           alt={entry.name}

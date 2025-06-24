@@ -306,6 +306,13 @@
   .hero-dex-content {
     padding: 5px;
   }
+
+  .like-button {
+    top: 5px;
+    right: 5px;
+    font-size: 0.5rem;
+    padding: 2px 4px;
+  }
 }
 
 @media (max-width: 350px) {
