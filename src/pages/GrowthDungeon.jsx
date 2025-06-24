@@ -16,11 +16,14 @@ export default function GrowthDungeon() {
 
   const selectedDungeon = dungeonList.find((d) => d.id === selectedId);
   const boss = selectedDungeon?.bossStatsByStage?.[selectedStage - 1];
-  const skillCount = selectedDungeon?.skillCount || 4;
+  const selectedSkills =
+    selectedDungeon?.skillsByStage?.[selectedStage - 1] ||
+    selectedDungeon?.skills ||
+    [];
 
   useEffect(() => {
-    setVisibleSkills(Array(skillCount).fill(true));
-  }, [selectedId, selectedStage, selectedDungeon?.skillCount]);
+    setVisibleSkills(Array(selectedSkills.length).fill(true));
+  }, [selectedId, selectedStage]);
 
   const highlightKeywords = (text) => {
     const goldColor = "#ffcc00";
@@ -62,17 +65,15 @@ export default function GrowthDungeon() {
       );
     });
 
-    const sortedBuffKeywords = [...buffKeywords].sort(
-      (a, b) => b.length - a.length
-    );
-
-    sortedBuffKeywords.forEach((keyword) => {
-      const regex = new RegExp(keyword, "g");
-      highlighted = highlighted.replace(
-        regex,
-        `<span style="color: ${blueColor}; font-weight: bold;">${keyword}</span>`
-      );
-    });
+    buffKeywords
+      .sort((a, b) => b.length - a.length)
+      .forEach((keyword) => {
+        const regex = new RegExp(keyword, "g");
+        highlighted = highlighted.replace(
+          regex,
+          `<span style="color: ${blueColor}; font-weight: bold;">${keyword}</span>`
+        );
+      });
 
     return highlighted;
   };
@@ -173,32 +174,26 @@ export default function GrowthDungeon() {
               <div className="skill-preview">
                 <p>보스 스킬</p>
                 <div className="skill-images">
-                  {[...Array(skillCount)].map((_, idx) => {
-                    const num = idx + 1;
-                    const skillData = selectedDungeon.skills?.[idx];
-                    const currentDungeonId = selectedId;
-                    return visibleSkills[idx] && skillData ? (
-                      <div
-                        key={`${selectedDungeon.id}-${num}`}
-                        className="skill-tooltip-wrapper"
-                      >
+                  {selectedSkills.map((skill, idx) =>
+                    visibleSkills[idx] ? (
+                      <div key={idx} className="skill-tooltip-wrapper">
                         <img
-                          src={`/성장던전/스킬/${selectedDungeon.name}-${num}.png`}
-                          alt={skillData.name}
+                          src={`/성장던전/스킬/${selectedDungeon.name}-${
+                            idx + 1
+                          }.png`}
+                          alt={skill.name}
                           onError={() => {
-                            if (currentDungeonId === selectedId) {
-                              const newVisible = [...visibleSkills];
-                              newVisible[idx] = false;
-                              setVisibleSkills(newVisible);
-                            }
+                            const newVisible = [...visibleSkills];
+                            newVisible[idx] = false;
+                            setVisibleSkills(newVisible);
                           }}
                         />
                         <div className="skill-tooltip">
-                          <strong>{skillData.name}</strong>
-                          {skillData.skillcooldown !== 0 && (
-                            <p>쿨타임: {skillData.skillcooldown}초</p>
+                          <strong>{skill.name}</strong>
+                          {skill.skillcooldown !== 0 && (
+                            <p>쿨타임: {skill.skillcooldown}초</p>
                           )}
-                          {skillData.effects?.map((e, i) => {
+                          {skill.effects?.map((e, i) => {
                             const targetColor =
                               e.detail === "버프"
                                 ? "#00ccff"
@@ -219,12 +214,10 @@ export default function GrowthDungeon() {
                                     {e.target}
                                   </div>
                                 )}
-
                                 {Array.isArray(e.effect) ? (
-                                  e.effect.map((line, idx2) => (
+                                  e.effect.map((line, j) => (
                                     <div
-                                      key={idx2}
-                                      className="skill-effect-line"
+                                      key={j}
                                       dangerouslySetInnerHTML={{
                                         __html: highlightKeywords(line),
                                       }}
@@ -232,7 +225,6 @@ export default function GrowthDungeon() {
                                   ))
                                 ) : (
                                   <div
-                                    className="skill-effect"
                                     dangerouslySetInnerHTML={{
                                       __html: highlightKeywords(e.effect || ""),
                                     }}
@@ -243,8 +235,8 @@ export default function GrowthDungeon() {
                           })}
                         </div>
                       </div>
-                    ) : null;
-                  })}
+                    ) : null
+                  )}
                 </div>
               </div>
             </div>
@@ -258,8 +250,8 @@ export default function GrowthDungeon() {
                 "보상 정보 없음"
               )
                 .split(",")
-                .map((part, index) => (
-                  <div key={index}>{part.trim()}</div>
+                .map((part, idx) => (
+                  <div key={idx}>{part.trim()}</div>
                 ))}
             </div>
           </div>
