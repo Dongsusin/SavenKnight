@@ -266,16 +266,20 @@ export default function Dex() {
                         {user && (
                           <button
                             className={`like-button ${
-                              likes[hero.id]?.users?.includes(user?.uid)
+                              likes[entry.id]?.users?.includes(user?.uid)
                                 ? "liked"
                                 : ""
                             }`}
                             onClick={(e) => {
                               e.preventDefault();
-                              handleLike(hero.id);
+                              if (!user) {
+                                alert("로그인이 필요합니다.");
+                                return;
+                              }
+                              handleLike(entry.id);
                             }}
                           >
-                            ⭐ {likes[hero.id]?.count || 0}
+                            추천 {likes[entry.id]?.count || 0}
                           </button>
                         )}
                         <img
@@ -358,10 +362,14 @@ export default function Dex() {
                               }`}
                               onClick={(e) => {
                                 e.preventDefault();
+                                if (!user) {
+                                  alert("로그인이 필요합니다.");
+                                  return;
+                                }
                                 handleLike(entry.id);
                               }}
                             >
-                              ⭐ {likes[entry.id]?.count || 0}
+                              추천 {likes[entry.id]?.count || 0}
                             </button>
                           )}
                           <img
