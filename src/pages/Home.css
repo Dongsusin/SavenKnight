@@ -147,6 +147,49 @@
   font-weight: bold;
 }
 
+.mini-team-preview {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.mini-slot {
+  width: 60px;
+  height: 60px;
+  background-color: #222;
+  border: 2px dashed #888;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.empty-slot {
+  color: #aaa;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.team-navigate-button {
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #ffaa00, #ffcc00);
+  color: #1a1a1a;
+  font-weight: bold;
+  font-size: 1.05rem;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 10px rgba(255, 204, 0, 0.2);
+}
+
+.team-navigate-button:hover {
+  background: linear-gradient(135deg, #ffdd33, #ffee66);
+  box-shadow: 0 6px 14px rgba(255, 204, 0, 0.3);
+}
+
 /* 반응형 대응 */
 @media (max-width: 768px) {
   .home-layout {
@@ -170,11 +213,11 @@
     width: 100%;
   }
 
-  .home-raid-list{
+  .home-raid-list {
     display: grid;
-    grid-template-columns: repeat(3,1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
-   .home-raid-card {
+  .home-raid-card {
     flex-direction: column;
     align-items: center;
     text-align: center;
@@ -188,4 +231,3 @@
     height: auto;
   }
 }
-

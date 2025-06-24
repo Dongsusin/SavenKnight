@@ -1,4 +1,3 @@
-
 .hero-dex {
   background-color: #1a1a1a;
   color: #fff;
@@ -156,6 +155,85 @@
   box-shadow: 0 0 6px #ffcc00aa;
 }
 
+.hero-ability-search {
+  margin-top: 2rem;
+  padding: 1rem 0;
+  border-top: 1px solid #333;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.ability-filter {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+  justify-content: center;
+  margin-bottom: 1rem;
+  padding: 10px;
+}
+
+.ability-filter button {
+  background-color: #222;
+  color: #fff;
+  border: 1px solid #555;
+  padding: 0.4rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+  font-size: 0.8rem;
+}
+
+.ability-filter button:hover {
+  background-color: #444;
+}
+
+.ability-filter button.active {
+  background-color: #ffcc00;
+  color: #000;
+  font-weight: bold;
+  border: 1px solid #ffaa00;
+}
+
+.hero-ability-search.two-column {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+  align-items: flex-start;
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 1rem 0;
+  border-top: 1px solid #333;
+}
+
+.ability-filter-column {
+  flex: 1;
+  min-width: 200px;
+  max-height: 65vh;
+  overflow-y: auto;
+  border: #ffcc00 1px solid;
+}
+
+.hero-result-column {
+  flex: 3;
+  min-width: 300px;
+}
+
+.ability-filter-column h3,
+.hero-result-column h3 {
+  color: #ffcc00;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  text-align: left;
+}
+
+.hero-result-column p {
+  color: #aaa;
+  font-size: 0.95rem;
+  margin-top: 0.5rem;
+}
+
 @media (max-width: 426px) {
   .hero-cards {
     grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
@@ -173,6 +251,23 @@
 
   .pet-name {
     font-size: 0.8rem;
+  }
+
+  .ability-filter {
+    gap: 0.3rem;
+  }
+
+  .ability-filter button {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.6rem;
+  }
+
+  .hero-ability-search {
+    padding: 0.5rem 0;
+  }
+
+  .ability-filter-column {
+    max-height: 30vh;
   }
 }
 

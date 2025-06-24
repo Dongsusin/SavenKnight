@@ -1,10 +1,14 @@
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import HeroSlide from "../components/HeroSlide";
 import PetSlide from "../components/PetSlide";
+import CharacterSelectPopup from "../components/CharacterSelectPopup";
 import "./Home.css";
 
 export default function Home() {
   const navigate = useNavigate();
+  const [previewTeam, setPreviewTeam] = useState(Array(5).fill(null));
+  const [selectingIndex, setSelectingIndex] = useState(null);
 
   return (
     <div className="page home-layout">
@@ -30,6 +34,7 @@ export default function Home() {
             </li>
           </ul>
         </section>
+
         <section className="home-panel">
           <h2>쿠폰 코드</h2>
           <ul className="coupon-list">
@@ -67,9 +72,55 @@ export default function Home() {
           <h2>영웅 도감</h2>
           <HeroSlide />
         </section>
+
         <section className="home-panel">
           <h2>펫 도감</h2>
           <PetSlide />
+        </section>
+
+        <section className="home-panel">
+          <h2>팀 편성</h2>
+          {/* 🧩 미니 팀 편성 UI */}
+          <div className="mini-team-preview">
+            {previewTeam.map((member, index) => (
+              <div
+                key={index}
+                className="mini-slot"
+                onClick={() => setSelectingIndex(index)}
+              >
+                {member ? (
+                  <img
+                    src={`/도감/${member.group}/아이콘/${member.name}.png`}
+                    alt={member.name}
+                    style={{ width: "60px", height: "60px" }}
+                  />
+                ) : (
+                  <div className="empty-slot">+</div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <div style={{ textAlign: "center", marginTop: "10px" }}>
+            <button
+              className="team-navigate-button"
+              onClick={() => navigate("/team")}
+            >
+              팀 편성하러 가기
+            </button>
+          </div>
+
+          {selectingIndex !== null && (
+            <CharacterSelectPopup
+              onSelect={(hero) => {
+                const updated = [...previewTeam];
+                updated[selectingIndex] = hero;
+                setPreviewTeam(updated);
+                setSelectingIndex(null);
+              }}
+              onClose={() => setSelectingIndex(null)}
+            />
+          )}
         </section>
       </main>
 
@@ -94,6 +145,7 @@ export default function Home() {
             ))}
           </ul>
         </section>
+
         <section className="home-panel">
           <h2>성장 던전</h2>
           <ul className="GrowthDungeon-list">
