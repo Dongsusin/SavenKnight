@@ -263,25 +263,23 @@ export default function Dex() {
                   {filteredHeroes.map((hero) => (
                     <Link to={`/hero/${hero.name}`} key={hero.id}>
                       <div className="hero-card">
-                        {user && (
-                          <button
-                            className={`like-button ${
-                              likes[entry.id]?.users?.includes(user?.uid)
-                                ? "liked "
-                                : ""
-                            }`}
-                            onClick={(e) => {
-                              e.preventDefault();
-                              if (!user) {
-                                alert("로그인이 필요합니다.");
-                                return;
-                              }
-                              handleLike(entry.id);
-                            }}
-                          >
-                            추천 {likes[entry.id]?.count || 0}
-                          </button>
-                        )}
+                        <button
+                          className={`like-button ${
+                            likes[entry.id]?.users?.includes(user?.uid)
+                              ? "liked "
+                              : ""
+                          }`}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            if (!user) {
+                              alert("로그인이 필요합니다.");
+                              return;
+                            }
+                            handleLike(entry.id);
+                          }}
+                        >
+                          추천 {likes[entry.id]?.count || 0}
+                        </button>
                         <img
                           src={`/도감/${hero.group}/아이콘/${hero.name}.png`}
                           alt={hero.name}
@@ -353,25 +351,23 @@ export default function Dex() {
                     ) : (
                       <Link to={`/hero/${entry.name}`} key={entry.id}>
                         <div className="hero-card">
-                          {user && (
-                            <button
-                              className={`like-button ${
-                                likes[entry.id]?.users?.includes(user?.uid)
-                                  ? "liked"
-                                  : ""
-                              }`}
-                              onClick={(e) => {
-                                e.preventDefault();
-                                if (!user) {
-                                  alert("로그인이 필요합니다.");
-                                  return;
-                                }
-                                handleLike(entry.id);
-                              }}
-                            >
-                              추천 {likes[entry.id]?.count || 0}
-                            </button>
-                          )}
+                          <button
+                            className={`like-button ${
+                              likes[entry.id]?.users?.includes(user?.uid)
+                                ? "liked"
+                                : ""
+                            }`}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              if (!user) {
+                                alert("로그인이 필요합니다.");
+                                return;
+                              }
+                              handleLike(entry.id);
+                            }}
+                          >
+                            추천 {likes[entry.id]?.count || 0}
+                          </button>
                           <img
                             src={imagePath}
                             alt={entry.name}
