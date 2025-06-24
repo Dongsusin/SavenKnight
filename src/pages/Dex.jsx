@@ -266,7 +266,7 @@ export default function Dex() {
                         <button
                           className={`like-button ${
                             likes[entry.id]?.users?.includes(user?.uid)
-                              ? "liked "
+                              ? "liked"
                               : ""
                           }`}
                           onClick={(e) => {
@@ -280,6 +280,7 @@ export default function Dex() {
                         >
                           추천 {likes[entry.id]?.count || 0}
                         </button>
+
                         <img
                           src={`/도감/${hero.group}/아이콘/${hero.name}.png`}
                           alt={hero.name}
@@ -353,7 +354,7 @@ export default function Dex() {
                         <div className="hero-card">
                           <button
                             className={`like-button ${
-                              likes[hero.id]?.users?.includes(user?.uid)
+                              likes[entry.id]?.users?.includes(user?.uid)
                                 ? "liked"
                                 : ""
                             }`}
@@ -363,10 +364,10 @@ export default function Dex() {
                                 alert("로그인이 필요합니다.");
                                 return;
                               }
-                              handleLike(hero.id);
+                              handleLike(entry.id);
                             }}
                           >
-                            추천 {likes[hero.id]?.count || 0}
+                            추천 {likes[entry.id]?.count || 0}
                           </button>
 
                           <img
