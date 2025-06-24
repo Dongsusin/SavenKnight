@@ -4,7 +4,7 @@ import heroes from "../data/heroes.json";
 import pets from "../data/pets.json";
 import { useLocation } from "react-router-dom";
 import { auth, db } from "../firebase";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, onSnapshot } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import "./Dex.css";
 
@@ -171,24 +171,16 @@ export default function Dex() {
     : [];
 
   useEffect(() => {
-    const fetchLikes = async () => {
-      const snapshot = await Promise.all(
-        heroes.map(async (hero) => {
-          const ref = doc(db, "likes", hero.id.toString());
-          const snap = await getDoc(ref);
-          return {
-            id: hero.id,
-            data: snap.exists() ? snap.data() : { count: 0, users: [] },
-          };
-        })
-      );
-      const likeData = {};
-      snapshot.forEach(({ id, data }) => {
-        likeData[id] = data;
+    const unsubscribes = heroes.map((hero) => {
+      const ref = doc(db, "likes", hero.id.toString());
+      return onSnapshot(ref, (snap) => {
+        setLikes((prev) => ({
+          ...prev,
+          [hero.id]: snap.exists() ? snap.data() : { count: 0, users: [] },
+        }));
       });
-      setLikes(likeData);
-    };
-    fetchLikes();
+    });
+    return () => unsubscribes.forEach((unsub) => unsub());
   }, []);
 
   const handleLike = async (heroId) => {
@@ -210,7 +202,6 @@ export default function Dex() {
         };
 
     await setDoc(ref, updated);
-    setLikes((prev) => ({ ...prev, [heroId]: updated }));
   };
 
   return (
@@ -236,7 +227,6 @@ export default function Dex() {
         {isSearchGroup ? (
           <section className="hero-ability-search two-column">
             <div className="ability-filter-column">
-              {/* 각 ABILITY_KEYWORDS 그룹을 반복 출력 */}
               {[
                 ABILITY_KEYWORDS,
                 ABILITY_KEYWORDS2,
@@ -273,19 +263,21 @@ export default function Dex() {
                   {filteredHeroes.map((hero) => (
                     <Link to={`/hero/${hero.name}`} key={hero.id}>
                       <div className="hero-card">
-                        <button
-                          className={`like-button ${
-                            likes[hero.id]?.users?.includes(user?.uid)
-                              ? "liked"
-                              : ""
-                          }`}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            handleLike(hero.id);
-                          }}
-                        >
-                          추천 {likes[hero.id]?.count || 0}
-                        </button>
+                        {user && (
+                          <button
+                            className={`like-button ${
+                              likes[hero.id]?.users?.includes(user?.uid)
+                                ? "liked"
+                                : ""
+                            }`}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handleLike(hero.id);
+                            }}
+                          >
+                            ⭐ {likes[hero.id]?.count || 0}
+                          </button>
+                        )}
                         <img
                           src={`/도감/${hero.group}/아이콘/${hero.name}.png`}
                           alt={hero.name}
@@ -357,19 +349,21 @@ export default function Dex() {
                     ) : (
                       <Link to={`/hero/${entry.name}`} key={entry.id}>
                         <div className="hero-card">
-                          <button
-                            className={`like-button ${
-                              likes[entry.id]?.users?.includes(user?.uid)
-                                ? "liked"
-                                : ""
-                            }`}
-                            onClick={(e) => {
-                              e.preventDefault();
-                              handleLike(entry.id);
-                            }}
-                          >
-                            추천 {likes[entry.id]?.count || 0}
-                          </button>
+                          {user && (
+                            <button
+                              className={`like-button ${
+                                likes[entry.id]?.users?.includes(user?.uid)
+                                  ? "liked"
+                                  : ""
+                              }`}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handleLike(entry.id);
+                              }}
+                            >
+                              ⭐ {likes[entry.id]?.count || 0}
+                            </button>
+                          )}
                           <img
                             src={imagePath}
                             alt={entry.name}
