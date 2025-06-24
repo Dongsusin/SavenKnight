@@ -353,7 +353,7 @@ export default function Dex() {
                         <div className="hero-card">
                           <button
                             className={`like-button ${
-                              user && likes[hero.id]?.users?.includes(user.uid)
+                              user && likes[entry.id]?.users?.includes(user.uid)
                                 ? "liked"
                                 : ""
                             }`}
