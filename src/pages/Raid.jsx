@@ -1,9 +1,19 @@
 import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import raidData from "../data/raidData.json";
 import "./Raid.css";
 
 export default function Raid() {
-  const [selectedId, setSelectedId] = useState(raidData[0].id);
+  const location = useLocation();
+  const selectedNameFromHome = location.state?.name;
+
+  // ✅ 전달된 name 기반으로 초기 선택 ID 결정
+  const initialId = selectedNameFromHome
+    ? raidData.find((r) => r.name === selectedNameFromHome)?.id ||
+      raidData[0].id
+    : raidData[0].id;
+
+  const [selectedId, setSelectedId] = useState(initialId);
   const [selectedStage, setSelectedStage] = useState(1);
   const [visibleSkills, setVisibleSkills] = useState([]);
 
@@ -172,7 +182,9 @@ export default function Raid() {
                       />
                       <div className="skill-tooltip">
                         <strong>{skill.name}</strong>
-                        {skill.skillcooldown !== 0 && <p>쿨타임: {skill.skillcooldown}초</p>}
+                        {skill.skillcooldown !== 0 && (
+                          <p>쿨타임: {skill.skillcooldown}초</p>
+                        )}
                         {skill.effects?.map((e, i) => {
                           const targetColor =
                             e.detail === "버프"

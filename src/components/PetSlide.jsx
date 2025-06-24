@@ -10,7 +10,7 @@ export default function PetSlide() {
         <div
           key={pet.id}
           className="hero-slide-card"
-          onClick={() => navigate(`/dex`)}
+          onClick={() => navigate("/dex", { state: { group: "펫" } })}
         >
           <img
             src={`/도감/펫/아이콘/${pet.name}.png`}

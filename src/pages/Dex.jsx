@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import heroes from "../data/heroes.json";
 import pets from "../data/pets.json";
+import { useLocation } from "react-router-dom";
 import "./Dex.css";
 
 const GROUPS = ["스페셜", "일반", "아소드", "아이사", "기타", "펫", "검색"];
@@ -28,6 +29,10 @@ const ABILITY_KEYWORDS = [
   "받는 회복량 증가",
   "효과 적용 확률 증가",
   "즉사 효과 적용 확률 증가",
+  "피해량 증가",
+  "효과 적중률 증가",
+  "최대 생명력 증가",
+  "치명타 피해량 증가",
 ];
 
 const ABILITY_KEYWORDS2 = [
@@ -143,8 +148,11 @@ const highlightKeywords = (text) => {
 };
 
 export default function Dex() {
-  const [selectedGroup, setSelectedGroup] = useState("스페셜");
-  const [selectedAbility, setSelectedAbility] = useState(null);
+  const location = useLocation();
+  const initialGroup = location.state?.group || "스페셜";
+  const initialAbility = location.state?.ability || null;
+  const [selectedGroup, setSelectedGroup] = useState(initialGroup);
+  const [selectedAbility, setSelectedAbility] = useState(initialAbility);
 
   const isPetGroup = selectedGroup === "펫";
   const isSearchGroup = selectedGroup === "검색";
@@ -352,7 +360,7 @@ export default function Dex() {
             </div>
 
             <div className="hero-result-column">
-              <h3>해당 능력을 가진 캐릭터</h3>
+              <h3>해당 효과를 가진 캐릭터</h3>
               {selectedAbility ? (
                 <div className="hero-cards">
                   {filteredHeroes.map((hero) => (

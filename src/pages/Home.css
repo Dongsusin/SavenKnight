@@ -190,6 +190,33 @@
   box-shadow: 0 6px 14px rgba(255, 204, 0, 0.3);
 }
 
+.ability-shortcut-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.25rem;
+  padding: 0.5rem 0;
+  justify-content: center;
+  max-height: 510px;
+  overflow-y: auto;
+}
+
+.ability-shortcut-button {
+  background-color: #222;
+  color: #fff;
+  border: 1px solid #444;
+  padding: 3px;
+  border-radius: 8px;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ability-shortcut-button:hover {
+  background-color: #ffcc00;
+  color: #000;
+  font-weight: bold;
+}
+
 /* 반응형 대응 */
 @media (max-width: 768px) {
   .home-layout {
@@ -229,5 +256,21 @@
   .GrowthDungeon-card img {
     width: 100%;
     height: auto;
+  }
+
+  .ability-shortcut-list {
+    grid-template-columns: repeat(4, 1fr);
+    max-height: 200px;
+  }
+}
+@media (max-width: 426px) {
+  .ability-shortcut-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 321px) {
+  .ability-shortcut-list {
+    grid-template-columns: repeat(2, 1fr);
   }
 }

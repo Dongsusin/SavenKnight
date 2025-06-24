@@ -1,9 +1,16 @@
 import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import dungeonList from "../data/dungeonData.json";
 import "./GrowthDungeon.css";
 
 export default function GrowthDungeon() {
-  const [selectedId, setSelectedId] = useState(1);
+  const location = useLocation();
+  const selectedNameFromHome = location.state?.name;
+  const initialId = selectedNameFromHome
+    ? dungeonList.find((d) => d.name === selectedNameFromHome)?.id || 1
+    : 1;
+
+  const [selectedId, setSelectedId] = useState(initialId);
   const [selectedStage, setSelectedStage] = useState(1);
   const [visibleSkills, setVisibleSkills] = useState([]);
 
@@ -188,7 +195,9 @@ export default function GrowthDungeon() {
                         />
                         <div className="skill-tooltip">
                           <strong>{skillData.name}</strong>
-                          {skillData.skillcooldown !== 0 && <p>쿨타임: {skillData.skillcooldown}초</p>}
+                          {skillData.skillcooldown !== 0 && (
+                            <p>쿨타임: {skillData.skillcooldown}초</p>
+                          )}
                           {skillData.effects?.map((e, i) => {
                             const targetColor =
                               e.detail === "버프"

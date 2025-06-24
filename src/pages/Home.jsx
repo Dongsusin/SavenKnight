@@ -5,6 +5,111 @@ import PetSlide from "../components/PetSlide";
 import CharacterSelectPopup from "../components/CharacterSelectPopup";
 import "./Home.css";
 
+const ABILITY_SEARCH_KEYWORDS = [
+  "물리 공격력 증가",
+  "마법 공격력 증가",
+  "모든 공격력 증가",
+  "방어력 증가",
+  "모든 피해량 증가",
+  "감쇄",
+  "약점 공격 확률 증가",
+  "치명타 확률 증가",
+  "치명타 피해 증가",
+  "효과 적중 증가",
+  "효과 저항 증가",
+  "물리 피해량 증가",
+  "마법 피해량 증가",
+  "물리 감쇄",
+  "마법 감쇄",
+  "막기 확률 증가",
+  "3인 공격기 감쇄",
+  "5인 공격기 감쇄",
+  "주는 회복량 증가",
+  "받는 회복량 증가",
+  "효과 적용 확률 증가",
+  "즉사 효과 적용 확률 증가",
+  "피해량 증가",
+  "효과 적중률 증가",
+  "최대 생명력 증가",
+  "치명타 피해량 증가",
+  "물리 공격력 감소",
+  "마법 공격력 감소",
+  "모든 공격력 감소",
+  "방어력 감소",
+  "모든 피해량 감소",
+  "약점 공격 확률 감소",
+  "치명타 확률 감소",
+  "치명타 피해 감소",
+  "효과 적중 감소",
+  "효과 저항 감소",
+  "물리 취약",
+  "마법 취약",
+  "물리 피해량 감소",
+  "마법 피해량 감소",
+  "막기 확률 감소",
+  "빗나감 확률 증가",
+  "받는 회복량 감소",
+  "주는 회복량 감소",
+  "회복 불가",
+  "기절",
+  "마비",
+  "감전",
+  "빙결",
+  "침묵",
+  "수면",
+  "석화",
+  "실명",
+  "기절 면역",
+  "감전 면역",
+  "마비 면역",
+  "빙결 면역",
+  "침묵 면역",
+  "수면 면역",
+  "행동 제어 면역",
+  "석화 면역",
+  "실명 면역",
+  "즉사",
+  "출혈",
+  "화상",
+  "중독",
+  "화상 면역",
+  "즉사 면역",
+  "출혈 면역",
+  "중독 면역",
+  "턴제 버프 감소",
+  "버프 해제",
+  "디버프 면역",
+  "디버프 해제",
+  "피해 면역",
+  "피해 무효화",
+  "불사",
+  "축복",
+  "권능",
+  "위장",
+  "링크",
+  "부활",
+  "보호막",
+  "회복",
+  "지속 회복",
+  "피해량 비례 회복",
+  "협공",
+  "반격",
+  "관통",
+  "방어 무시",
+  "고정 피해",
+  "도발",
+  "흡혈",
+  "쿨타임 감소",
+  "쿨타임 초기화",
+  "폭발",
+  "스킬 변환",
+  "집중 공격",
+  "영멸",
+  "생명력 전환",
+  "처형",
+  "쿨타임 증가",
+];
+
 export default function Home() {
   const navigate = useNavigate();
   const [previewTeam, setPreviewTeam] = useState(Array(5).fill(null));
@@ -64,6 +169,25 @@ export default function Home() {
             </li>
           </ul>
         </section>
+
+        <section className="home-panel">
+          <h2>효과별 검색</h2>
+          <div className="ability-shortcut-list">
+            {ABILITY_SEARCH_KEYWORDS.map((keyword) => (
+              <button
+                key={keyword}
+                className="ability-shortcut-button"
+                onClick={() =>
+                  navigate("/dex", {
+                    state: { group: "검색", ability: keyword },
+                  })
+                }
+              >
+                {keyword}
+              </button>
+            ))}
+          </div>
+        </section>
       </aside>
 
       {/* 중앙 섹션 */}
@@ -75,7 +199,9 @@ export default function Home() {
 
         <section className="home-panel">
           <h2>펫 도감</h2>
-          <PetSlide />
+          <div>
+            <PetSlide />
+          </div>
         </section>
 
         <section className="home-panel">
@@ -137,7 +263,9 @@ export default function Home() {
               <li
                 key={raid.name}
                 className={`home-raid-card ${i === 0 ? "selected" : ""}`}
-                onClick={() => navigate("/raid")}
+                onClick={() =>
+                  navigate("/raid", { state: { name: raid.name } })
+                }
               >
                 <img src={raid.img} alt={raid.name} />
                 <span>{raid.name}</span>
@@ -160,7 +288,11 @@ export default function Home() {
               <li
                 key={GrowthDungeon.name}
                 className={`GrowthDungeon-card ${i === 0 ? "selected" : ""}`}
-                onClick={() => navigate("/growth-dungeon")}
+                onClick={() =>
+                  navigate("/growth-dungeon", {
+                    state: { name: GrowthDungeon.name },
+                  })
+                }
               >
                 <img src={GrowthDungeon.img} alt={GrowthDungeon.name} />
               </li>
