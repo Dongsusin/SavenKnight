@@ -264,7 +264,7 @@ export default function Dex() {
                       <div className="hero-card">
                         <button
                           className={`like-button ${
-                            likes[hero.id]?.users?.includes(user?.uid)
+                            user && likes[hero.id]?.users?.includes(user.uid)
                               ? "liked"
                               : ""
                           }`}
@@ -353,7 +353,7 @@ export default function Dex() {
                         <div className="hero-card">
                           <button
                             className={`like-button ${
-                              likes[entry.id]?.users?.includes(user?.uid)
+                              user && likes[hero.id]?.users?.includes(user.uid)
                                 ? "liked"
                                 : ""
                             }`}
