@@ -938,8 +938,9 @@
     padding: 5px;
     font-size: 0.5em;
     gap: 5px;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    max-width: 90vw;
+    overflow-x: auto;
+    justify-content: flex-start;
   }
 
   .substat-selection {
