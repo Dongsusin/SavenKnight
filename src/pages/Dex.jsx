@@ -267,7 +267,7 @@ export default function Dex() {
                           <button
                             className={`like-button ${
                               likes[entry.id]?.users?.includes(user?.uid)
-                                ? "liked"
+                                ? "liked "
                                 : ""
                             }`}
                             onClick={(e) => {
