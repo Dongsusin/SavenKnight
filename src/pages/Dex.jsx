@@ -1,8 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import heroes from "../data/heroes.json";
 import pets from "../data/pets.json";
 import { useLocation } from "react-router-dom";
+import { auth, db } from "../firebase";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { useAuthState } from "react-firebase-hooks/auth";
 import "./Dex.css";
 
 const GROUPS = ["스페셜", "일반", "아소드", "아이사", "기타", "펫", "검색"];
@@ -67,7 +70,6 @@ const ABILITY_KEYWORDS3 = [
   "석화",
   "실명",
 ];
-
 const ABILITY_KEYWORDS4 = [
   "기절 면역",
   "감전 면역",
@@ -79,15 +81,10 @@ const ABILITY_KEYWORDS4 = [
   "석화 면역",
   "실명 면역",
 ];
-
 const ABILITY_KEYWORDS5 = ["즉사", "출혈", "화상", "중독"];
-
 const ABILITY_KEYWORDS6 = ["화상 면역", "즉사 면역", "출혈 면역", "중독 면역"];
-
 const ABILITY_KEYWORDS7 = ["턴제 버프 감소", "버프 해제"];
-
 const ABILITY_KEYWORDS8 = ["디버프 면역", "디버프 해제"];
-
 const ABILITY_KEYWORDS9 = [
   "피해 면역",
   "피해 무효화",
@@ -98,11 +95,8 @@ const ABILITY_KEYWORDS9 = [
   "링크",
   "부활",
 ];
-
 const ABILITY_KEYWORDS10 = ["보호막", "회복", "지속 회복", "피해량 비례 회복"];
-
 const ABILITY_KEYWORDS11 = ["협공", "반격", "관통", "방어 무시", "고정 피해"];
-
 const ABILITY_KEYWORDS12 = [
   "도발",
   "흡혈",
@@ -111,7 +105,6 @@ const ABILITY_KEYWORDS12 = [
   "폭발",
   "스킬 변환",
 ];
-
 const ABILITY_KEYWORDS13 = [
   "집중 공격",
   "영멸",
@@ -124,7 +117,6 @@ const highlightKeywords = (text) => {
   const goldColor = "#ffcc00";
   const blueColor = "#00ccff";
   const numberPatterns = [/\d+%/g];
-
   const buffKeywords = ABILITY_KEYWORDS;
 
   let highlighted = text;
@@ -153,6 +145,8 @@ export default function Dex() {
   const initialAbility = location.state?.ability || null;
   const [selectedGroup, setSelectedGroup] = useState(initialGroup);
   const [selectedAbility, setSelectedAbility] = useState(initialAbility);
+  const [user] = useAuthState(auth);
+  const [likes, setLikes] = useState({});
 
   const isPetGroup = selectedGroup === "펫";
   const isSearchGroup = selectedGroup === "검색";
@@ -160,7 +154,6 @@ export default function Dex() {
   const entries = isPetGroup
     ? pets
     : heroes.filter((hero) => hero.group === selectedGroup);
-
   const categoryKey = isPetGroup ? "rarity" : "category";
   const categories = [...new Set(entries.map((entry) => entry[categoryKey]))];
 
@@ -176,6 +169,49 @@ export default function Dex() {
         return effects.some((text) => text.includes(selectedAbility));
       })
     : [];
+
+  useEffect(() => {
+    const fetchLikes = async () => {
+      const snapshot = await Promise.all(
+        heroes.map(async (hero) => {
+          const ref = doc(db, "likes", hero.id.toString());
+          const snap = await getDoc(ref);
+          return {
+            id: hero.id,
+            data: snap.exists() ? snap.data() : { count: 0, users: [] },
+          };
+        })
+      );
+      const likeData = {};
+      snapshot.forEach(({ id, data }) => {
+        likeData[id] = data;
+      });
+      setLikes(likeData);
+    };
+    fetchLikes();
+  }, []);
+
+  const handleLike = async (heroId) => {
+    if (!user) return alert("로그인이 필요합니다.");
+
+    const ref = doc(db, "likes", heroId.toString());
+    const snap = await getDoc(ref);
+    const data = snap.exists() ? snap.data() : { count: 0, users: [] };
+    const alreadyLiked = data.users.includes(user.uid);
+
+    const updated = alreadyLiked
+      ? {
+          count: Math.max(0, data.count - 1),
+          users: data.users.filter((uid) => uid !== user.uid),
+        }
+      : {
+          count: data.count + 1,
+          users: [...data.users, user.uid],
+        };
+
+    await setDoc(ref, updated);
+    setLikes((prev) => ({ ...prev, [heroId]: updated }));
+  };
 
   return (
     <div className="page hero-dex">
@@ -197,166 +233,37 @@ export default function Dex() {
       <main className="hero-dex-content">
         <h2>{selectedGroup}</h2>
 
-        {/* 검색 탭 */}
         {isSearchGroup ? (
           <section className="hero-ability-search two-column">
             <div className="ability-filter-column">
-              <h3>능력치 증가</h3>
-              <div className="ability-filter">
-                {ABILITY_KEYWORDS.map((keyword) => (
-                  <button
-                    key={keyword}
-                    className={selectedAbility === keyword ? "active" : ""}
-                    onClick={() => setSelectedAbility(keyword)}
-                  >
-                    {keyword}
-                  </button>
-                ))}
-              </div>
-              <h3>능력치 감소</h3>
-              <div className="ability-filter">
-                {ABILITY_KEYWORDS2.map((keyword) => (
-                  <button
-                    key={keyword}
-                    className={selectedAbility === keyword ? "active" : ""}
-                    onClick={() => setSelectedAbility(keyword)}
-                  >
-                    {keyword}
-                  </button>
-                ))}
-              </div>
-              <h3>행동 제어</h3>
-              <div className="ability-filter">
-                {ABILITY_KEYWORDS3.map((keyword) => (
-                  <button
-                    key={keyword}
-                    className={selectedAbility === keyword ? "active" : ""}
-                    onClick={() => setSelectedAbility(keyword)}
-                  >
-                    {keyword}
-                  </button>
-                ))}
-              </div>
-              <h3>행동 제어 면역</h3>
-              <div className="ability-filter">
-                {ABILITY_KEYWORDS4.map((keyword) => (
-                  <button
-                    key={keyword}
-                    className={selectedAbility === keyword ? "active" : ""}
-                    onClick={() => setSelectedAbility(keyword)}
-                  >
-                    {keyword}
-                  </button>
-                ))}
-              </div>
-              <h3>지속 피해</h3>
-              <div className="ability-filter">
-                {ABILITY_KEYWORDS5.map((keyword) => (
-                  <button
-                    key={keyword}
-                    className={selectedAbility === keyword ? "active" : ""}
-                    onClick={() => setSelectedAbility(keyword)}
-                  >
-                    {keyword}
-                  </button>
-                ))}
-              </div>
-              <h3>지속 피해 면역</h3>
-              <div className="ability-filter">
-                {ABILITY_KEYWORDS6.map((keyword) => (
-                  <button
-                    key={keyword}
-                    className={selectedAbility === keyword ? "active" : ""}
-                    onClick={() => setSelectedAbility(keyword)}
-                  >
-                    {keyword}
-                  </button>
-                ))}
-              </div>
-              <h3>버프 해제</h3>
-              <div className="ability-filter">
-                {ABILITY_KEYWORDS7.map((keyword) => (
-                  <button
-                    key={keyword}
-                    className={selectedAbility === keyword ? "active" : ""}
-                    onClick={() => setSelectedAbility(keyword)}
-                  >
-                    {keyword}
-                  </button>
-                ))}
-              </div>
-              <h3>디버프 면역&해제</h3>
-              <div className="ability-filter">
-                {ABILITY_KEYWORDS8.map((keyword) => (
-                  <button
-                    key={keyword}
-                    className={selectedAbility === keyword ? "active" : ""}
-                    onClick={() => setSelectedAbility(keyword)}
-                  >
-                    {keyword}
-                  </button>
-                ))}
-              </div>
-              <h3>생존</h3>
-              <div className="ability-filter">
-                {ABILITY_KEYWORDS9.map((keyword) => (
-                  <button
-                    key={keyword}
-                    className={selectedAbility === keyword ? "active" : ""}
-                    onClick={() => setSelectedAbility(keyword)}
-                  >
-                    {keyword}
-                  </button>
-                ))}
-              </div>
-              <h3>회복&보호막</h3>
-              <div className="ability-filter">
-                {ABILITY_KEYWORDS10.map((keyword) => (
-                  <button
-                    key={keyword}
-                    className={selectedAbility === keyword ? "active" : ""}
-                    onClick={() => setSelectedAbility(keyword)}
-                  >
-                    {keyword}
-                  </button>
-                ))}
-              </div>
-              <h3>특수 공격</h3>
-              <div className="ability-filter">
-                {ABILITY_KEYWORDS11.map((keyword) => (
-                  <button
-                    key={keyword}
-                    className={selectedAbility === keyword ? "active" : ""}
-                    onClick={() => setSelectedAbility(keyword)}
-                  >
-                    {keyword}
-                  </button>
-                ))}
-              </div>
-              <h3>특수 버프</h3>
-              <div className="ability-filter">
-                {ABILITY_KEYWORDS12.map((keyword) => (
-                  <button
-                    key={keyword}
-                    className={selectedAbility === keyword ? "active" : ""}
-                    onClick={() => setSelectedAbility(keyword)}
-                  >
-                    {keyword}
-                  </button>
-                ))}
-              </div>
-              <h3>특수 디버프</h3>
-              <div className="ability-filter">
-                {ABILITY_KEYWORDS13.map((keyword) => (
-                  <button
-                    key={keyword}
-                    className={selectedAbility === keyword ? "active" : ""}
-                    onClick={() => setSelectedAbility(keyword)}
-                  >
-                    {keyword}
-                  </button>
-                ))}
-              </div>
+              {/* 각 ABILITY_KEYWORDS 그룹을 반복 출력 */}
+              {[
+                ABILITY_KEYWORDS,
+                ABILITY_KEYWORDS2,
+                ABILITY_KEYWORDS3,
+                ABILITY_KEYWORDS4,
+                ABILITY_KEYWORDS5,
+                ABILITY_KEYWORDS6,
+                ABILITY_KEYWORDS7,
+                ABILITY_KEYWORDS8,
+                ABILITY_KEYWORDS9,
+                ABILITY_KEYWORDS10,
+                ABILITY_KEYWORDS11,
+                ABILITY_KEYWORDS12,
+                ABILITY_KEYWORDS13,
+              ].map((group, i) => (
+                <div key={i} className="ability-filter">
+                  {group.map((keyword) => (
+                    <button
+                      key={keyword}
+                      className={selectedAbility === keyword ? "active" : ""}
+                      onClick={() => setSelectedAbility(keyword)}
+                    >
+                      {keyword}
+                    </button>
+                  ))}
+                </div>
+              ))}
             </div>
 
             <div className="hero-result-column">
@@ -366,6 +273,19 @@ export default function Dex() {
                   {filteredHeroes.map((hero) => (
                     <Link to={`/hero/${hero.name}`} key={hero.id}>
                       <div className="hero-card">
+                        <button
+                          className={`like-button ${
+                            likes[hero.id]?.users?.includes(user?.uid)
+                              ? "liked"
+                              : ""
+                          }`}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleLike(hero.id);
+                          }}
+                        >
+                          추천 {likes[hero.id]?.count || 0}
+                        </button>
                         <img
                           src={`/도감/${hero.group}/아이콘/${hero.name}.png`}
                           alt={hero.name}
@@ -381,7 +301,6 @@ export default function Dex() {
             </div>
           </section>
         ) : (
-          // 영웅 또는 펫 도감 렌더링
           categories.map((category) => {
             const filtered = entries.filter(
               (entry) => entry[categoryKey] === category
@@ -438,6 +357,19 @@ export default function Dex() {
                     ) : (
                       <Link to={`/hero/${entry.name}`} key={entry.id}>
                         <div className="hero-card">
+                          <button
+                            className={`like-button ${
+                              likes[entry.id]?.users?.includes(user?.uid)
+                                ? "liked"
+                                : ""
+                            }`}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handleLike(entry.id);
+                            }}
+                          >
+                            추천 {likes[entry.id]?.count || 0}
+                          </button>
                           <img
                             src={imagePath}
                             alt={entry.name}

@@ -234,6 +234,30 @@
   margin-top: 0.5rem;
 }
 
+.hero-card {
+  position: relative;
+}
+
+.like-button {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: rgba(255, 215, 0, 0.9);
+  border: none;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  padding: 4px 8px;
+  cursor: pointer;
+  z-index: 10;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+  color: black;
+  font-weight: bold;
+}
+
+.like-button.liked {
+  background-color: #ffaa00;
+}
+
 @media (max-width: 426px) {
   .hero-cards {
     grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
