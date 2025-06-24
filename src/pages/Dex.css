@@ -269,6 +269,19 @@
   .ability-filter-column {
     max-height: 30vh;
   }
+  .hero-dex-sidebar {
+    justify-content: flex-start;
+  }
+  .hero-ability-search.two-column {
+    margin: 0;
+    gap: 5px;
+  }
+  .hero-dex-content h2 {
+    margin-bottom: 0;
+  }
+  .hero-dex-content {
+    padding: 5px;
+  }
 }
 
 @media (max-width: 350px) {
