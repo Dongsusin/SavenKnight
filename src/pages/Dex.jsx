@@ -353,7 +353,7 @@ export default function Dex() {
                         <div className="hero-card">
                           <button
                             className={`like-button ${
-                              likes[entry.id]?.users?.includes(user?.uid)
+                              likes[hero.id]?.users?.includes(user?.uid)
                                 ? "liked"
                                 : ""
                             }`}
@@ -363,11 +363,12 @@ export default function Dex() {
                                 alert("로그인이 필요합니다.");
                                 return;
                               }
-                              handleLike(entry.id);
+                              handleLike(hero.id);
                             }}
                           >
-                            추천 {likes[entry.id]?.count || 0}
+                            추천 {likes[hero.id]?.count || 0}
                           </button>
+
                           <img
                             src={imagePath}
                             alt={entry.name}
