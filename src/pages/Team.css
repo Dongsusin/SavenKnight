@@ -21,9 +21,6 @@
   max-width: 800px;
   min-width: 120px;
   min-height: 150px;
-  max-height: 750px;
-  overflow-y: auto;
-  overflow-x: hidden;
   border: 1px dashed #777;
   border-radius: 10px;
   padding: 6px;
@@ -100,8 +97,7 @@
 }
 
 .skill-icon {
-  width: 50px;
-  height: 50px;
+  width: 100%;
   border-radius: 4px;
   background-color: #333;
   object-fit: contain;
@@ -235,6 +231,10 @@
 
 .text-purple-400 {
   color: rgb(151, 39, 255);
+}
+
+.text-orange-400 {
+  color: #ffa500;
 }
 
 /* --- 장비 탭 전체 컨테이너 --- */
@@ -547,8 +547,12 @@
 
 .text-stat {
   font-size: 12px;
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  display: flex;
+  width: 100%;
+  gap: 12px;
+  overflow-x: auto;
+  text-wrap: nowrap;
+  padding: 5px;
 }
 
 @media (max-width: 786px) {

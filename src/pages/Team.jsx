@@ -152,6 +152,11 @@ export default function Team() {
       "효과 저항 감소",
       "출혈 폭발",
       "집중 공격",
+      "효과 적중률 증가",
+      "모든 공격력 증가",
+      "최대 생명력 증가",
+      "주는 회복량 증가",
+      "치명타 피해량 증가",
     ];
 
     let highlighted = text;
@@ -443,7 +448,18 @@ export default function Team() {
   function getTotalPassiveBonuses(team, index = null, pet = null) {
     const selfOnly = {};
     const teamWide = {};
+    const petBonuses = {};
 
+    const applyMaxPassive = (map, stat, type, value) => {
+      if (!map[stat]) {
+        map[stat] = { flat: 0, percent: 0 };
+      }
+      if (map[stat][type] < value) {
+        map[stat][type] = value;
+      }
+    };
+
+    // 1. 일반 패시브 효과 적용
     team.forEach((member, i) => {
       if (!member?.passives) return;
 
@@ -456,43 +472,59 @@ export default function Team() {
 
         if (target === "self" && index !== null && i !== index) return;
 
-        if (!targetMap[stat]) targetMap[stat] = { flat: 0, percent: 0 };
-        targetMap[stat][type] += value;
+        applyMaxPassive(targetMap, stat, type, value);
       });
     });
 
-    // ✅ 펫 효과도 포함
+    // 2. 🟠 펫 효과는 따로 petBonuses에만 적용 (중복 제거!)
+    // 🟠 펫 효과는 따로 petBonuses에만 적용
     if (pet?.skillDescription) {
       const descList = Array.isArray(pet.skillDescription)
         ? pet.skillDescription
         : [pet.skillDescription];
+
       descList.forEach((desc) => {
         const parsed = parsePassiveEffectLine(
           desc.replace(/\[.*?\]/g, "").trim()
         );
         if (!parsed) return;
-        const { stat, value, type } = parsed;
 
-        if (!teamWide[stat]) teamWide[stat] = { flat: 0, percent: 0 };
-        teamWide[stat][type] += value;
+        let { stat, value, type } = parsed;
+
+        // ✅ 모든 공격력 → 물리+마법 둘 다 반영
+        const statList =
+          stat === "모든 공격력" ? ["물리 공격력", "마법 공격력"] : [stat];
+
+        statList.forEach((s) => {
+          applyMaxPassive(petBonuses, s, type, value);
+        });
       });
     }
 
+    // 3. 최종 합산: 일반 패시브만 계산
     const result = {};
     const allStats = new Set([
-      ...Object.keys(teamWide),
       ...Object.keys(selfOnly),
+      ...Object.keys(teamWide),
     ]);
 
     allStats.forEach((stat) => {
       result[stat] = {
-        flat: (teamWide[stat]?.flat ?? 0) + (selfOnly[stat]?.flat ?? 0),
-        percent:
-          (teamWide[stat]?.percent ?? 0) + (selfOnly[stat]?.percent ?? 0),
+        flat: Math.max(selfOnly[stat]?.flat ?? 0, teamWide[stat]?.flat ?? 0),
+        percent: Math.max(
+          selfOnly[stat]?.percent ?? 0,
+          teamWide[stat]?.percent ?? 0
+        ),
       };
     });
 
-    return result;
+    return {
+      bonuses: result, // 일반 패시브 합산 (펫 제외)
+      sourceMap: {
+        skill: selfOnly,
+        pet: petBonuses, // 오렌지색 표시용
+      },
+    };
   }
 
   return (
@@ -515,11 +547,22 @@ export default function Team() {
             />
             <div className="selected-pet-name">{selectedPet.name}</div>
             <div className="selected-pet-effect">
-              {Array.isArray(selectedPet.skillDescription)
-                ? selectedPet.skillDescription.map((line, i) => (
-                    <div key={i}>{line}</div>
-                  ))
-                : selectedPet.skillDescription}
+              {Array.isArray(selectedPet.des) ? (
+                selectedPet.des.map((line, i) => (
+                  <div
+                    key={i}
+                    dangerouslySetInnerHTML={{
+                      __html: highlightKeywords(line),
+                    }}
+                  />
+                ))
+              ) : (
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: highlightKeywords(selectedPet.des),
+                  }}
+                />
+              )}
             </div>
           </div>
         ) : (
@@ -871,10 +914,10 @@ export default function Team() {
                           }
                         });
 
-                        const passiveBonuses = getTotalPassiveBonuses(
-                          team,
-                          index
-                        );
+                        const {
+                          bonuses: passiveBonuses,
+                          sourceMap: { pet: petBonusesRaw },
+                        } = getTotalPassiveBonuses(team, index, selectedPet);
 
                         const fullStats = {
                           ...statKeys.reduce((acc, key) => {
@@ -890,6 +933,9 @@ export default function Team() {
                             const passiveFlat = passiveBonuses[key]?.flat ?? 0;
                             const passivePercent =
                               passiveBonuses[key]?.percent ?? 0;
+                            const petBonusFlat = petBonusesRaw[key]?.flat ?? 0;
+                            const petBonusPercent =
+                              petBonusesRaw[key]?.percent ?? 0;
 
                             const baseWithEnhance = levelStat + enhanceBonus;
                             const fromEquipPercent = Math.floor(
@@ -898,7 +944,10 @@ export default function Team() {
                                 100
                             );
                             const fromPassivePercent = Math.floor(
-                              (baseWithEnhance * (passivePercent || 0)) / 100
+                              (baseWithEnhance * passivePercent) / 100
+                            );
+                            const fromPetPercent = Math.floor(
+                              (baseWithEnhance * petBonusPercent) / 100
                             );
 
                             const total =
@@ -907,7 +956,9 @@ export default function Team() {
                               equipmentBonus.flatBonus +
                               fromEquipPercent +
                               passiveFlat +
-                              fromPassivePercent;
+                              fromPassivePercent +
+                              petBonusFlat +
+                              fromPetPercent;
 
                             acc[key] = {
                               total,
@@ -918,6 +969,7 @@ export default function Team() {
                                 equipmentBonus.flatBonus + fromEquipPercent,
                               passiveBonusTotal:
                                 passiveFlat + fromPassivePercent,
+                              petBonusTotal: petBonusFlat + fromPetPercent,
                             };
                             return acc;
                           }, {}),
@@ -940,13 +992,17 @@ export default function Team() {
                             const passiveFlat = passiveBonuses[key]?.flat ?? 0;
                             const passivePercent =
                               passiveBonuses[key]?.percent ?? 0;
+                            const petFlat = petBonusesRaw[key]?.flat ?? 0;
+                            const petPercent = petBonusesRaw[key]?.percent ?? 0;
 
                             const total =
                               base +
                               equipmentBonus.flatBonus +
                               equipmentBonus.percentBonus +
                               passiveFlat +
-                              passivePercent;
+                              passivePercent +
+                              petFlat +
+                              petPercent;
 
                             acc[key] = {
                               total: `${total.toFixed(1)}%`,
@@ -957,6 +1013,7 @@ export default function Team() {
                                 equipmentBonus.flatBonus +
                                 equipmentBonus.percentBonus,
                               passiveBonusTotal: passiveFlat + passivePercent,
+                              petBonusTotal: petFlat + petPercent,
                             };
                             return acc;
                           }, {}),
@@ -975,6 +1032,7 @@ export default function Team() {
                                     transcendBonus,
                                     equipmentBonusTotal,
                                     passiveBonusTotal,
+                                    petBonusTotal,
                                   },
                                 ],
                                 i
@@ -985,71 +1043,53 @@ export default function Team() {
                                     <span className="text-yellow-400 font-bold">
                                       {total}
                                     </span>
-                                    {percentStats.includes(label) ? (
-                                      <span className="text-sm text-gray-400">
-                                        {" ("}
-                                        <span className="text-gray-400">
-                                          {levelStat}
-                                        </span>
-                                        {equipmentBonusTotal > 0 && (
-                                          <>
-                                            {" + "}
-                                            <span className="text-blue-400">
-                                              {equipmentBonusTotal.toFixed(1)}%
-                                            </span>
-                                          </>
-                                        )}
-                                        {passiveBonusTotal > 0 && (
-                                          <>
-                                            {" + "}
-                                            <span className="text-purple-400">
-                                              {passiveBonusTotal.toFixed(1)}%
-                                            </span>
-                                          </>
-                                        )}
-                                        {")"}
+                                    <span className="text-sm text-gray-400">
+                                      {" ("}
+                                      <span className="text-gray-400">
+                                        {levelStat}
                                       </span>
-                                    ) : (
-                                      <span className="text-sm text-gray-400">
-                                        {" ("}
-                                        <span className="text-gray-400">
-                                          {levelStat}
-                                        </span>
-                                        {enhanceBonus > 0 && (
-                                          <>
-                                            {" + "}
-                                            <span className="text-green-400">
-                                              {enhanceBonus}
-                                            </span>
-                                          </>
-                                        )}
-                                        {transcendBonus > 0 && (
-                                          <>
-                                            {" + "}
-                                            <span className="text-red-400">
-                                              {transcendBonus}
-                                            </span>
-                                          </>
-                                        )}
-                                        {equipmentBonusTotal > 0 && (
-                                          <>
-                                            {" + "}
-                                            <span className="text-blue-400">
-                                              {equipmentBonusTotal}
-                                            </span>
-                                          </>
-                                        )}
-                                        {passiveBonusTotal > 0 && (
-                                          <>
-                                            {" + "}
-                                            <span className="text-purple-400">
-                                              {passiveBonusTotal}
-                                            </span>
-                                          </>
-                                        )}
-                                        {")"}
-                                      </span>
-                                    )}
+                                      {enhanceBonus > 0 && (
+                                        <>
+                                          {" + "}
+                                          <span className="text-green-400">
+                                            {enhanceBonus}
+                                          </span>
+                                        </>
+                                      )}
+                                      {transcendBonus > 0 && (
+                                        <>
+                                          {" + "}
+                                          <span className="text-red-400">
+                                            {transcendBonus}
+                                          </span>
+                                        </>
+                                      )}
+                                      {equipmentBonusTotal > 0 && (
+                                        <>
+                                          {" + "}
+                                          <span className="text-blue-400">
+                                            {equipmentBonusTotal}
+                                          </span>
+                                        </>
+                                      )}
+                                      {passiveBonusTotal > 0 && (
+                                        <>
+                                          {" + "}
+                                          <span className="text-purple-400">
+                                            {passiveBonusTotal}
+                                          </span>
+                                        </>
+                                      )}
+                                      {petBonusTotal > 0 && (
+                                        <>
+                                          {" + "}
+                                          <span className="text-orange-400">
+                                            {petBonusTotal}
+                                          </span>
+                                        </>
+                                      )}
+                                      {")"}
+                                    </span>
                                   </span>
                                 </div>
                               )
@@ -1062,7 +1102,9 @@ export default function Team() {
                               <span className="text-green-400">●</span> 강화
                               <span className="text-red-400">●</span> 초월
                               <span className="text-blue-400">●</span> 장비
-                              <span className="text-purple-400">●</span> 스킬
+                              <span className="text-purple-400">●</span>{" "}
+                              스킬[상시]
+                              <span className="text-orange-400">●</span> 펫
                             </div>
 
                             {/* 장신구 특수효과 */}

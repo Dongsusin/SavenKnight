@@ -10,9 +10,7 @@ const highlightKeywords = (text) => {
   const goldColor = "#ffcc00";
   const blueColor = "#00ccff";
 
-  const numberPatterns = [
-    /\d+%/g,
-  ];
+  const numberPatterns = [/\d+%/g];
 
   const buffKeywords = [
     "방어력 증가",
@@ -27,7 +25,7 @@ const highlightKeywords = (text) => {
     "최대 생명력 증가",
     "주는 회복량 증가",
     "막기 확률 증가",
-    "치명타 피해량 증가"
+    "치명타 피해량 증가",
   ];
 
   let highlighted = text;
@@ -52,7 +50,6 @@ const highlightKeywords = (text) => {
 
   return highlighted;
 };
-
 
 export default function Dex() {
   const [selectedGroup, setSelectedGroup] = useState("스페셜");
@@ -83,7 +80,9 @@ export default function Dex() {
         <h2>{selectedGroup}</h2>
 
         {categories.map((category) => {
-          const filtered = entries.filter((entry) => entry[categoryKey] === category);
+          const filtered = entries.filter(
+            (entry) => entry[categoryKey] === category
+          );
 
           return (
             <section key={category} className="category-section">
@@ -107,10 +106,10 @@ export default function Dex() {
                             alt={entry.name}
                             className="pet-skill-icon"
                           />
-                         <div className="skill-tooltip">
+                          <div className="skill-tooltip">
                             <strong>{entry.skill}</strong>
-                            {Array.isArray(entry.skillDescription) ? (
-                              entry.skillDescription.map((line, idx) => (
+                            {Array.isArray(entry.des) ? (
+                              entry.des.map((line, idx) => (
                                 <div
                                   key={idx}
                                   dangerouslySetInnerHTML={{
@@ -121,7 +120,9 @@ export default function Dex() {
                             ) : (
                               <div
                                 dangerouslySetInnerHTML={{
-                                  __html: highlightKeywords(entry.skillDescription),
+                                  __html: highlightKeywords(
+                                    entry.skillDescription
+                                  ),
                                 }}
                               />
                             )}
@@ -132,7 +133,11 @@ export default function Dex() {
                   ) : (
                     <Link to={`/hero/${entry.name}`} key={entry.id}>
                       <div className="hero-card">
-                        <img src={imagePath} alt={entry.name} className="image" />
+                        <img
+                          src={imagePath}
+                          alt={entry.name}
+                          className="image"
+                        />
                       </div>
                     </Link>
                   );

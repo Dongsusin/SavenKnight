@@ -5,7 +5,8 @@
     "group": "축복의 천사",
     "rarity": "세븐나이츠",
     "grade": "S",
-    "skillDescription": "방어력 증가 22% [상시]"
+    "des": ["방어력 증가 22% [상시]"],
+    "skillDescription": "방어력 22%"
   },
   {
     "id": 2,
@@ -13,7 +14,8 @@
     "group": "사냥터의 왕",
     "rarity": "세븐나이츠",
     "grade": "S",
-    "skillDescription": "물리 공격력 증가 21% [상시]"
+    "des": ["물리 공격력 증가 21% [상시]"],
+    "skillDescription": "물리 공격력 21%"
   },
   {
     "id": 3,
@@ -21,7 +23,8 @@
     "group": "고귀한 귀족",
     "rarity": "세븐나이츠",
     "grade": "S",
-    "skillDescription": ["약점 공격 확률 증가 13% [상시]","피해량 증가 8% [상시]"]
+    "des": ["약점 공격 확률 증가 13% [상시]", "피해량 증가 8% [상시]"],
+    "skillDescription": ["약점 공격 확률 13%", "피해량 8%"]
   },
   {
     "id": 4,
@@ -29,7 +32,8 @@
     "group": "복수의 악마",
     "rarity": "세븐나이츠",
     "grade": "S",
-    "skillDescription": ["효과 적중률 증가 19% [상시]","모든 공격력 증가 12% [상시]"]
+    "des": ["효과 적중률 증가 19% [상시]", "모든 공격력 증가 12% [상시]"],
+    "skillDescription": ["효과 적중 19%", "모든 공격력 12%"]
   },
   {
     "id": 5,
@@ -37,7 +41,8 @@
     "group": "따뜻한 눈보라",
     "rarity": "세븐나이츠",
     "grade": "S",
-    "skillDescription": ["효과 저항 증가 19% [상시]","방어력 증가 13% [상시]"]
+    "des": ["효과 저항 증가 19% [상시]", "방어력 증가 13% [상시]"],
+    "skillDescription": ["효과 저항 19%", "방어력 13%"]
   },
   {
     "id": 6,
@@ -45,7 +50,8 @@
     "group": "작은 사신",
     "rarity": "세븐나이츠",
     "grade": "S",
-    "skillDescription": "치명타 확률 증가 21% [상시]"
+    "des": ["치명타 확률 증가 21% [상시]"],
+    "skillDescription": "치명타 확률 21%"
   },
   {
     "id": 7,
@@ -53,7 +59,8 @@
     "group": "잠을 인도하는",
     "rarity": "(구)사황",
     "grade": "S",
-    "skillDescription": "마법 공격력 증가 21% [상시]"
+    "des": ["마법 공격력 증가 21% [상시]"],
+    "skillDescription": "마법 공격력 21%"
   },
   {
     "id": 8,
@@ -61,7 +68,8 @@
     "group": "보호의",
     "rarity": "에반원정대",
     "grade": "B",
-    "skillDescription": "최대 생명력 증가 11% [상시]"
+    "des": ["최대 생명력 증가 11% [상시]"],
+    "skillDescription": "생명력 11%"
   },
   {
     "id": 9,
@@ -69,7 +77,8 @@
     "group": "작은 성녀",
     "rarity": "에반원정대",
     "grade": "B",
-    "skillDescription": "주는 회복량 증가 14% [상시]"
+    "des": ["주는 회복량 증가 14% [상시]"],
+    "skillDescription": "주는 회복량 14%"
   },
   {
     "id": 10,
@@ -77,15 +86,17 @@
     "group": "분노한 목탁",
     "rarity": "에반원정대",
     "grade": "B",
-    "skillDescription": "막기 확률 증가 11% [상시]"
+    "des": ["막기 확률 증가 11% [상시]"],
+    "skillDescription": "막기 확률 11%"
   },
   {
-    "id":11,
+    "id": 11,
     "name": "쥬시",
     "group": "찬란한 날개",
     "rarity": "에반원정대",
     "grade": "C",
-    "skillDescription": "물리 공격력 증가 9% [상시]"
+    "des": ["물리 공격력 증가 9% [상시]"],
+    "skillDescription": "물리 공격력 9%"
   },
   {
     "id": 12,
@@ -93,7 +104,8 @@
     "group": "발키리의 그리폰",
     "rarity": "에반원정대",
     "grade": "A",
-     "skillDescription": "막기 확률 증가 17% [상시]"
+    "des": ["막기 확률 증가 17% [상시]"],
+    "skillDescription": "막기 확률 17%"
   },
   {
     "id": 13,
@@ -101,7 +113,8 @@
     "group": "발키리의 그리폰",
     "rarity": "에반원정대",
     "grade": "C",
-    "skillDescription": "방어력 증가 8% [상시]"
+    "des": ["방어력 증가 8% [상시]"],
+    "skillDescription": "방어력 8%"
   },
   {
     "id": 14,
@@ -109,7 +122,8 @@
     "group": "스니퍼의 친구",
     "rarity": "에반원정대",
     "grade": "C",
-    "skillDescription": "최대 생명력 증가 9% [상시]"
+    "des": ["최대 생명력 증가 9% [상시]"],
+    "skillDescription": "생명력 9%"
   },
   {
     "id": 15,
@@ -117,7 +131,8 @@
     "group": "여우 구슬",
     "rarity": "모험가",
     "grade": "C",
-    "skillDescription": "마법 공격력 증가 9% [상시]"
+    "des": ["마법 공격력 증가 9% [상시]"],
+    "skillDescription": "마법 공격력 9%"
   },
   {
     "id": 16,
@@ -125,7 +140,8 @@
     "group": "심연의 상징",
     "rarity": "모험가",
     "grade": "A",
-    "skillDescription": "모든 공격력 증가 12% [상시]"
+    "des": ["모든 공격력 증가 12% [상시]"],
+    "skillDescription": "모든 공격력 12%"
   },
   {
     "id": 17,
@@ -133,7 +149,8 @@
     "group": "하늘의 눈",
     "rarity": "테라영지",
     "grade": "A",
-    "skillDescription": "방어력 증가 17% [상시]"
+    "des": ["방어력 증가 17% [상시]"],
+    "skillDescription": "방어력 17%"
   },
   {
     "id": 18,
@@ -141,7 +158,8 @@
     "group": "대도서관",
     "rarity": "테라영지",
     "grade": "A",
-    "skillDescription": "마법 공격력 증가 17% [상시]"
+    "des": ["마법 공격력 증가 17% [상시]"],
+    "skillDescription": "마법 공격력 17%"
   },
   {
     "id": 19,
@@ -149,7 +167,8 @@
     "group": "베테랑 해결사",
     "rarity": "테라영지",
     "grade": "B",
-    "skillDescription": "약점 공격 확률 증가 11% [상시]"
+    "des": ["약점 공격 확률 증가 11% [상시]"],
+    "skillDescription": "약점 공격 확률 11%"
   },
   {
     "id": 20,
@@ -157,7 +176,8 @@
     "group": "완전체 쥐",
     "rarity": "성십자단",
     "grade": "A",
-    "skillDescription": "효과 적중률 증가 25% [상시]"
+    "des": ["효과 적중률 증가 25% [상시]"],
+    "skillDescription": "효과 적중 25%"
   },
   {
     "id": 21,
@@ -165,7 +185,8 @@
     "group": "세인의 친구",
     "rarity": "성십자단",
     "grade": "A",
-    "skillDescription": "물리 공격력 증가 17% [상시]"
+    "des": ["물리 공격력 증가 17% [상시]"],
+    "skillDescription": "물리 공격력 17%"
   },
   {
     "id": 22,
@@ -173,21 +194,24 @@
     "group": "완성형",
     "rarity": "성십자단",
     "grade": "B",
-    "skillDescription": "효과 적중 증가 16% [상시]"
+    "des": ["효과 적중률 증가 16% [상시]"],
+    "skillDescription": "효과 적중 16%"
   },
-   {
+  {
     "id": 23,
     "name": "푸리",
     "group": "푸키 동생",
     "rarity": "아소드펫",
-    "skillDescription": "물리 공격력 증가 7% [상시]"
+    "des": ["물리 공격력 증가 7% [상시]"],
+    "skillDescription": "물리 공격력 7%"
   },
   {
     "id": 24,
     "name": "아야",
     "group": "아리 동생",
     "rarity": "아소드펫",
-    "skillDescription": "마법 공격력 증가 7% [상시]"
+    "des": ["마법 공격력 증가 7% [상시]"],
+    "skillDescription": "마법 공격력 7%"
   },
   {
     "id": 25,
@@ -195,21 +219,24 @@
     "group": "두꺼비 영웅",
     "rarity": "아소드펫",
     "grade": "C",
-    "skillDescription": "효과 저항 증가 13% [상시]"
+    "des": ["효과 저항 증가 13% [상시]"],
+    "skillDescription": "효과 저항 13%"
   },
   {
     "id": 26,
     "name": "해르피",
     "group": "슈퍼 도우미",
     "rarity": "아소드펫",
-    "skillDescription": "최대 생명력 증가 7% [상시]"
+    "des": ["최대 생명력 증가 7% [상시]"],
+    "skillDescription": "생명력 7%"
   },
   {
     "id": 27,
     "name": "사란",
     "group": "시기와 질투의",
     "rarity": "아소드펫",
-    "skillDescription": "방어력 증가 6% [상시]"
+    "des": ["방어력 증가 6% [상시]"],
+    "skillDescription": "방어력 6%"
   },
   {
     "id": 28,
@@ -217,7 +244,8 @@
     "group": "감동의 정화",
     "rarity": "아이사펫",
     "grade": "A",
-    "skillDescription": "치명타 확률 증가 17% [상시]"
+    "des": ["치명타 확률 증가 17% [상시]"],
+    "skillDescription": "치명타 확률 17%"
   },
   {
     "id": 29,
@@ -225,7 +253,8 @@
     "group": "호위 무사",
     "rarity": "아이사펫",
     "grade": "A",
-    "skillDescription": "치명타 피해량 증가 25% [상시]"
+    "des": ["치명타 피해량 증가 25% [상시]"],
+    "skillDescription": "치명타 피해량 25%"
   },
   {
     "id": 30,
@@ -233,7 +262,8 @@
     "group": "천둥 신선",
     "rarity": "아이사펫",
     "grade": "A",
-    "skillDescription": "피해량 증가 10% [상시]"
+    "des": ["피해량 증가 10% [상시]"],
+    "skillDescription": "피해량 10%"
   },
   {
     "id": 31,
@@ -241,6 +271,7 @@
     "group": "황금 상자",
     "rarity": "기타 펫",
     "grade": "S",
+    "des": ["모험에서 골드 20% 추가 획득"],
     "skillDescription": "모험에서 골드 20% 추가 획득"
   },
   {
@@ -249,7 +280,8 @@
     "group": "영리한 탐험가",
     "rarity": "기타 펫",
     "grade": "S",
-     "skillDescription": "모험에서 장비 획득 확률 30% 증가"
+    "des": ["모험에서 장비 획득 확률 30% 증가"],
+    "skillDescription": "모험에서 장비 획득 확률 30% 증가"
   },
   {
     "id": 33,
@@ -257,6 +289,7 @@
     "group": "행복을 전하는",
     "rarity": "기타 펫",
     "grade": "S",
-     "skillDescription": "모험에서 영웅 획득 확률 10% 증가"
+    "des": ["모험에서 영웅 획득 확률 10% 증가"],
+    "skillDescription": "모험에서 영웅 획득 확률 10% 증가"
   }
 ]
