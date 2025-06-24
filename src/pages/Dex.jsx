@@ -203,7 +203,6 @@ export default function Dex() {
 
     await setDoc(ref, updated);
   };
-
   return (
     <div className="page hero-dex">
       <aside className="hero-dex-sidebar">
