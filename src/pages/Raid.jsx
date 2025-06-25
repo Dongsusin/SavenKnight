@@ -1,3 +1,4 @@
+// 🔽 리턴 위 영역 (추천 영웅 + 추천 덱)
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -9,12 +10,14 @@ import {
   setDoc,
   getDoc,
   updateDoc,
+  addDoc,
   serverTimestamp,
   orderBy,
 } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import raidData from "../data/raidData.json";
 import heroes from "../data/heroes.json";
+import pets from "../data/pets.json";
 import "./Raid.css";
 
 export default function Raid() {
@@ -42,19 +45,45 @@ export default function Raid() {
   }, [selectedId, selectedStage]);
 
   const [showHeroPopup, setShowHeroPopup] = useState(false);
+  const [showTeamPopup, setShowTeamPopup] = useState(false);
+  const [showTeamRegister, setShowTeamRegister] = useState(false);
   const [heroVotes, setHeroVotes] = useState([]);
+  const [teamVotes, setTeamVotes] = useState([]);
+  const [selectedTeamHeroes, setSelectedTeamHeroes] = useState([
+    null,
+    null,
+    null,
+    null,
+    null,
+  ]);
+  const [activeSlotIndex, setActiveSlotIndex] = useState(null);
 
   useEffect(() => {
     const q = query(
       collection(db, "raids", selectedId.toString(), "heroVotes"),
       orderBy("likes", "desc")
     );
-    const unsubscribe = onSnapshot(q, (snap) => {
-      const list = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      setHeroVotes(list);
+    return onSnapshot(q, (snap) => {
+      setHeroVotes(snap.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
     });
-    return () => unsubscribe();
   }, [selectedId]);
+
+  useEffect(() => {
+    const q = query(
+      collection(
+        db,
+        "raids",
+        selectedId.toString(),
+        "stages",
+        selectedStage.toString(),
+        "teams"
+      ),
+      orderBy("likes", "desc")
+    );
+    return onSnapshot(q, (snap) => {
+      setTeamVotes(snap.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+    });
+  }, [selectedId, selectedStage]);
 
   const handleHeroVote = async (heroId, likes = []) => {
     if (!user) return alert("로그인이 필요합니다.");
@@ -65,22 +94,63 @@ export default function Raid() {
       "heroVotes",
       heroId.toString()
     );
-    const docSnap = await getDoc(ref);
-
-    if (!docSnap.exists()) {
+    const snap = await getDoc(ref);
+    if (!snap.exists()) {
       await setDoc(ref, {
         heroId,
         likes: [user.uid],
         createdAt: serverTimestamp(),
       });
     } else {
-      const alreadyLiked = likes.includes(user.uid);
       await updateDoc(ref, {
-        likes: alreadyLiked
+        likes: likes.includes(user.uid)
           ? likes.filter((id) => id !== user.uid)
           : [...likes, user.uid],
       });
     }
+  };
+
+  const handleTeamVote = async (teamId, likes = []) => {
+    if (!user) return alert("로그인이 필요합니다.");
+    const ref = doc(db, "raids", selectedId.toString(), "teams", teamId);
+    await updateDoc(ref, {
+      likes: likes.includes(user.uid)
+        ? likes.filter((id) => id !== user.uid)
+        : [...likes, user.uid],
+    });
+  };
+
+  const handleSelectHeroSlot = (slotIndex, heroId) => {
+    const updated = [...selectedTeamHeroes];
+    updated[slotIndex] = heroId;
+    setSelectedTeamHeroes(updated);
+  };
+
+  const handleSubmitTeam = async () => {
+    if (!user) return alert("로그인이 필요합니다.");
+    if (selectedTeamHeroes.some((id) => !id))
+      return alert("빈 슬롯이 있습니다.");
+
+    await addDoc(
+      collection(
+        db,
+        "raids",
+        selectedId.toString(),
+        "stages",
+        selectedStage.toString(),
+        "teams"
+      ),
+      {
+        heroes: selectedTeamHeroes,
+        likes: [],
+        authorName: user.displayName || user.email,
+        createdAt: serverTimestamp(),
+      }
+    );
+
+    setSelectedTeamHeroes([null, null, null, null, null]);
+    setActiveSlotIndex(null);
+    setShowTeamRegister(false);
   };
 
   const highlightKeywords = (text) => {
@@ -149,7 +219,6 @@ export default function Raid() {
           </div>
         ))}
       </div>
-
       <div className="raid-detail">
         <div className="dungeon-info">
           <div className="raid-top">
@@ -295,10 +364,10 @@ export default function Raid() {
                 ))}
             </div>
           </div>
-
-          <button className="suggestion" onClick={() => setShowHeroPopup(true)}>
-            추천 영웅
-          </button>
+          <div className="suggestion">
+            <button onClick={() => setShowHeroPopup(true)}>추천 영웅</button>
+            <button onClick={() => setShowTeamPopup(true)}>추천 덱</button>
+          </div>
         </div>
       </div>
       {showHeroPopup && (
@@ -340,6 +409,112 @@ export default function Raid() {
                 );
               })}
             </div>
+          </div>
+        </div>
+      )}
+      {showTeamPopup && (
+        <div className="team-popup-overlay">
+          <div className="team-popup">
+            <button
+              className="popup-close"
+              onClick={() => setShowTeamPopup(false)}
+            >
+              닫기
+            </button>
+            <h3>{selectedRaid.name} 추천 덱</h3>
+
+            {!showTeamRegister ? (
+              <>
+                <div className="team-list">
+                  {teamVotes.map((team) => (
+                    <div key={team.id} className="team-card">
+                      <div className="team-heroes">
+                        {team.heroes.map((id) => {
+                          const hero = heroes.find((h) => h.id === id);
+                          return (
+                            <img
+                              key={id}
+                              src={`/도감/${hero.group}/아이콘/${hero.name}.png`}
+                              alt={hero.name}
+                              title={hero.name}
+                            />
+                          );
+                        })}
+                      </div>
+                      <div className="team-meta">
+                        <button
+                          onClick={() => handleTeamVote(team.id, team.likes)}
+                        >
+                          추천 {team.likes?.length || 0}
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="team-add-button-wrap">
+                  <button
+                    onClick={() => setShowTeamRegister(true)}
+                    className="submit-team-button"
+                  >
+                    새 덱 등록하기
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="team-selection-area">
+                  <div className="selected-team">
+                    {selectedTeamHeroes.map((heroId, i) => {
+                      const hero = heroes.find((h) => h.id === heroId);
+                      return (
+                        <div key={i} className="team-slot">
+                          {hero ? (
+                            <img
+                              src={`/도감/${hero.group}/아이콘/${hero.name}.png`}
+                              alt={hero.name}
+                              onClick={() => handleSelectHeroSlot(i, null)}
+                            />
+                          ) : (
+                            <div
+                              className="team-slot-empty"
+                              onClick={() => setActiveSlotIndex(i)}
+                            >
+                              +
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <button
+                    onClick={handleSubmitTeam}
+                    className="submit-team-button"
+                  >
+                    등록 완료
+                  </button>
+                </div>
+                {activeSlotIndex !== null && (
+                  <div className="hero-select-list">
+                    {heroes.map((hero) => (
+                      <div
+                        key={hero.id}
+                        className="hero-item"
+                        onClick={() => {
+                          handleSelectHeroSlot(activeSlotIndex, hero.id);
+                          setActiveSlotIndex(null);
+                        }}
+                      >
+                        <img
+                          src={`/도감/${hero.group}/아이콘/${hero.name}.png`}
+                          alt={hero.name}
+                          title={hero.name}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </>
+            )}
           </div>
         </div>
       )}
