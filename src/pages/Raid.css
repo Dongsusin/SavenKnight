@@ -210,12 +210,11 @@
   justify-items: center;
 }
 .hero-item {
-  width: 100px;
+  width: 100%;
   text-align: center;
 }
 .hero-item img {
-  width: 64px;
-  height: 64px;
+  width: 100%;
   border-radius: 8px;
 }
 .hero-item button {
@@ -302,5 +301,19 @@
 
   .raid-bg img {
     height: 200px;
+  }
+
+  .popup-close {
+    top: 5px;
+    right: 5px;
+  }
+
+  .hero-popup {
+    padding: 0.5rem;
+  }
+
+  .hero-list {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
   }
 }
