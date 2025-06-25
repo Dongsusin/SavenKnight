@@ -46,14 +46,7 @@ export default function Raid() {
 
   useEffect(() => {
     const q = query(
-      collection(
-        db,
-        "raids",
-        selectedId.toString(),
-        "stages",
-        selectedStage.toString(),
-        "heroVotes"
-      ),
+      collection(db, "raids", selectedId.toString(), "heroVotes"),
       orderBy("likes", "desc")
     );
     const unsubscribe = onSnapshot(q, (snap) => {
@@ -61,7 +54,7 @@ export default function Raid() {
       setHeroVotes(list);
     });
     return () => unsubscribe();
-  }, [selectedId, selectedStage]);
+  }, [selectedId]);
 
   const handleHeroVote = async (heroId, likes = []) => {
     if (!user) return alert("로그인이 필요합니다.");
@@ -69,8 +62,6 @@ export default function Raid() {
       db,
       "raids",
       selectedId.toString(),
-      "stages",
-      selectedStage.toString(),
       "heroVotes",
       heroId.toString()
     );
@@ -319,7 +310,7 @@ export default function Raid() {
             >
               닫기
             </button>
-            <h3>추천 영웅</h3>
+            <h3>{selectedRaid.name} 추천 영웅</h3>
             <div className="hero-list">
               {heroes.map((hero) => {
                 const vote = heroVotes.find(
@@ -343,7 +334,7 @@ export default function Raid() {
                         handleHeroVote(hero.id, likes);
                       }}
                     >
-                      추천: {likes.length}
+                      추천:{likes.length}
                     </button>
                   </div>
                 );
