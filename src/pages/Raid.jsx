@@ -342,7 +342,6 @@ export default function Raid() {
                         }
                         handleHeroVote(hero.id, likes);
                       }}
-                      disabled={!user}
                     >
                       추천: {likes.length}
                     </button>
