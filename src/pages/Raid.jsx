@@ -60,13 +60,20 @@ export default function Raid() {
 
   useEffect(() => {
     const q = query(
-      collection(db, "raids", selectedId.toString(), "heroVotes"),
+      collection(
+        db,
+        "raids",
+        selectedId.toString(),
+        "stages",
+        selectedStage.toString(),
+        "heroVotes"
+      ),
       orderBy("likes", "desc")
     );
     return onSnapshot(q, (snap) => {
       setHeroVotes(snap.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
     });
-  }, [selectedId]);
+  }, [selectedId, selectedStage]); // ✅ 수정된 부분
 
   useEffect(() => {
     const q = query(
@@ -91,9 +98,12 @@ export default function Raid() {
       db,
       "raids",
       selectedId.toString(),
+      "stages",
+      selectedStage.toString(),
       "heroVotes",
       heroId.toString()
     );
+
     const snap = await getDoc(ref);
     if (!snap.exists()) {
       await setDoc(ref, {
@@ -112,7 +122,16 @@ export default function Raid() {
 
   const handleTeamVote = async (teamId, likes = []) => {
     if (!user) return alert("로그인이 필요합니다.");
-    const ref = doc(db, "raids", selectedId.toString(), "teams", teamId);
+    const ref = doc(
+      db,
+      "raids",
+      selectedId.toString(),
+      "stages",
+      selectedStage.toString(),
+      "teams",
+      teamId
+    );
+
     await updateDoc(ref, {
       likes: likes.includes(user.uid)
         ? likes.filter((id) => id !== user.uid)

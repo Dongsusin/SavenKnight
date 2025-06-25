@@ -470,7 +470,6 @@ export default function GrowthDungeon() {
                         })}
                       </div>
                       <div className="team-meta">
-                        <span>{team.authorName}</span>
                         <button
                           onClick={() => handleTeamVote(team.id, team.likes)}
                         >

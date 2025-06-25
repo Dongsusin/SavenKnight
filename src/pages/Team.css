@@ -634,6 +634,13 @@
   .team-stat-settings {
     flex-direction: row;
   }
+  .team-slot-wrapper.front-line {
+    transform: translateY(0);
+  }
+
+  .team-slot-wrapper.back-line {
+    transform: translateY(0);
+  }
 }
 
 @media (max-width: 480px) {
