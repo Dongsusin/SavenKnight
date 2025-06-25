@@ -328,24 +328,6 @@ export default function Dex() {
                       : null;
                     return isPetGroup ? (
                       <div key={entry.id} className="hero-card">
-                        <button
-                          className={`like-button ${
-                            user && likes[entry.id]?.users?.includes(user.uid)
-                              ? "liked"
-                              : ""
-                          }`}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            if (!user) {
-                              alert("로그인이 필요합니다.");
-                              return;
-                            }
-                            handleLike(entry.id);
-                          }}
-                        >
-                          추천 {likes[entry.id]?.count || 0}
-                        </button>
-
                         <img
                           src={imagePath}
                           alt={entry.name}
