@@ -19,6 +19,7 @@
   position: fixed;
   width: 100vw;
   height: 60px;
+  z-index: 100;
 }
 
 .hero-dex-sidebar::-webkit-scrollbar {

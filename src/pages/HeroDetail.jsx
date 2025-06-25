@@ -10,6 +10,9 @@ import armorMainStatTable from "../data/armorMainStatTable.json";
 import subStatTable from "../data/subStatTable.json";
 import setEffectTable from "../data/setEffectTable.json";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { auth, db } from "../firebase";
+import { doc, getDoc, setDoc, onSnapshot } from "firebase/firestore";
+import { useAuthState } from "react-firebase-hooks/auth";
 import "./HeroDetail.css";
 
 export default function HeroDetail() {
@@ -24,6 +27,8 @@ export default function HeroDetail() {
   const [equipModalOpen, setEquipModalOpen] = useState(false);
   const [selectedEquipSlot, setSelectedEquipSlot] = useState(null);
   const [selectedEquipments, setSelectedEquipments] = useState({});
+  const [user] = useAuthState(auth);
+  const [likeData, setLikeData] = useState({ count: 0, users: [] });
 
   function getSetCounts() {
     const counts = {};
@@ -104,6 +109,28 @@ export default function HeroDetail() {
     setSelectedSkillIndex(0);
     setActiveTab("스킬");
   }, [name]);
+
+  const handleLike = async () => {
+    if (!user || !hero?.id) return alert("로그인이 필요합니다.");
+
+    const ref = doc(db, "likes", hero.id.toString());
+    const snap = await getDoc(ref);
+    const data = snap.exists() ? snap.data() : { count: 0, users: [] };
+    const alreadyLiked = data.users.includes(user.uid);
+
+    const updated = alreadyLiked
+      ? {
+          count: Math.max(0, data.count - 1),
+          users: data.users.filter((uid) => uid !== user.uid),
+        }
+      : {
+          count: data.count + 1,
+          users: [...data.users, user.uid],
+        };
+
+    await setDoc(ref, updated);
+  };
+  const isLiked = user && likeData.users.includes(user.uid);
 
   const allHeroes = heroes.flat ? heroes.flat() : heroes;
   const hero = allHeroes.find((h) => h.name === name);
@@ -362,6 +389,14 @@ export default function HeroDetail() {
       label: item.specialEffect || null,
     };
   };
+  useEffect(() => {
+    if (!hero?.id) return;
+    const ref = doc(db, "likes", hero.id.toString());
+    const unsubscribe = onSnapshot(ref, (snap) => {
+      setLikeData(snap.exists() ? snap.data() : { count: 0, users: [] });
+    });
+    return () => unsubscribe();
+  }, [hero?.id]);
   const [youtubeOpen, setYoutubeOpen] = useState(false);
 
   return (
@@ -398,7 +433,16 @@ export default function HeroDetail() {
             </button>
           )}
           <p className="info-category">{hero.category}</p>
-          <img src={imagePath} alt={hero.name} className="main-image" />
+          <div className="info-hero-card">
+            <button
+              className={`like-button ${isLiked ? "liked" : ""}`}
+              onClick={handleLike}
+              style={{ marginBottom: "10px" }}
+            >
+              추천 {likeData.count || 0}
+            </button>
+            <img src={imagePath} alt={hero.name} className="main-image" />
+          </div>
           <p className="info-title">{hero.title}</p>
 
           <div className="stat-settings">

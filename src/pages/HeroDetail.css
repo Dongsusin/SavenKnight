@@ -72,6 +72,7 @@
   padding: 20px;
   box-sizing: border-box;
   text-align: center;
+  justify-items: center;
 }
 
 .info-right {
@@ -105,7 +106,7 @@
   border-radius: 8px;
   border: 3px solid #ffd700;
   background: #000;
-  margin: 1rem 0;
+  margin-bottom: 1rem;
 }
 
 .hero-info h3 {
@@ -115,6 +116,11 @@
   border-bottom: 2px solid #444;
   padding-bottom: 0.5rem;
   text-align: center;
+}
+
+.info-hero-card {
+  width: 200px;
+  position: relative;
 }
 
 .skill-images {

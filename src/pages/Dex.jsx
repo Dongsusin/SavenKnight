@@ -240,30 +240,33 @@ export default function Dex() {
           <section className="hero-ability-search two-column">
             <div className="ability-filter-column">
               {[
-                ABILITY_KEYWORDS,
-                ABILITY_KEYWORDS2,
-                ABILITY_KEYWORDS3,
-                ABILITY_KEYWORDS4,
-                ABILITY_KEYWORDS5,
-                ABILITY_KEYWORDS6,
-                ABILITY_KEYWORDS7,
-                ABILITY_KEYWORDS8,
-                ABILITY_KEYWORDS9,
-                ABILITY_KEYWORDS10,
-                ABILITY_KEYWORDS11,
-                ABILITY_KEYWORDS12,
-                ABILITY_KEYWORDS13,
-              ].map((group, i) => (
-                <div key={i} className="ability-filter">
-                  {group.map((keyword) => (
-                    <button
-                      key={keyword}
-                      className={selectedAbility === keyword ? "active" : ""}
-                      onClick={() => setSelectedAbility(keyword)}
-                    >
-                      {keyword}
-                    </button>
-                  ))}
+                { title: "능력치 증가", list: ABILITY_KEYWORDS },
+                { title: "능력치 감소", list: ABILITY_KEYWORDS2 },
+                { title: "행동 제어", list: ABILITY_KEYWORDS3 },
+                { title: "행동 제어 면역", list: ABILITY_KEYWORDS4 },
+                { title: "지속 피해", list: ABILITY_KEYWORDS5 },
+                { title: "지속 피해 면역", list: ABILITY_KEYWORDS6 },
+                { title: "버프해제", list: ABILITY_KEYWORDS7 },
+                { title: "디버프 면역/해제", list: ABILITY_KEYWORDS8 },
+                { title: "생존", list: ABILITY_KEYWORDS9 },
+                { title: "회복 및 보호막", list: ABILITY_KEYWORDS10 },
+                { title: "특수 공격", list: ABILITY_KEYWORDS11 },
+                { title: "특수 버프", list: ABILITY_KEYWORDS12 },
+                { title: "특수 디버프", list: ABILITY_KEYWORDS13 },
+              ].map(({ title, list }) => (
+                <div key={title} className="ability-group">
+                  <h4 className="ability-title">{title}</h4>
+                  <div className="ability-filter">
+                    {list.map((keyword) => (
+                      <button
+                        key={keyword}
+                        className={selectedAbility === keyword ? "active" : ""}
+                        onClick={() => setSelectedAbility(keyword)}
+                      >
+                        {keyword}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               ))}
             </div>
