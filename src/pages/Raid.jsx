@@ -1,6 +1,20 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { useAuthState } from "react-firebase-hooks/auth";
+import {
+  collection,
+  query,
+  onSnapshot,
+  doc,
+  setDoc,
+  getDoc,
+  updateDoc,
+  serverTimestamp,
+  orderBy,
+} from "firebase/firestore";
+import { auth, db } from "../firebase";
 import raidData from "../data/raidData.json";
+import heroes from "../data/heroes.json";
 import "./Raid.css";
 
 export default function Raid() {
@@ -14,6 +28,7 @@ export default function Raid() {
   const [selectedId, setSelectedId] = useState(initialId);
   const [selectedStage, setSelectedStage] = useState(1);
   const [visibleSkills, setVisibleSkills] = useState([]);
+  const [user] = useAuthState(auth);
 
   const selectedRaid = raidData.find((r) => r.id === selectedId);
   const boss = selectedRaid?.bossStatsByStage?.[selectedStage - 1];
@@ -25,6 +40,57 @@ export default function Raid() {
   useEffect(() => {
     setVisibleSkills(Array(selectedSkills.length).fill(true));
   }, [selectedId, selectedStage]);
+
+  const [showHeroPopup, setShowHeroPopup] = useState(false);
+  const [heroVotes, setHeroVotes] = useState([]);
+
+  useEffect(() => {
+    const q = query(
+      collection(
+        db,
+        "raids",
+        selectedId.toString(),
+        "stages",
+        selectedStage.toString(),
+        "heroVotes"
+      ),
+      orderBy("likes", "desc")
+    );
+    const unsubscribe = onSnapshot(q, (snap) => {
+      const list = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      setHeroVotes(list);
+    });
+    return () => unsubscribe();
+  }, [selectedId, selectedStage]);
+
+  const handleHeroVote = async (heroId, likes = []) => {
+    if (!user) return alert("로그인이 필요합니다.");
+    const ref = doc(
+      db,
+      "raids",
+      selectedId.toString(),
+      "stages",
+      selectedStage.toString(),
+      "heroVotes",
+      heroId.toString()
+    );
+    const docSnap = await getDoc(ref);
+
+    if (!docSnap.exists()) {
+      await setDoc(ref, {
+        heroId,
+        likes: [user.uid],
+        createdAt: serverTimestamp(),
+      });
+    } else {
+      const alreadyLiked = likes.includes(user.uid);
+      await updateDoc(ref, {
+        likes: alreadyLiked
+          ? likes.filter((id) => id !== user.uid)
+          : [...likes, user.uid],
+      });
+    }
+  };
 
   const highlightKeywords = (text) => {
     const goldColor = "#ffcc00";
@@ -238,8 +304,55 @@ export default function Raid() {
                 ))}
             </div>
           </div>
+
+          <button className="suggestion" onClick={() => setShowHeroPopup(true)}>
+            추천 영웅
+          </button>
         </div>
       </div>
+      {showHeroPopup && (
+        <div className="hero-popup-overlay">
+          <div className="hero-popup">
+            <button
+              className="popup-close"
+              onClick={() => setShowHeroPopup(false)}
+            >
+              닫기
+            </button>
+            <h3>추천 영웅</h3>
+            <div className="hero-list">
+              {heroes.map((hero) => {
+                const vote = heroVotes.find(
+                  (v) => parseInt(v.heroId) === hero.id
+                );
+                const likes = vote?.likes || [];
+                const liked = user && likes.includes(user.uid);
+                return (
+                  <div key={hero.id} className="hero-item">
+                    <img
+                      src={`/도감/${hero.group}/아이콘/${hero.name}.png`}
+                      alt={hero.name}
+                    />
+                    <button
+                      className={`vote-button ${liked ? "liked" : ""}`}
+                      onClick={() => {
+                        if (!user) {
+                          alert("로그인이 필요합니다.");
+                          return;
+                        }
+                        handleHeroVote(hero.id, likes);
+                      }}
+                      disabled={!user}
+                    >
+                      추천: {likes.length}
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
