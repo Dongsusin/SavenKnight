@@ -1,3 +1,17 @@
+import { useAuthState } from "react-firebase-hooks/auth";
+import {
+  collection,
+  query,
+  onSnapshot,
+  doc,
+  setDoc,
+  getDoc,
+  updateDoc,
+  serverTimestamp,
+  orderBy,
+} from "firebase/firestore";
+import { auth, db } from "../firebase";
+import heroes from "../data/heroes.json";
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import dungeonList from "../data/dungeonData.json";
@@ -9,11 +23,12 @@ export default function GrowthDungeon() {
   const initialId = selectedNameFromHome
     ? dungeonList.find((d) => d.name === selectedNameFromHome)?.id || 1
     : 1;
-
+  const [user] = useAuthState(auth);
+  const [showHeroPopup, setShowHeroPopup] = useState(false);
+  const [heroVotes, setHeroVotes] = useState([]);
   const [selectedId, setSelectedId] = useState(initialId);
   const [selectedStage, setSelectedStage] = useState(1);
   const [visibleSkills, setVisibleSkills] = useState([]);
-
   const selectedDungeon = dungeonList.find((d) => d.id === selectedId);
   const boss = selectedDungeon?.bossStatsByStage?.[selectedStage - 1];
   const selectedSkills =
@@ -24,6 +39,45 @@ export default function GrowthDungeon() {
   useEffect(() => {
     setVisibleSkills(Array(selectedSkills.length).fill(true));
   }, [selectedId, selectedStage]);
+
+  useEffect(() => {
+    const q = query(
+      collection(db, "growthDungeons", selectedId.toString(), "heroVotes"),
+      orderBy("likes", "desc")
+    );
+    const unsubscribe = onSnapshot(q, (snap) => {
+      const list = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      setHeroVotes(list);
+    });
+    return () => unsubscribe();
+  }, [selectedId]);
+
+  const handleHeroVote = async (heroId, likes = []) => {
+    if (!user) return alert("로그인이 필요합니다.");
+    const ref = doc(
+      db,
+      "growthDungeons",
+      selectedId.toString(),
+      "heroVotes",
+      heroId.toString()
+    );
+    const docSnap = await getDoc(ref);
+
+    if (!docSnap.exists()) {
+      await setDoc(ref, {
+        heroId,
+        likes: [user.uid],
+        createdAt: serverTimestamp(),
+      });
+    } else {
+      const alreadyLiked = likes.includes(user.uid);
+      await updateDoc(ref, {
+        likes: alreadyLiked
+          ? likes.filter((id) => id !== user.uid)
+          : [...likes, user.uid],
+      });
+    }
+  };
 
   const highlightKeywords = (text) => {
     const goldColor = "#ffcc00";
@@ -255,8 +309,56 @@ export default function GrowthDungeon() {
                 ))}
             </div>
           </div>
+
+          <button className="suggestion" onClick={() => setShowHeroPopup(true)}>
+            추천 영웅
+          </button>
         </div>
       </div>
+
+      {showHeroPopup && (
+        <div className="hero-popup-overlay">
+          <div className="hero-popup">
+            <button
+              className="popup-close"
+              onClick={() => setShowHeroPopup(false)}
+            >
+              닫기
+            </button>
+            <h3>{selectedDungeon.name} 추천 영웅</h3>
+            <div className="hero-list">
+              {heroes.map((hero) => {
+                const vote = heroVotes.find(
+                  (v) => parseInt(v.heroId) === hero.id
+                );
+                const likes = vote?.likes || [];
+                const liked = user && likes.includes(user.uid);
+
+                return (
+                  <div key={hero.id} className="hero-item">
+                    <img
+                      src={`/도감/${hero.group}/아이콘/${hero.name}.png`}
+                      alt={hero.name}
+                    />
+                    <button
+                      className={`vote-button ${liked ? "liked" : ""}`}
+                      onClick={() => {
+                        if (!user) {
+                          alert("로그인이 필요합니다.");
+                          return;
+                        }
+                        handleHeroVote(hero.id, likes);
+                      }}
+                    >
+                      추천: {likes.length}
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
