@@ -351,6 +351,10 @@ button.react-calendar__tile:enabled:hover {
     padding: 0.5rem;
   }
 
+  .home-layout {
+    padding: 0.1rem;
+  }
+
   .home-sidebar {
     width: 100%;
     flex-direction: column;
