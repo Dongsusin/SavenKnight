@@ -8,6 +8,8 @@ import { auth, db } from "../firebase";
 import { doc, getDoc, setDoc, onSnapshot } from "firebase/firestore";
 import heroes from "../data/heroes.json";
 import pets from "../data/pets.json";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
 import "./Home.css";
 
 const ABILITY_SEARCH_KEYWORDS = [
@@ -121,6 +123,81 @@ export default function Home() {
   const [selectingIndex, setSelectingIndex] = useState(null);
   const [user] = useAuthState(auth);
   const [likes, setLikes] = useState({});
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [events] = useState([
+    {
+      title: "정식 오픈",
+      start: "2025-05-15",
+      end: "2025-05-15",
+    },
+    {
+      title: "제이브, 레이첼, 바네사 영웅 픽업 소환 및 성장 이벤트 안내",
+      start: "2025-05-15",
+      end: "2025-05-28",
+    },
+    {
+      title: "태오/타카 업데이트",
+      start: "2025-05-29",
+      end: "2025-05-29",
+    },
+    {
+      title: "태오, 타카 영웅 픽업 소환 및 영웅 성장 이벤트",
+      start: "2025-05-29",
+      end: "2025-06-11",
+    },
+    {
+      title: "시나리오 이벤트 : [늦게 피는 꽃]",
+      start: "2025-05-29",
+      end: "2025-06-11",
+    },
+    {
+      title: "연희 업데이트",
+      start: "2025-06-12",
+      end: "2025-06-12",
+    },
+    {
+      title: "연희 영웅 픽업 소환 및 영웅 성장 이벤트",
+      start: "2025-06-12",
+      end: "2025-06-25",
+    },
+    {
+      title: "골드 러시 이벤트",
+      start: "2025-06-12",
+      end: "2025-06-25",
+    },
+    {
+      title: "멜키르 업데이트",
+      start: "2025-06-26",
+      end: "2025-06-25",
+    },
+    {
+      title: "멜키르 시나리오 이벤트 [최후의 시간선]",
+      start: "2025-06-26",
+      end: "2025-07-09",
+    },
+    {
+      title: "멜키르 픽업 소환 및 영웅 성장 이벤트 안내",
+      start: "2025-06-26",
+      end: "2025-07-09",
+    },
+    {
+      title: "길드전 대비! 레이드 장비 추가 획득 이벤트",
+      start: "2025-06-26",
+      end: "2025-07-09",
+    },
+  ]);
+
+  const formatDate = (date) => {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  const getEventsForDate = (date) => {
+    const target = formatDate(date); // 현재 클릭한 날짜 (yyyy-mm-dd)
+    return events.filter((e) => e.start <= target && target <= e.end);
+  };
 
   useEffect(() => {
     const heroUnsubs = heroes.map((hero) => {
@@ -171,193 +248,237 @@ export default function Home() {
 
   return (
     <div className="page home-layout">
-      {/* 왼쪽 섹션 */}
-      <aside className="home-sidebar">
-        <section className="home-panel">
-          <h2>업데이트 게시판</h2>
-          <ul>
-            <li>
-              <a href="https://game.naver.com/lounge/sena_rebirth/board/detail/6254363">
-                [2025-06-26]업데이트 내역
-              </a>
-            </li>
-            <li>
-              <a href="https://game.naver.com/lounge/sena_rebirth/board/detail/6184591">
-                [2025-06-12]업데이트 내역
-              </a>
-            </li>
-            <li>
-              <a href="https://game.naver.com/lounge/sena_rebirth/board/detail/6103024">
-                [2025-05-29]업데이트 내역
-              </a>
-            </li>
-            <li>
-              <a href="https://game.naver.com/lounge/sena_rebirth/board/detail/6056683">
-                [2025-05-21]업데이트 내역
-              </a>
-            </li>
-          </ul>
-        </section>
+      <div className="main">
+        {/* 왼쪽 섹션 */}
+        <aside className="home-sidebar">
+          <section className="home-panel">
+            <h2>업데이트 게시판</h2>
+            <ul>
+              <li>
+                <a href="https://game.naver.com/lounge/sena_rebirth/board/detail/6254363">
+                  [2025-06-26]업데이트 내역
+                </a>
+              </li>
+              <li>
+                <a href="https://game.naver.com/lounge/sena_rebirth/board/detail/6184591">
+                  [2025-06-12]업데이트 내역
+                </a>
+              </li>
+              <li>
+                <a href="https://game.naver.com/lounge/sena_rebirth/board/detail/6103024">
+                  [2025-05-29]업데이트 내역
+                </a>
+              </li>
+              <li>
+                <a href="https://game.naver.com/lounge/sena_rebirth/board/detail/6056683">
+                  [2025-05-21]업데이트 내역
+                </a>
+              </li>
+            </ul>
+          </section>
 
-        <section className="home-panel">
-          <h2>쿠폰 코드</h2>
-          <ul className="coupon-list">
-            <li>
-              <div className="coupon-code">SENARESAMEWAY</div>
-              <div className="coupon-reward">열쇠 상자 3개</div>
-            </li>
-            <li>
-              <div className="coupon-code">SENAREYOUNGLAEGI</div>
-              <div className="coupon-reward">골드 30만</div>
-            </li>
-            <li>
-              <div className="coupon-code">SENAREGSIK</div>
-              <div className="coupon-reward">희귀 영웅 소환권 1개</div>
-            </li>
-            <li>
-              <div className="coupon-code">SENAREMOOVING</div>
-              <div className="coupon-reward">진화 재료 상자(중) 30개</div>
-            </li>
-            <li>
-              <div className="coupon-code">SORRY4WAITING</div>
-              <div className="coupon-reward">진화 재료 상자(상) 30개</div>
-            </li>
-            <li>
-              <div className="coupon-code">SEVENKNIGHTSFOREVER</div>
-              <div className="coupon-reward">희귀 영웅 선택권 1개 </div>
-            </li>
-          </ul>
-        </section>
+          <section className="home-panel">
+            <h2>쿠폰 코드</h2>
+            <ul className="coupon-list">
+              <li>
+                <div className="coupon-code">SENARESAMEWAY</div>
+                <div className="coupon-reward">열쇠 상자 3개</div>
+              </li>
+              <li>
+                <div className="coupon-code">SENAREYOUNGLAEGI</div>
+                <div className="coupon-reward">골드 30만</div>
+              </li>
+              <li>
+                <div className="coupon-code">SENAREGSIK</div>
+                <div className="coupon-reward">희귀 영웅 소환권 1개</div>
+              </li>
+              <li>
+                <div className="coupon-code">SENAREMOOVING</div>
+                <div className="coupon-reward">진화 재료 상자(중) 30개</div>
+              </li>
+              <li>
+                <div className="coupon-code">SORRY4WAITING</div>
+                <div className="coupon-reward">진화 재료 상자(상) 30개</div>
+              </li>
+              <li>
+                <div className="coupon-code">SEVENKNIGHTSFOREVER</div>
+                <div className="coupon-reward">희귀 영웅 선택권 1개 </div>
+              </li>
+            </ul>
+          </section>
 
-        <section className="home-panel">
-          <h2>효과별 검색</h2>
-          <div className="ability-shortcut-list">
-            {ABILITY_SEARCH_KEYWORDS.map((keyword) => (
-              <button
-                key={keyword}
-                className="ability-shortcut-button"
-                onClick={() =>
-                  navigate("/dex", {
-                    state: { group: "검색", ability: keyword },
-                  })
+          <section className="home-panel">
+            <h2>효과별 검색</h2>
+            <div className="ability-shortcut-list">
+              {ABILITY_SEARCH_KEYWORDS.map((keyword) => (
+                <button
+                  key={keyword}
+                  className="ability-shortcut-button"
+                  onClick={() =>
+                    navigate("/dex", {
+                      state: { group: "검색", ability: keyword },
+                    })
+                  }
+                >
+                  {keyword}
+                </button>
+              ))}
+            </div>
+          </section>
+        </aside>
+
+        {/* 중앙 섹션 */}
+        <main className="home-main">
+          <section className="home-panel">
+            <h2>이벤트 캘린더</h2>
+            <Calendar
+              onChange={setSelectedDate}
+              value={selectedDate}
+              tileClassName={({ date, view }) => {
+                if (view === "month" && date.getDay() === 4) {
+                  return "thursday-tile";
                 }
-              >
-                {keyword}
-              </button>
-            ))}
-          </div>
-        </section>
-      </aside>
-
-      {/* 중앙 섹션 */}
-      <main className="home-main">
-        <section className="home-panel">
-          <h2>영웅 도감</h2>
-          <HeroSlide likes={likes} handleLike={handleLike} user={user} />
-        </section>
-
-        <section className="home-panel">
-          <h2>펫 도감</h2>
-          <div>
-            <PetSlide likes={likes} handleLike={handleLike} user={user} />
-          </div>
-        </section>
-
-        <section className="home-panel">
-          <h2>팀 편성</h2>
-          <div className="mini-team-preview">
-            {previewTeam.map((member, index) => (
-              <div
-                key={index}
-                className="mini-slot"
-                onClick={() => setSelectingIndex(index)}
-              >
-                {member ? (
-                  <img
-                    src={`/도감/${member.group}/아이콘/${member.name}.png`}
-                    alt={member.name}
-                    style={{ width: "60px", height: "60px" }}
-                  />
-                ) : (
-                  <div className="empty-slot">+</div>
-                )}
-              </div>
-            ))}
-          </div>
-
-          <div style={{ textAlign: "center", marginTop: "10px" }}>
-            <button
-              className="team-navigate-button"
-              onClick={() => navigate("/team")}
-            >
-              팀 편성하러 가기
-            </button>
-          </div>
-
-          {selectingIndex !== null && (
-            <CharacterSelectPopup
-              onSelect={(hero) => {
-                const updated = [...previewTeam];
-                updated[selectingIndex] = hero;
-                setPreviewTeam(updated);
-                setSelectingIndex(null);
+                return null;
               }}
-              onClose={() => setSelectingIndex(null)}
+              tileContent={({ date, view }) => {
+                if (view !== "month") return null;
+                const target = formatDate(date);
+                const dayEvents = events.filter(
+                  (e) => e.start <= target && target <= e.end
+                );
+                if (dayEvents.length === 0) return null;
+                return (
+                  <div
+                    className="event-dot-bar"
+                    title={dayEvents
+                      .map((e) => `${e.title} (${e.start}~${e.end})`)
+                      .join("\n")}
+                  ></div>
+                );
+              }}
             />
-          )}
-        </section>
-      </main>
 
-      {/* 오른쪽 섹션 */}
-      <aside className="home-sidebar">
-        <section className="home-panel">
-          <h2>레이드</h2>
-          <ul className="home-raid-list">
-            {[
-              { name: "파멸의눈동자", img: "/레이드/선택/파멸의눈동자.png" },
-              { name: "우마왕", img: "/레이드/선택/우마왕.png" },
-              { name: "강철의포식자", img: "/레이드/선택/강철의포식자.png" },
-            ].map((raid, i) => (
-              <li
-                key={raid.name}
-                className={`home-raid-card ${i === 0 ? "selected" : ""}`}
-                onClick={() =>
-                  navigate("/raid", { state: { name: raid.name } })
-                }
-              >
-                <img src={raid.img} alt={raid.name} />
-                <span>{raid.name}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
+            {getEventsForDate(selectedDate).length > 0 && (
+              <div className="calendar-selected-event">
+                {formatDate(selectedDate)}의 이벤트:
+                <ul>
+                  {getEventsForDate(selectedDate).map((e, i) => (
+                    <li key={i}>
+                      • {e.title} ({e.start} ~ {e.end})
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </section>
 
-        <section className="home-panel">
-          <h2>성장 던전</h2>
-          <ul className="GrowthDungeon-list">
-            {[
-              { name: "불의원소", img: "/성장던전/배경/불의원소.png" },
-              { name: "물의원소", img: "/성장던전/배경/물의원소.png" },
-              { name: "땅의원소", img: "/성장던전/배경/땅의원소.png" },
-              { name: "빛의원소", img: "/성장던전/배경/빛의원소.png" },
-              { name: "암흑의원소", img: "/성장던전/배경/암흑의원소.png" },
-              { name: "골드", img: "/성장던전/배경/골드.png" },
-            ].map((GrowthDungeon, i) => (
-              <li
-                key={GrowthDungeon.name}
-                className={`GrowthDungeon-card ${i === 0 ? "selected" : ""}`}
-                onClick={() =>
-                  navigate("/growth-dungeon", {
-                    state: { name: GrowthDungeon.name },
-                  })
-                }
+          <section className="home-panel">
+            <h2>영웅 도감</h2>
+            <HeroSlide likes={likes} handleLike={handleLike} user={user} />
+          </section>
+
+          <section className="home-panel">
+            <h2>펫 도감</h2>
+            <div>
+              <PetSlide likes={likes} handleLike={handleLike} user={user} />
+            </div>
+          </section>
+
+          <section className="home-panel">
+            <h2>팀 편성</h2>
+            <div className="mini-team-preview">
+              {previewTeam.map((member, index) => (
+                <div
+                  key={index}
+                  className="mini-slot"
+                  onClick={() => setSelectingIndex(index)}
+                >
+                  {member ? (
+                    <img
+                      src={`/도감/${member.group}/아이콘/${member.name}.png`}
+                      alt={member.name}
+                      style={{ width: "60px", height: "60px" }}
+                    />
+                  ) : (
+                    <div className="empty-slot">+</div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            <div style={{ textAlign: "center", marginTop: "10px" }}>
+              <button
+                className="team-navigate-button"
+                onClick={() => navigate("/team")}
               >
-                <img src={GrowthDungeon.img} alt={GrowthDungeon.name} />
-              </li>
-            ))}
-          </ul>
-        </section>
-      </aside>
+                팀 편성하러 가기
+              </button>
+            </div>
+            {selectingIndex !== null && (
+              <CharacterSelectPopup
+                onSelect={(hero) => {
+                  const updated = [...previewTeam];
+                  updated[selectingIndex] = hero;
+                  setPreviewTeam(updated);
+                  setSelectingIndex(null);
+                }}
+                onClose={() => setSelectingIndex(null)}
+              />
+            )}
+          </section>
+        </main>
+
+        {/* 오른쪽 섹션 */}
+        <aside className="home-sidebar">
+          <section className="home-panel">
+            <h2>레이드</h2>
+            <ul className="home-raid-list">
+              {[
+                { name: "파멸의눈동자", img: "/레이드/선택/파멸의눈동자.png" },
+                { name: "우마왕", img: "/레이드/선택/우마왕.png" },
+                { name: "강철의포식자", img: "/레이드/선택/강철의포식자.png" },
+              ].map((raid, i) => (
+                <li
+                  key={raid.name}
+                  className={`home-raid-card ${i === 0 ? "selected" : ""}`}
+                  onClick={() =>
+                    navigate("/raid", { state: { name: raid.name } })
+                  }
+                >
+                  <img src={raid.img} alt={raid.name} />
+                  <span>{raid.name}</span>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <section className="home-panel">
+            <h2>성장 던전</h2>
+            <ul className="GrowthDungeon-list">
+              {[
+                { name: "불의원소", img: "/성장던전/배경/불의원소.png" },
+                { name: "물의원소", img: "/성장던전/배경/물의원소.png" },
+                { name: "땅의원소", img: "/성장던전/배경/땅의원소.png" },
+                { name: "빛의원소", img: "/성장던전/배경/빛의원소.png" },
+                { name: "암흑의원소", img: "/성장던전/배경/암흑의원소.png" },
+                { name: "골드", img: "/성장던전/배경/골드.png" },
+              ].map((GrowthDungeon, i) => (
+                <li
+                  key={GrowthDungeon.name}
+                  className={`GrowthDungeon-card ${i === 0 ? "selected" : ""}`}
+                  onClick={() =>
+                    navigate("/growth-dungeon", {
+                      state: { name: GrowthDungeon.name },
+                    })
+                  }
+                >
+                  <img src={GrowthDungeon.img} alt={GrowthDungeon.name} />
+                </li>
+              ))}
+            </ul>
+          </section>
+        </aside>
+      </div>
     </div>
   );
 }
