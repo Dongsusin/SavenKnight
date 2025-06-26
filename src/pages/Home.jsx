@@ -177,6 +177,11 @@ export default function Home() {
           <h2>업데이트 게시판</h2>
           <ul>
             <li>
+              <a href="https://game.naver.com/lounge/sena_rebirth/board/detail/6254363">
+                [2025-06-26]업데이트 내역
+              </a>
+            </li>
+            <li>
               <a href="https://game.naver.com/lounge/sena_rebirth/board/detail/6184591">
                 [2025-06-12]업데이트 내역
               </a>

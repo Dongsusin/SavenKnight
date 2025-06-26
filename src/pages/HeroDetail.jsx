@@ -257,6 +257,8 @@ export default function HeroDetail() {
       "효과 저항 감소",
       "출혈 폭발",
       "집중 공격",
+      "마력 억류",
+      "축복",
     ];
 
     let highlighted = text;
