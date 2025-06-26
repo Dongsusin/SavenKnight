@@ -113,6 +113,27 @@ const ABILITY_KEYWORDS13 = [
   "쿨타임 증가",
 ];
 
+const handlePetLike = async (petId) => {
+  if (!user) return alert("로그인이 필요합니다.");
+
+  const ref = doc(db, "petLikes", petId.toString());
+  const snap = await getDoc(ref);
+  const data = snap.exists() ? snap.data() : { count: 0, users: [] };
+  const alreadyLiked = data.users.includes(user.uid);
+
+  const updated = alreadyLiked
+    ? {
+        count: Math.max(0, data.count - 1),
+        users: data.users.filter((uid) => uid !== user.uid),
+      }
+    : {
+        count: data.count + 1,
+        users: [...data.users, user.uid],
+      };
+
+  await setDoc(ref, updated);
+};
+
 const highlightKeywords = (text) => {
   const goldColor = "#ffcc00";
   const blueColor = "#00ccff";
@@ -182,7 +203,7 @@ export default function Dex() {
     });
 
     const petUnsubs = pets.map((pet) => {
-      const ref = doc(db, "likes", pet.id.toString());
+      const ref = doc(db, "petLikes", pet.id.toString()); // 🔁 변경
       return onSnapshot(ref, (snap) => {
         setLikes((prev) => ({
           ...prev,
@@ -326,13 +347,34 @@ export default function Dex() {
                     const skillPath = isPetGroup
                       ? `/도감/펫/스킬/${entry.name}.png`
                       : null;
+
                     return isPetGroup ? (
                       <div key={entry.id} className="hero-card">
+                        {/* ✅ 펫 추천 버튼 */}
+                        <button
+                          className={`like-button ${
+                            user && likes[entry.id]?.users?.includes(user.uid)
+                              ? "liked"
+                              : ""
+                          }`}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            if (!user) {
+                              alert("로그인이 필요합니다.");
+                              return;
+                            }
+                            handlePetLike(entry.id); // ✅ 펫 전용 추천 함수
+                          }}
+                        >
+                          추천 {likes[entry.id]?.count || 0}
+                        </button>
+
                         <img
                           src={imagePath}
                           alt={entry.name}
                           className="image"
                         />
+
                         {skillPath && (
                           <div className="pet-skill-tooltip-wrapper">
                             <img
@@ -379,7 +421,7 @@ export default function Dex() {
                                 alert("로그인이 필요합니다.");
                                 return;
                               }
-                              handleLike(entry.id);
+                              handleLike(entry.id); // ✅ 영웅 추천
                             }}
                           >
                             추천 {likes[entry.id]?.count || 0}

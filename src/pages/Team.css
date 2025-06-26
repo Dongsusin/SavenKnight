@@ -609,16 +609,6 @@
   padding: 5px;
 }
 
-.team-slot-wrapper.front-line {
-  transform: translateY(-10px); /* 전열은 약간 위로 */
-  z-index: 2;
-}
-
-.team-slot-wrapper.back-line {
-  transform: translateY(10px); /* 후열은 약간 아래로 */
-  z-index: 1;
-}
-
 @media (max-width: 786px) {
   .team-slot-wrapper {
     justify-content: center;
@@ -633,13 +623,6 @@
   }
   .team-stat-settings {
     flex-direction: row;
-  }
-  .team-slot-wrapper.front-line {
-    transform: translateY(0);
-  }
-
-  .team-slot-wrapper.back-line {
-    transform: translateY(0);
   }
 }
 

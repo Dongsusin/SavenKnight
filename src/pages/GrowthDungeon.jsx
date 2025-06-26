@@ -56,31 +56,31 @@ export default function GrowthDungeon() {
   }, [selectedId, selectedStage]);
 
   useEffect(() => {
-    const q = query(
-      collection(db, "growthDungeons", selectedId.toString(), "heroVotes"),
-      orderBy("likes", "desc")
+    const q = collection(
+      db,
+      "growthDungeons",
+      selectedId.toString(),
+      "heroVotes"
     );
     const unsubscribe = onSnapshot(q, (snap) => {
       const list = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      setHeroVotes(list);
+      // 추천수 기준으로 정렬
+      setHeroVotes(
+        list.sort((a, b) => (b.likes?.length || 0) - (a.likes?.length || 0))
+      );
     });
     return () => unsubscribe();
   }, [selectedId]);
 
   useEffect(() => {
-    const q = query(
-      collection(
-        db,
-        "growthDungeons",
-        selectedId.toString(),
-        "stages",
-        selectedStage.toString(),
-        "teams"
-      ),
-      orderBy("likes", "desc")
-    );
+    const q = collection(db, "growthDungeons", selectedId.toString(), "teams");
+
     return onSnapshot(q, (snap) => {
-      setTeamVotes(snap.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+      const teams = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      // 추천수 기준으로 정렬
+      setTeamVotes(
+        teams.sort((a, b) => (b.likes?.length || 0) - (a.likes?.length || 0))
+      );
     });
   }, [selectedId, selectedStage]);
 
@@ -117,11 +117,10 @@ export default function GrowthDungeon() {
       db,
       "growthDungeons",
       selectedId.toString(),
-      "stages",
-      selectedStage.toString(),
       "teams",
       teamId
     );
+
     await updateDoc(ref, {
       likes: likes.includes(user.uid)
         ? likes.filter((id) => id !== user.uid)
@@ -141,14 +140,7 @@ export default function GrowthDungeon() {
       return alert("빈 슬롯이 있습니다.");
 
     await addDoc(
-      collection(
-        db,
-        "growthDungeons",
-        selectedId.toString(),
-        "stages",
-        selectedStage.toString(),
-        "teams"
-      ),
+      collection(db, "growthDungeons", selectedId.toString(), "teams"),
       {
         heroes: selectedTeamHeroes,
         likes: [],
@@ -409,34 +401,36 @@ export default function GrowthDungeon() {
             </button>
             <h3>{selectedDungeon.name} 추천 영웅</h3>
             <div className="hero-list">
-              {heroes.map((hero) => {
-                const vote = heroVotes.find(
-                  (v) => parseInt(v.heroId) === hero.id
-                );
-                const likes = vote?.likes || [];
-                const liked = user && likes.includes(user.uid);
+              {heroes
+                .filter((hero) => hero.category !== "특수영웅") // 🔽 필터 추가
+                .map((hero) => {
+                  const vote = heroVotes.find(
+                    (v) => parseInt(v.heroId) === hero.id
+                  );
+                  const likes = vote?.likes || [];
+                  const liked = user && likes.includes(user.uid);
 
-                return (
-                  <div key={hero.id} className="hero-item">
-                    <img
-                      src={`/도감/${hero.group}/아이콘/${hero.name}.png`}
-                      alt={hero.name}
-                    />
-                    <button
-                      className={`vote-button ${liked ? "liked" : ""}`}
-                      onClick={() => {
-                        if (!user) {
-                          alert("로그인이 필요합니다.");
-                          return;
-                        }
-                        handleHeroVote(hero.id, likes);
-                      }}
-                    >
-                      추천: {likes.length}
-                    </button>
-                  </div>
-                );
-              })}
+                  return (
+                    <div key={hero.id} className="hero-item">
+                      <img
+                        src={`/도감/${hero.group}/아이콘/${hero.name}.png`}
+                        alt={hero.name}
+                      />
+                      <button
+                        className={`vote-button ${liked ? "liked" : ""}`}
+                        onClick={() => {
+                          if (!user) {
+                            alert("로그인이 필요합니다.");
+                            return;
+                          }
+                          handleHeroVote(hero.id, likes);
+                        }}
+                      >
+                        추천: {likes.length}
+                      </button>
+                    </div>
+                  );
+                })}
             </div>
           </div>
         </div>
@@ -455,29 +449,36 @@ export default function GrowthDungeon() {
             {!showTeamRegister ? (
               <>
                 <div className="team-list">
-                  {teamVotes.map((team) => (
-                    <div key={team.id} className="team-card">
-                      <div className="team-heroes">
-                        {team.heroes.map((id) => {
-                          const hero = heroes.find((h) => h.id === id);
-                          return (
-                            <img
-                              key={id}
-                              src={`/도감/${hero.group}/아이콘/${hero.name}.png`}
-                              alt={hero.name}
-                            />
-                          );
-                        })}
+                  {teamVotes
+                    .filter((team) =>
+                      team.heroes.every((id) => {
+                        const hero = heroes.find((h) => h.id === id);
+                        return hero?.category !== "특수영웅";
+                      })
+                    )
+                    .map((team) => (
+                      <div key={team.id} className="team-card">
+                        <div className="team-heroes">
+                          {team.heroes.map((id) => {
+                            const hero = heroes.find((h) => h.id === id);
+                            return (
+                              <img
+                                key={id}
+                                src={`/도감/${hero.group}/아이콘/${hero.name}.png`}
+                                alt={hero.name}
+                              />
+                            );
+                          })}
+                        </div>
+                        <div className="team-meta">
+                          <button
+                            onClick={() => handleTeamVote(team.id, team.likes)}
+                          >
+                            추천 {team.likes?.length || 0}
+                          </button>
+                        </div>
                       </div>
-                      <div className="team-meta">
-                        <button
-                          onClick={() => handleTeamVote(team.id, team.likes)}
-                        >
-                          추천 {team.likes?.length || 0}
-                        </button>
-                      </div>
-                    </div>
-                  ))}
+                    ))}
                 </div>
                 <div className="team-add-button-wrap">
                   <button
@@ -523,22 +524,24 @@ export default function GrowthDungeon() {
                 </div>
                 {activeSlotIndex !== null && (
                   <div className="hero-select-list">
-                    {heroes.map((hero) => (
-                      <div
-                        key={hero.id}
-                        className="hero-item"
-                        onClick={() => {
-                          handleSelectHeroSlot(activeSlotIndex, hero.id);
-                          setActiveSlotIndex(null);
-                        }}
-                      >
-                        <img
-                          src={`/도감/${hero.group}/아이콘/${hero.name}.png`}
-                          alt={hero.name}
-                          title={hero.name}
-                        />
-                      </div>
-                    ))}
+                    {heroes
+                      .filter((hero) => hero.category !== "특수영웅")
+                      .map((hero) => (
+                        <div
+                          key={hero.id}
+                          className="hero-item"
+                          onClick={() => {
+                            handleSelectHeroSlot(activeSlotIndex, hero.id);
+                            setActiveSlotIndex(null);
+                          }}
+                        >
+                          <img
+                            src={`/도감/${hero.group}/아이콘/${hero.name}.png`}
+                            alt={hero.name}
+                            title={hero.name}
+                          />
+                        </div>
+                      ))}
                   </div>
                 )}
               </>
