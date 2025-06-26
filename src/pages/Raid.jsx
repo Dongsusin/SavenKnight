@@ -423,38 +423,58 @@ export default function Raid() {
             {!showTeamRegister ? (
               <>
                 <div className="team-list">
-                  {teamVotes
-                    .filter((team) =>
-                      team.heroes.every((id) => {
-                        const hero = heroes.find((h) => h.id === id);
-                        return hero?.category !== "특수영웅";
-                      })
-                    )
-                    .map((team) => (
-                      <div key={team.id} className="team-card">
-                        <div className="team-heroes">
-                          {team.heroes.map((id) => {
-                            const hero = heroes.find((h) => h.id === id);
-                            return (
-                              <img
-                                key={id}
-                                src={`/도감/${hero.group}/아이콘/${hero.name}.png`}
-                                alt={hero.name}
-                                title={hero.name}
-                              />
-                            );
-                          })}
+                  {teamVotes.filter((team) =>
+                    team.heroes.every((id) => {
+                      const hero = heroes.find((h) => h.id === id);
+                      return hero?.category !== "특수영웅";
+                    })
+                  ).length === 0 ? (
+                    <p
+                      style={{
+                        textAlign: "center",
+                        color: "#aaa",
+                        marginTop: "20px",
+                      }}
+                    >
+                      아직 등록된 덱이 없습니다. 덱을 추천해주세요!
+                    </p>
+                  ) : (
+                    teamVotes
+                      .filter((team) =>
+                        team.heroes.every((id) => {
+                          const hero = heroes.find((h) => h.id === id);
+                          return hero?.category !== "특수영웅";
+                        })
+                      )
+                      .map((team) => (
+                        <div key={team.id} className="team-card">
+                          <div className="team-heroes">
+                            {team.heroes.map((id) => {
+                              const hero = heroes.find((h) => h.id === id);
+                              return (
+                                <img
+                                  key={id}
+                                  src={`/도감/${hero.group}/아이콘/${hero.name}.png`}
+                                  alt={hero.name}
+                                  title={hero.name}
+                                />
+                              );
+                            })}
+                          </div>
+                          <div className="team-meta">
+                            <button
+                              onClick={() =>
+                                handleTeamVote(team.id, team.likes)
+                              }
+                            >
+                              추천 {team.likes?.length || 0}
+                            </button>
+                          </div>
                         </div>
-                        <div className="team-meta">
-                          <button
-                            onClick={() => handleTeamVote(team.id, team.likes)}
-                          >
-                            추천 {team.likes?.length || 0}
-                          </button>
-                        </div>
-                      </div>
-                    ))}
+                      ))
+                  )}
                 </div>
+
                 <div className="team-add-button-wrap">
                   <button
                     onClick={() => setShowTeamRegister(true)}
