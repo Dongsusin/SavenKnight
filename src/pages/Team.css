@@ -4,6 +4,9 @@
   color: #fff;
   text-align: center;
   padding: 10px;
+  h1 {
+    margin-bottom: 1rem;
+  }
 }
 
 .formation-select {
@@ -14,7 +17,6 @@
   margin-bottom: 20px;
   font-size: 14px;
   color: #fff;
-  margin-right: 45px;
 }
 
 .formation-select label {
@@ -311,6 +313,17 @@
   background-color: #1e1e1e;
   transition: background-color 0.2s ease;
   cursor: pointer;
+}
+
+.formation {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.formation-level {
+  display: flex;
+  gap: 10px;
 }
 
 .equip-slot:hover {

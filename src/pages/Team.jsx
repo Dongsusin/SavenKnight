@@ -597,40 +597,45 @@ export default function Team() {
           marginTop: "10px",
         }}
       >
-        <span style={{ color: "#fff" }}>
-          {formation} 레벨:{" "}
-          <span style={{ color: "#ffcc00" }}>{formationLevels[formation]}</span>
-        </span>
-        <button
-          onClick={() => updateFormationLevel(-1)}
-          disabled={formationLevels[formation] <= 1}
-          style={{
-            backgroundColor: "#333",
-            color: "#fff",
-            border: "1px solid #666",
-            padding: "2px 6px",
-            borderRadius: "4px",
-            cursor: "pointer",
-            opacity: formationLevels[formation] <= 1 ? 0.5 : 1,
-          }}
-        >
-          -
-        </button>
-        <button
-          onClick={() => updateFormationLevel(1)}
-          disabled={formationLevels[formation] >= 40}
-          style={{
-            backgroundColor: "#333",
-            color: "#fff",
-            border: "1px solid #666",
-            padding: "2px 6px",
-            borderRadius: "4px",
-            cursor: "pointer",
-            opacity: formationLevels[formation] >= 40 ? 0.5 : 1,
-          }}
-        >
-          +
-        </button>
+        <div className="formation">
+          <span>{formation}</span>
+          <span className="formation-level" style={{ color: "#fff" }}>
+            진형 레벨:{" "}
+            <span style={{ color: "#ffcc00" }}>
+              {formationLevels[formation]}
+            </span>
+            <button
+              onClick={() => updateFormationLevel(-1)}
+              disabled={formationLevels[formation] <= 1}
+              style={{
+                backgroundColor: "#333",
+                color: "#fff",
+                border: "1px solid #666",
+                padding: "2px 6px",
+                borderRadius: "4px",
+                cursor: "pointer",
+                opacity: formationLevels[formation] <= 1 ? 0.5 : 1,
+              }}
+            >
+              -
+            </button>
+            <button
+              onClick={() => updateFormationLevel(1)}
+              disabled={formationLevels[formation] >= 40}
+              style={{
+                backgroundColor: "#333",
+                color: "#fff",
+                border: "1px solid #666",
+                padding: "2px 6px",
+                borderRadius: "4px",
+                cursor: "pointer",
+                opacity: formationLevels[formation] >= 40 ? 0.5 : 1,
+              }}
+            >
+              +
+            </button>
+          </span>
+        </div>
       </div>
 
       <div className="pet-select-wrapper">

@@ -168,7 +168,7 @@ export default function Home() {
     {
       title: "멜키르 업데이트",
       start: "2025-06-26",
-      end: "2025-06-25",
+      end: "2025-06-26",
     },
     {
       title: "멜키르 시나리오 이벤트 [최후의 시간선]",
