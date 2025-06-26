@@ -1615,7 +1615,6 @@ export default function HeroDetail() {
                     </p>
                   ) : (
                     recommendations.map((rec) => (
-                      // 기존 카드 렌더링 코드 그대로 유지
                       <div key={rec.id} className="recommend-card">
                         <div className="equip-summary">
                           {[

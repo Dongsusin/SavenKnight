@@ -1,4 +1,3 @@
-// 🔽 리턴 위 영역 (추천 영웅 + 추천 덱)
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -62,7 +61,6 @@ export default function Raid() {
     const q = collection(db, "raids", selectedId.toString(), "heroVotes");
     return onSnapshot(q, (snap) => {
       const votes = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      // 👍 추천수 기준 정렬
       setHeroVotes(
         votes.sort((a, b) => (b.likes?.length || 0) - (a.likes?.length || 0))
       );
@@ -73,7 +71,6 @@ export default function Raid() {
     const q = collection(db, "raids", selectedId.toString(), "teams");
     return onSnapshot(q, (snap) => {
       const teams = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      // 👍 추천수 기준 정렬
       setTeamVotes(
         teams.sort((a, b) => (b.likes?.length || 0) - (a.likes?.length || 0))
       );
@@ -128,20 +125,12 @@ export default function Raid() {
     if (selectedTeamHeroes.some((id) => !id))
       return alert("빈 슬롯이 있습니다.");
 
-    await addDoc(
-      collection(
-        db,
-        "raids",
-        selectedId.toString(),
-        "teams" // ✅ 단계 제거
-      ),
-      {
-        heroes: selectedTeamHeroes,
-        likes: [],
-        authorName: user.displayName || user.email,
-        createdAt: serverTimestamp(),
-      }
-    );
+    await addDoc(collection(db, "raids", selectedId.toString(), "teams"), {
+      heroes: selectedTeamHeroes,
+      likes: [],
+      authorName: user.displayName || user.email,
+      createdAt: serverTimestamp(),
+    });
 
     setSelectedTeamHeroes([null, null, null, null, null]);
     setActiveSlotIndex(null);

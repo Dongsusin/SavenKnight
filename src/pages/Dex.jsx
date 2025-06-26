@@ -193,7 +193,7 @@ export default function Dex() {
     });
 
     const petLikeUnsubs = pets.map((pet) => {
-      const ref = doc(db, "petLikes", pet.id.toString()); // ✅ PetSlide에서 사용한 컬렉션
+      const ref = doc(db, "petLikes", pet.id.toString());
       return onSnapshot(ref, (snap) => {
         setPetLikes((prev) => ({
           ...prev,

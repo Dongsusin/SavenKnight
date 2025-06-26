@@ -63,7 +63,7 @@ export default function PetSlide() {
               user && likes[pet.id]?.users?.includes(user.uid) ? "liked" : ""
             }`}
             onClick={(e) => {
-              e.stopPropagation(); // 클릭이 카드 내비게이션으로 퍼지지 않도록 막음
+              e.stopPropagation();
               handlePetLike(pet.id);
             }}
           >

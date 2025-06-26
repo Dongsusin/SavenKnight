@@ -11,15 +11,19 @@
 
 .main {
   width: 100%;
-  height: auto;
+  height: 100%;
+  max-height: 1300px;
   display: flex;
   gap: 10px;
+  position: relative;
 }
 
 .home-sidebar {
   width: auto;
+  height: 1300px;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   gap: 1rem;
 }
 
@@ -31,8 +35,9 @@
   margin: 0 auto;
   min-width: 25vw;
   width: 100%;
+  height: 1300px;
   box-sizing: border-box;
-  justify-content: space-evenly;
+  justify-content: space-between;
 }
 
 .home-panel {
@@ -113,7 +118,6 @@
   flex-direction: column;
   gap: 1rem;
   padding-left: 0;
-  margin-top: 1rem;
 }
 
 .home-raid-card,
@@ -230,7 +234,6 @@
   position: relative;
 }
 
-/* 캘린더 기본 스타일 */
 .react-calendar {
   width: 100%;
   background-color: #1f1f1f;
@@ -242,7 +245,6 @@
   font-family: inherit;
 }
 
-/* 네비게이션 (년/월 이동 버튼) */
 .react-calendar__navigation {
   display: flex;
   justify-content: space-between;
@@ -261,7 +263,6 @@
   color: #ffaa00;
 }
 
-/* 요일 헤더 */
 .react-calendar__month-view__weekdays {
   text-align: center;
   text-transform: uppercase;
@@ -269,7 +270,6 @@
   color: #ccc;
 }
 
-/* 타일 기본 (날짜 버튼) */
 .react-calendar__tile {
   background: none;
   border: none;
@@ -281,33 +281,28 @@
   color: white;
 }
 
-/* 목요일 날짜 셀 배경 하늘색 */
 .thursday-tile {
   color: #00bfff !important;
   font-weight: bold;
 }
 
-/* 호버 효과 */
 .react-calendar__tile:enabled:hover,
 button.react-calendar__tile:enabled:hover {
   background-color: rgba(255, 215, 0, 0.1) !important;
   color: #ffd700 !important;
 }
 
-/* 오늘 날짜 */
 .react-calendar__tile--now {
   border: 1px solid #ffd700;
   border-radius: 6px;
 }
 
-/* 선택된 날짜 */
 .react-calendar__tile--active {
   color: #ffd700;
   font-weight: bold;
   border-radius: 6px;
 }
 
-/* 선택된 날짜의 이벤트 목록 표시 */
 .calendar-selected-event {
   margin-top: 0.75rem;
   color: #ccc;
@@ -327,7 +322,6 @@ button.react-calendar__tile:enabled:hover {
   margin-top: 0.2rem;
 }
 
-/* 월/연도/세기 뷰 호버 효과 */
 .react-calendar__year-view__months__month:hover,
 .react-calendar__decade-view__years__year:hover,
 .react-calendar__century-view__decades__decade:hover {
@@ -336,7 +330,6 @@ button.react-calendar__tile:enabled:hover {
   border-radius: 6px;
 }
 
-/* 모든 버튼 회색 배경 제거 */
 .react-calendar button {
   background-color: transparent !important;
 }
@@ -352,7 +345,6 @@ button.react-calendar__tile:enabled:hover {
   margin-top: 2px;
 }
 
-/* 반응형 대응 */
 @media (max-width: 768px) {
   .home-layout {
     flex-direction: column;

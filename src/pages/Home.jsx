@@ -195,7 +195,7 @@ export default function Home() {
   };
 
   const getEventsForDate = (date) => {
-    const target = formatDate(date); // 현재 클릭한 날짜 (yyyy-mm-dd)
+    const target = formatDate(date);
     return events.filter((e) => e.start <= target && target <= e.end);
   };
 

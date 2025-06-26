@@ -64,7 +64,6 @@ export default function GrowthDungeon() {
     );
     const unsubscribe = onSnapshot(q, (snap) => {
       const list = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      // 추천수 기준으로 정렬
       setHeroVotes(
         list.sort((a, b) => (b.likes?.length || 0) - (a.likes?.length || 0))
       );
@@ -77,7 +76,6 @@ export default function GrowthDungeon() {
 
     return onSnapshot(q, (snap) => {
       const teams = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      // 추천수 기준으로 정렬
       setTeamVotes(
         teams.sort((a, b) => (b.likes?.length || 0) - (a.likes?.length || 0))
       );
@@ -402,7 +400,7 @@ export default function GrowthDungeon() {
             <h3>{selectedDungeon.name} 추천 영웅</h3>
             <div className="hero-list">
               {heroes
-                .filter((hero) => hero.category !== "특수영웅") // 🔽 필터 추가
+                .filter((hero) => hero.category !== "특수영웅")
                 .map((hero) => {
                   const vote = heroVotes.find(
                     (v) => parseInt(v.heroId) === hero.id

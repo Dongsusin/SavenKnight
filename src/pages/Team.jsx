@@ -81,7 +81,7 @@ export default function Team() {
       enhance: 0,
       transcend: 0,
       transcendBonus: hero.transcendBonus ?? [],
-      passives: hero.passives ?? [], // ✅ 이 줄이 없으면 패시브 누락됨!
+      passives: hero.passives ?? [],
     };
     setTeam(updated);
     setSelectingIndex(null);
@@ -232,7 +232,7 @@ export default function Team() {
   };
 
   const interpolateStat = (base, max, level) => {
-    const ratio = (level - 1) / (30 - 1); // 1레벨~30레벨 선형 비율
+    const ratio = (level - 1) / (30 - 1);
     return Math.round(base + (max - base) * ratio);
   };
 
@@ -355,8 +355,6 @@ export default function Team() {
       "효과 적중%": "효과 적중",
       "효과 저항%": "효과 저항",
     };
-
-    // ✅ 물리/마법 공격력은 내부 비교 시 "공격력"으로 매핑
     const matchStatKey =
       statKey === "물리 공격력" || statKey === "마법 공격력"
         ? "공격력"
@@ -373,8 +371,6 @@ export default function Team() {
       const isWeapon = equip.type === "무기";
       const isArmor = equip.type === "방어구";
       const level = equip.level ?? 0;
-
-      // 1. 기본 장비 평면 보너스
       if (isWeapon && matchStatKey === "공격력") {
         flatBonus += 64 + 16 * level;
       }
@@ -383,8 +379,6 @@ export default function Team() {
         if (matchStatKey === "방어력") flatBonus += 39 + 10 * level;
         if (matchStatKey === "생명력") flatBonus += 224 + 57 * level;
       }
-
-      // 2. 주 스탯
       const mainStat = subs?.[key]?.main;
       if (mainStat) {
         const val = getMainStatValue(mainStat, level, isWeapon);
@@ -397,8 +391,6 @@ export default function Team() {
           }
         }
       }
-
-      // 3. 부 스탯
       const subList = subs?.[key]?.subs || [];
       const upgradeList = upgrades?.[key] || {};
       subList.forEach((sub, i) => {
@@ -420,8 +412,6 @@ export default function Team() {
           }
         }
       });
-
-      // 4. 장신구 퍼센트 보너스
       if (equip.type === "장신구") {
         const bonus = 2.5 + 0.5 * level;
         if (matchStatKey === "공격력") percentBonus += bonus;
@@ -429,8 +419,6 @@ export default function Team() {
         if (matchStatKey === "생명력") percentBonus += bonus;
       }
     });
-
-    // 5. 세트 효과
     Object.entries(setCounts).forEach(([setName, count]) => {
       const effect = setEffectTable[setName];
       if (!effect) return;
@@ -464,8 +452,6 @@ export default function Team() {
 
     const rawStat = match[1].trim();
     const value = parseFloat(match[2]);
-
-    // ✅ stat 이름 매핑
     const statMap = {
       "받는 피해량": "받는 피해 감소",
       "받는 피해 감소": "받는 피해 감소",
@@ -480,7 +466,6 @@ export default function Team() {
       "막기 확률": "막기 확률",
       "효과 적중": "효과 적중",
       "효과 저항": "효과 저항",
-      // 필요 시 추가
     };
 
     const stat = statMap[rawStat] || rawStat;
@@ -488,7 +473,7 @@ export default function Team() {
     return {
       stat,
       value,
-      type: "percent", // 모두 % 처리
+      type: "percent",
     };
   }
 
@@ -506,7 +491,6 @@ export default function Team() {
       }
     };
 
-    // 1. 일반 패시브 효과 적용
     team.forEach((member, i) => {
       if (!member?.passives) return;
 
@@ -523,8 +507,6 @@ export default function Team() {
       });
     });
 
-    // 2. 🟠 펫 효과는 따로 petBonuses에만 적용 (중복 제거!)
-    // 🟠 펫 효과는 따로 petBonuses에만 적용
     if (pet?.skillDescription) {
       const descList = Array.isArray(pet.skillDescription)
         ? pet.skillDescription
@@ -538,7 +520,6 @@ export default function Team() {
 
         let { stat, value, type } = parsed;
 
-        // ✅ 모든 공격력 → 물리+마법 둘 다 반영
         const statList =
           stat === "모든 공격력" ? ["물리 공격력", "마법 공격력"] : [stat];
 
@@ -548,7 +529,6 @@ export default function Team() {
       });
     }
 
-    // 3. 최종 합산: 일반 패시브만 계산
     const result = {};
     const allStats = new Set([
       ...Object.keys(selfOnly),
@@ -566,10 +546,10 @@ export default function Team() {
     });
 
     return {
-      bonuses: result, // 일반 패시브 합산 (펫 제외)
+      bonuses: result,
       sourceMap: {
         skill: selfOnly,
-        pet: petBonuses, // 오렌지색 표시용
+        pet: petBonuses,
       },
     };
   }
@@ -699,13 +679,13 @@ export default function Team() {
 
       <div className="team-slots">
         {team.map((member, index) => {
-          const position = getPositionForFormation(index); // ✅ 진형 기반 포지션
+          const position = getPositionForFormation(index);
           const positionColor =
             position === "전열"
-              ? "#66ccff" // 파란색
+              ? "#66ccff"
               : position === "후열"
-              ? "#ff6666" // 빨간색
-              : "#cccccc"; // 기본
+              ? "#ff6666"
+              : "#cccccc";
 
           if (!member) {
             return (
@@ -1342,7 +1322,6 @@ export default function Team() {
                               className="equip-slot"
                               onClick={() => {
                                 if (!item) {
-                                  // 장비가 없을 때만 모달 열기
                                   setSelectedEquipSlot({
                                     memberIndex: index,
                                     slotKey,
@@ -1846,7 +1825,7 @@ export default function Team() {
                             [selectedEquipSlot.slotKey]: {
                               ...item,
                               image: imagePath,
-                              name: displayName, // 무기 타입에 따라 name1 or name2 저장
+                              name: displayName,
                             },
                           };
 
