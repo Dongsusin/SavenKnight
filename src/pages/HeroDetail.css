@@ -756,6 +756,168 @@
   cursor: pointer;
 }
 
+/* 추천 장비 버튼 영역 */
+.recommend-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.recommend-buttons button {
+  background-color: #333;
+  color: #ffcc00;
+  border: 1px solid #ffcc00;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.recommend-buttons button:hover {
+  background-color: #ffcc00;
+  color: #000;
+}
+
+/* 공통 팝업 레이어 */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.popup-content {
+  background-color: #1f1f1f;
+  border: 2px solid #555;
+  border-radius: 10px;
+  padding: 20px;
+  max-width: 95%;
+  color: white;
+  position: relative;
+  max-height: 80vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.popup-content h3 {
+  color: #ffd700;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.popup-content button {
+  background-color: #333;
+  color: #fff;
+  border: 1px solid #666;
+  padding: 3px 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.popup-content button:hover {
+  background-color: #444;
+}
+
+.popup-content .equip-summary {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin: 5px 0;
+  justify-content: start;
+  justify-items: center;
+  overflow-x: auto;
+}
+
+.popup-content .equip-summary div {
+  background-color: #2a2a2a;
+  border: 1px solid #555;
+  padding: 3px 5px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  color: #ffd700;
+}
+
+/* 추천 카드 */
+.recommend-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.recommend-card {
+  background-color: #2a2a2a;
+  border: 1px solid #555;
+  padding: 5px;
+  border-radius: 8px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.recommend-card p {
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+.suggestion {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.recommend-card button {
+  align-self: flex-start;
+  background-color: #444;
+  color: #ffd700;
+  border: 1px solid #666;
+  padding: 2px 4px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.recommend-card button:hover {
+  background-color: #ffd700;
+  color: #000;
+}
+
+.recommend-equip-box {
+  display: flex;
+  gap: 8px;
+  padding: 3px 5px;
+  background-color: #222;
+  border: 1px solid #444;
+  border-radius: 6px;
+  width: 180px;
+  flex-direction: column;
+}
+
+.recommend-equip-box img {
+  border: 1px solid #666;
+  background: #000;
+  flex-shrink: 0;
+}
+
+.equip-label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
 @media (max-width: 768px) {
   .hero-info {
     flex-direction: column;

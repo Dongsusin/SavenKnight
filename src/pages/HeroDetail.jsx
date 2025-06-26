@@ -11,7 +11,8 @@ import subStatTable from "../data/subStatTable.json";
 import setEffectTable from "../data/setEffectTable.json";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { auth, db } from "../firebase";
-import { doc, getDoc, setDoc, onSnapshot } from "firebase/firestore";
+import { doc, getDoc, setDoc, onSnapshot, updateDoc } from "firebase/firestore";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import "./HeroDetail.css";
 
@@ -29,6 +30,9 @@ export default function HeroDetail() {
   const [selectedEquipments, setSelectedEquipments] = useState({});
   const [user] = useAuthState(auth);
   const [likeData, setLikeData] = useState({ count: 0, users: [] });
+  const [showRecommendPopup, setShowRecommendPopup] = useState(false);
+  const [showViewPopup, setShowViewPopup] = useState(false);
+  const [recommendations, setRecommendations] = useState([]);
 
   function getSetCounts() {
     const counts = {};
@@ -398,6 +402,44 @@ export default function HeroDetail() {
     return () => unsubscribe();
   }, [hero?.id]);
   const [youtubeOpen, setYoutubeOpen] = useState(false);
+  async function handleRecommendSubmit() {
+    if (!user) return alert("로그인이 필요합니다.");
+
+    const ref = collection(db, "recommendations", hero.id.toString(), "builds");
+    await addDoc(ref, {
+      authorUid: user.uid,
+      authorName: user.displayName || user.email,
+      equipment: selectedEquipments,
+      substats,
+      upgrades: substatUpgrades,
+      createdAt: serverTimestamp(),
+      likes: [],
+    });
+
+    alert("추천 완료!");
+    setShowRecommendPopup(false);
+  }
+
+  useEffect(() => {
+    if (!showViewPopup || !hero?.id) return;
+    const q = collection(db, "recommendations", hero.id.toString(), "builds");
+    onSnapshot(q, (snap) => {
+      setRecommendations(
+        snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+      );
+    });
+  }, [showViewPopup, hero?.id]);
+
+  async function handleVote(id, likes) {
+    if (!user) return alert("로그인이 필요합니다.");
+    const ref = doc(db, "recommendations", hero.id.toString(), "builds", id);
+    const already = likes.includes(user.uid);
+    await updateDoc(ref, {
+      likes: already
+        ? likes.filter((uid) => uid !== user.uid)
+        : [...likes, user.uid],
+    });
+  }
 
   return (
     <div className="hero-detail page">
@@ -946,6 +988,15 @@ export default function HeroDetail() {
           {activeTab === "장비" && (
             <div className="equipment-section">
               <h3>장비</h3>
+              <div className="recommend-buttons">
+                <button onClick={() => setShowRecommendPopup(true)}>
+                  현재 장비 추천하기
+                </button>
+                <button onClick={() => setShowViewPopup(true)}>
+                  추천 장비 보기
+                </button>
+              </div>
+
               <div className="equipment-grid">
                 {[
                   { type: "무기", index: 0 },
@@ -1460,6 +1511,172 @@ export default function HeroDetail() {
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                 ></iframe>
+              </div>
+            </div>
+          )}
+
+          {showRecommendPopup && (
+            <div className="popup-overlay">
+              <div className="popup-content">
+                <button
+                  className="popup-close"
+                  onClick={() => setShowRecommendPopup(false)}
+                >
+                  닫기
+                </button>
+                <h3>현재 장비 추천하기</h3>
+
+                <div className="equip-summary">
+                  {Object.entries(selectedEquipments).map(([key, item]) => {
+                    const level = item.level ?? 0;
+                    const isWeapon = item.type === "무기";
+
+                    const mainStat = substats[key]?.main;
+                    const mainValue = mainStat
+                      ? calcMainStat(mainStat, level, isWeapon)
+                      : null;
+
+                    const subList = substats[key]?.subs ?? [];
+                    const upgrades = substatUpgrades[key] ?? {};
+
+                    return (
+                      <div key={key} className="recommend-equip-box">
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          style={{
+                            width: "48px",
+                            height: "48px",
+                            borderRadius: "6px",
+                          }}
+                        />
+                        <div className="equip-label">
+                          <div style={{ fontWeight: "bold", color: "#ffd700" }}>
+                            +{level}
+                          </div>
+                          {mainStat && (
+                            <div style={{ fontSize: "0.8rem", color: "#7cf" }}>
+                              {mainStat}: {mainValue}
+                            </div>
+                          )}
+                          {subList.map((sub, i) => {
+                            const upLevel = (upgrades[i] ?? 0) * 3;
+                            const value = calcSubStat(sub, upLevel);
+                            return (
+                              <div
+                                key={i}
+                                style={{ fontSize: "0.75rem", color: "#ccc" }}
+                              >
+                                {sub}: {value}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <button onClick={handleRecommendSubmit}>
+                  이 장비 추천하기
+                </button>
+              </div>
+            </div>
+          )}
+
+          {showViewPopup && (
+            <div className="popup-overlay">
+              <div className="popup-content">
+                <button
+                  className="popup-close"
+                  onClick={() => setShowViewPopup(false)}
+                >
+                  닫기
+                </button>
+                <h3>추천 장비 보기</h3>
+                <div className="recommend-list">
+                  {recommendations.map((rec) => (
+                    <div key={rec.id} className="recommend-card">
+                      <div className="equip-summary">
+                        {[
+                          "무기0",
+                          "방어구1",
+                          "무기2",
+                          "방어구3",
+                          "장신구0",
+                        ].map((key) => {
+                          const item = rec.equipment?.[key];
+                          if (!item) return null;
+
+                          const level = item.level ?? 0;
+                          const isWeapon = item.type === "무기";
+                          const mainStat = rec.substats?.[key]?.main;
+                          const mainValue = mainStat
+                            ? calcMainStat(mainStat, level, isWeapon)
+                            : null;
+
+                          const subList = rec.substats?.[key]?.subs ?? [];
+                          const upgrades = rec.upgrades?.[key] ?? {};
+
+                          return (
+                            <div key={key} className="recommend-equip-box">
+                              <img
+                                src={item.image}
+                                alt={item.name}
+                                style={{
+                                  width: "48px",
+                                  height: "48px",
+                                  borderRadius: "6px",
+                                }}
+                              />
+                              <div className="equip-label">
+                                <div
+                                  style={{
+                                    fontWeight: "bold",
+                                    color: "#ffd700",
+                                  }}
+                                >
+                                  {item.name} +{level}
+                                </div>
+                                {mainStat && (
+                                  <div
+                                    style={{
+                                      fontSize: "0.8rem",
+                                      color: "#7cf",
+                                    }}
+                                  >
+                                    {mainStat}: {mainValue}
+                                  </div>
+                                )}
+                                {subList.map((sub, i) => {
+                                  const upLevel = (upgrades[i] ?? 0) * 3;
+                                  const value = calcSubStat(sub, upLevel);
+                                  return (
+                                    <div
+                                      key={i}
+                                      style={{
+                                        fontSize: "0.75rem",
+                                        color: "#ccc",
+                                      }}
+                                    >
+                                      {sub}: {value}
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      <div className="suggestion">
+                        <button onClick={() => handleVote(rec.id, rec.likes)}>
+                          추천 {rec.likes.length}
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           )}
