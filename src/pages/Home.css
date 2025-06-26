@@ -346,7 +346,7 @@ button.react-calendar__tile:enabled:hover {
 }
 
 @media (max-width: 768px) {
-  .home-layout {
+  .main {
     flex-direction: column;
     padding: 0.5rem;
   }
