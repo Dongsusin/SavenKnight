@@ -147,6 +147,7 @@ export default function Dex() {
   const [selectedAbility, setSelectedAbility] = useState(initialAbility);
   const [user] = useAuthState(auth);
   const [likes, setLikes] = useState({});
+  const [petLikes, setPetLikes] = useState({});
 
   const isPetGroup = selectedGroup === "펫";
   const isSearchGroup = selectedGroup === "검색";
@@ -191,8 +192,20 @@ export default function Dex() {
       });
     });
 
+    const petLikeUnsubs = pets.map((pet) => {
+      const ref = doc(db, "petLikes", pet.id.toString()); // ✅ PetSlide에서 사용한 컬렉션
+      return onSnapshot(ref, (snap) => {
+        setPetLikes((prev) => ({
+          ...prev,
+          [pet.id]: snap.exists() ? snap.data() : { count: 0, users: [] },
+        }));
+      });
+    });
+
     return () => {
-      [...heroUnsubs, ...petUnsubs].forEach((unsub) => unsub());
+      [...heroUnsubs, ...petUnsubs, ...petLikeUnsubs].forEach((unsub) =>
+        unsub()
+      );
     };
   }, []);
 
@@ -216,6 +229,28 @@ export default function Dex() {
 
     await setDoc(ref, updated);
   };
+
+  const handlePetLike = async (petId) => {
+    if (!user) return alert("로그인이 필요합니다.");
+
+    const ref = doc(db, "petLikes", petId.toString());
+    const snap = await getDoc(ref);
+    const data = snap.exists() ? snap.data() : { count: 0, users: [] };
+    const alreadyLiked = data.users.includes(user.uid);
+
+    const updated = alreadyLiked
+      ? {
+          count: Math.max(0, data.count - 1),
+          users: data.users.filter((uid) => uid !== user.uid),
+        }
+      : {
+          count: data.count + 1,
+          users: [...data.users, user.uid],
+        };
+
+    await setDoc(ref, updated);
+  };
+
   return (
     <div className="page hero-dex">
       <aside className="hero-dex-sidebar">
@@ -333,6 +368,25 @@ export default function Dex() {
                           alt={entry.name}
                           className="image"
                         />
+                        <button
+                          className={`like-button ${
+                            user &&
+                            petLikes[entry.id]?.users?.includes(user.uid)
+                              ? "liked"
+                              : ""
+                          }`}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            if (!user) {
+                              alert("로그인이 필요합니다.");
+                              return;
+                            }
+                            handlePetLike(entry.id);
+                          }}
+                        >
+                          추천 {petLikes[entry.id]?.count || 0}
+                        </button>
                         {skillPath && (
                           <div className="pet-skill-tooltip-wrapper">
                             <img
