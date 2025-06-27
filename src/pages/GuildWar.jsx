@@ -43,7 +43,7 @@ export default function GuildWar() {
                 round.map((monster, mIdx) => (
                   <div key={mIdx} className="monster-card">
                     <img
-                      src={`/길드전/${selectedDay}/아이콘/${monster.name}(${
+                      src={`/공성전/${selectedDay}/아이콘/${monster.name}(${
                         idx + 1
                       }라).png`}
                       alt={monster.name}
@@ -80,7 +80,7 @@ export default function GuildWar() {
             </button>
             <h3>{selectedMonster.name}</h3>
             <img
-              src={`/길드전/${selectedDay}/아이콘/${selectedMonster.name}(${selectedMonster.round}라).png`}
+              src={`/공성전/${selectedDay}/아이콘/${selectedMonster.name}(${selectedMonster.round}라).png`}
               alt={selectedMonster.name}
               className="monster-detail-image"
             />
