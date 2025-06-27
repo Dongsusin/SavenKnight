@@ -245,9 +245,29 @@ export default function Home() {
 
     await setDoc(ref, updated);
   };
+  const [searchKeyword, setSearchKeyword] = useState("");
 
   return (
     <div className="page home-layout">
+      <div className="home-search-bar">
+        <input
+          type="text"
+          value={searchKeyword}
+          onChange={(e) => setSearchKeyword(e.target.value)}
+          placeholder="영웅 또는 펫 이름을 검색하세요"
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && searchKeyword.trim()) {
+              navigate("/dex", {
+                state: {
+                  group: "검색",
+                  name: searchKeyword.trim(),
+                },
+              });
+            }
+          }}
+        />
+      </div>
+
       <div className="main">
         {/* 왼쪽 섹션 */}
         <aside className="home-sidebar">

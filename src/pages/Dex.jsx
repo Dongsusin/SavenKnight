@@ -143,11 +143,20 @@ export default function Dex() {
   const location = useLocation();
   const initialGroup = location.state?.group || "스페셜";
   const initialAbility = location.state?.ability || null;
+  const initialSearchName = location.state?.name || "";
   const [selectedGroup, setSelectedGroup] = useState(initialGroup);
   const [selectedAbility, setSelectedAbility] = useState(initialAbility);
   const [user] = useAuthState(auth);
   const [likes, setLikes] = useState({});
   const [petLikes, setPetLikes] = useState({});
+  const [searchName, setSearchName] = useState(initialSearchName);
+
+  const nameFilteredHeroes = heroes.filter((hero) =>
+    hero.name.toLowerCase().includes(searchName.toLowerCase())
+  );
+  const nameFilteredPets = pets.filter((pet) =>
+    pet.name.toLowerCase().includes(searchName.toLowerCase())
+  );
 
   const isPetGroup = selectedGroup === "펫";
   const isSearchGroup = selectedGroup === "검색";
@@ -260,6 +269,7 @@ export default function Dex() {
             onClick={() => {
               setSelectedGroup(group);
               setSelectedAbility(null);
+              setSearchName("");
             }}
             className={selectedGroup === group ? "active" : ""}
           >
@@ -273,76 +283,143 @@ export default function Dex() {
 
         {isSearchGroup ? (
           <section className="hero-ability-search two-column">
-            <div className="ability-filter-column">
-              {[
-                { title: "능력치 증가", list: ABILITY_KEYWORDS },
-                { title: "능력치 감소", list: ABILITY_KEYWORDS2 },
-                { title: "행동 제어", list: ABILITY_KEYWORDS3 },
-                { title: "행동 제어 면역", list: ABILITY_KEYWORDS4 },
-                { title: "지속 피해", list: ABILITY_KEYWORDS5 },
-                { title: "지속 피해 면역", list: ABILITY_KEYWORDS6 },
-                { title: "버프해제", list: ABILITY_KEYWORDS7 },
-                { title: "디버프 면역/해제", list: ABILITY_KEYWORDS8 },
-                { title: "생존", list: ABILITY_KEYWORDS9 },
-                { title: "회복 및 보호막", list: ABILITY_KEYWORDS10 },
-                { title: "특수 공격", list: ABILITY_KEYWORDS11 },
-                { title: "특수 버프", list: ABILITY_KEYWORDS12 },
-                { title: "특수 디버프", list: ABILITY_KEYWORDS13 },
-              ].map(({ title, list }) => (
-                <div key={title} className="ability-group">
-                  <h4 className="ability-title">{title}</h4>
-                  <div className="ability-filter">
-                    {list.map((keyword) => (
-                      <button
-                        key={keyword}
-                        className={selectedAbility === keyword ? "active" : ""}
-                        onClick={() => setSelectedAbility(keyword)}
-                      >
-                        {keyword}
-                      </button>
+            <div className="search-top">
+              <input
+                type="text"
+                value={searchName}
+                onChange={(e) => setSearchName(e.target.value)}
+                placeholder="영웅 또는 펫 이름을 입력하세요"
+              />
+            </div>
+            <div className="search-bottom">
+              <div className="ability-filter-column">
+                {[
+                  { title: "능력치 증가", list: ABILITY_KEYWORDS },
+                  { title: "능력치 감소", list: ABILITY_KEYWORDS2 },
+                  { title: "행동 제어", list: ABILITY_KEYWORDS3 },
+                  { title: "행동 제어 면역", list: ABILITY_KEYWORDS4 },
+                  { title: "지속 피해", list: ABILITY_KEYWORDS5 },
+                  { title: "지속 피해 면역", list: ABILITY_KEYWORDS6 },
+                  { title: "버프해제", list: ABILITY_KEYWORDS7 },
+                  { title: "디버프 면역/해제", list: ABILITY_KEYWORDS8 },
+                  { title: "생존", list: ABILITY_KEYWORDS9 },
+                  { title: "회복 및 보호막", list: ABILITY_KEYWORDS10 },
+                  { title: "특수 공격", list: ABILITY_KEYWORDS11 },
+                  { title: "특수 버프", list: ABILITY_KEYWORDS12 },
+                  { title: "특수 디버프", list: ABILITY_KEYWORDS13 },
+                ].map(({ title, list }) => (
+                  <div key={title} className="ability-group">
+                    <h4 className="ability-title">{title}</h4>
+                    <div className="ability-filter">
+                      {list.map((keyword) => (
+                        <button
+                          key={keyword}
+                          className={
+                            selectedAbility === keyword ? "active" : ""
+                          }
+                          onClick={() => setSelectedAbility(keyword)}
+                        >
+                          {keyword}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="hero-result-column">
+                {searchName && (
+                  <>
+                    <h3>이름 검색 결과</h3>
+                    <div className="hero-cards">
+                      {nameFilteredHeroes.map((hero) => (
+                        <Link to={`/hero/${hero.name}`} key={hero.id}>
+                          <div className="hero-card">
+                            <button
+                              className={`like-button ${
+                                user &&
+                                likes[hero.id]?.users?.includes(user.uid)
+                                  ? "liked"
+                                  : ""
+                              }`}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handleLike(hero.id);
+                              }}
+                            >
+                              추천 {likes[hero.id]?.count || 0}
+                            </button>
+                            <img
+                              src={`/도감/${hero.group}/아이콘/${hero.name}.png`}
+                              alt={hero.name}
+                              className="image"
+                            />
+                          </div>
+                        </Link>
+                      ))}
+                      {nameFilteredPets.map((pet) => (
+                        <div className="hero-card" key={pet.id}>
+                          <img
+                            src={`/도감/펫/아이콘/${pet.name}.png`}
+                            alt={pet.name}
+                            className="image"
+                          />
+                          <button
+                            className={`like-button ${
+                              user &&
+                              petLikes[pet.id]?.users?.includes(user.uid)
+                                ? "liked"
+                                : ""
+                            }`}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handlePetLike(pet.id);
+                            }}
+                          >
+                            추천 {petLikes[pet.id]?.count || 0}
+                          </button>
+                        </div>
+                      ))}
+                      {nameFilteredHeroes.length === 0 &&
+                        nameFilteredPets.length === 0 && (
+                          <p style={{ color: "#aaa" }}>검색 결과가 없습니다.</p>
+                        )}
+                    </div>
+                  </>
+                )}
+
+                <h3>해당 효과를 가진 캐릭터</h3>
+                {selectedAbility ? (
+                  <div className="hero-cards">
+                    {filteredHeroes.map((hero) => (
+                      <Link to={`/hero/${hero.name}`} key={hero.id}>
+                        <div className="hero-card">
+                          <button
+                            className={`like-button ${
+                              user && likes[hero.id]?.users?.includes(user.uid)
+                                ? "liked"
+                                : ""
+                            }`}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handleLike(hero.id);
+                            }}
+                          >
+                            추천 {likes[hero.id]?.count || 0}
+                          </button>
+                          <img
+                            src={`/도감/${hero.group}/아이콘/${hero.name}.png`}
+                            alt={hero.name}
+                            className="image"
+                          />
+                        </div>
+                      </Link>
                     ))}
                   </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="hero-result-column">
-              <h3>해당 효과를 가진 캐릭터</h3>
-              {selectedAbility ? (
-                <div className="hero-cards">
-                  {filteredHeroes.map((hero) => (
-                    <Link to={`/hero/${hero.name}`} key={hero.id}>
-                      <div className="hero-card">
-                        <button
-                          className={`like-button ${
-                            user && likes[hero.id]?.users?.includes(user.uid)
-                              ? "liked"
-                              : ""
-                          }`}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            if (!user) {
-                              alert("로그인이 필요합니다.");
-                              return;
-                            }
-                            handleLike(hero.id);
-                          }}
-                        >
-                          추천 {likes[hero.id]?.count || 0}
-                        </button>
-
-                        <img
-                          src={`/도감/${hero.group}/아이콘/${hero.name}.png`}
-                          alt={hero.name}
-                          className="image"
-                        />
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              ) : (
-                <p style={{ color: "#aaa" }}>능력을 선택하세요.</p>
-              )}
+                ) : (
+                  <p style={{ color: "#aaa" }}>능력을 선택하세요.</p>
+                )}
+              </div>
             </div>
           </section>
         ) : (
