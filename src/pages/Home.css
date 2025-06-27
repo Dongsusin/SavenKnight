@@ -481,6 +481,9 @@ button.react-calendar__tile:enabled:hover {
     grid-template-columns: repeat(4, 1fr);
     max-height: 200px;
   }
+  .home-mini-slot img {
+    width: 100%;
+  }
 }
 @media (max-width: 426px) {
   .ability-shortcut-list {
