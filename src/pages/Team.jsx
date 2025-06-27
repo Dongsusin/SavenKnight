@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CharacterSelectPopup from "../components/CharacterSelectPopup";
 import baseStatData from "../data/statByGradeAndType.json";
 import maxStatData from "../data/maxStatByGradeAndType.json";
@@ -10,6 +10,17 @@ import subStatTable from "../data/subStatTable.json";
 import setEffectTable from "../data/setEffectTable.json";
 import pets from "../data/pets.json";
 import "./Team.css";
+import { auth, db } from "../firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
+import {
+  addDoc,
+  collection,
+  serverTimestamp,
+  doc,
+  updateDoc,
+  getDoc,
+  onSnapshot,
+} from "firebase/firestore";
 
 export default function Team() {
   const [team, setTeam] = useState(Array(5).fill(null));
@@ -25,6 +36,10 @@ export default function Team() {
   const [teamSubstatUpgrades, setTeamSubstatUpgrades] = useState(
     Array(5).fill({})
   );
+  const [user] = useAuthState(auth);
+  const [showRecommendPopup, setShowRecommendPopup] = useState(false);
+  const [showViewPopup, setShowViewPopup] = useState(false);
+  const [teamRecommendations, setTeamRecommendations] = useState([]);
 
   const getPositionForFormation = (index) => {
     const formations = {
@@ -570,6 +585,78 @@ export default function Team() {
     }
 
     return { flat: 0, percent };
+  }
+
+  async function handleTeamRecommendSubmit() {
+    if (!user) return alert("로그인이 필요합니다.");
+
+    const teamEmpty = team.every((t) => !t);
+    if (teamEmpty) {
+      alert("팀에 영웅을 하나 이상 배치해야 추천할 수 있습니다.");
+      return;
+    }
+
+    try {
+      const ref = collection(db, "teamRecommendations");
+
+      const sanitizedTeam = team.map((hero) => {
+        if (!hero) return null;
+
+        return {
+          name: hero.name,
+          level: hero.level,
+          group: hero.group,
+          enhance: hero.enhance,
+          transcend: hero.transcend,
+        };
+      });
+
+      await addDoc(ref, {
+        authorUid: user.uid,
+        authorName: user.displayName || user.email,
+        team: sanitizedTeam,
+        pet: selectedPet
+          ? {
+              name: selectedPet.name,
+            }
+          : null,
+        formation,
+        formationLevel: formationLevels[formation] ?? 1,
+        createdAt: serverTimestamp(),
+        likes: [],
+      });
+
+      alert("추천이 완료되었습니다!");
+      setShowRecommendPopup(false);
+    } catch (err) {
+      console.error("Firestore 등록 오류:", err.code, err.message);
+      alert("추천 등록 실패: " + err.message);
+    }
+  }
+
+  useEffect(() => {
+    if (!showViewPopup) return;
+
+    const q = collection(db, "teamRecommendations"); // ✅ 수정됨
+    const unsubscribe = onSnapshot(q, (snap) => {
+      const list = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      setTeamRecommendations(list);
+    });
+
+    return () => unsubscribe();
+  }, [showViewPopup]);
+
+  async function handleTeamVote(recId, likes) {
+    if (!user) return alert("로그인이 필요합니다.");
+
+    const ref = doc(db, "teamRecommendations", recId);
+    const already = likes.includes(user.uid);
+
+    await updateDoc(ref, {
+      likes: already
+        ? likes.filter((uid) => uid !== user.uid)
+        : [...likes, user.uid],
+    });
   }
 
   return (
@@ -1738,6 +1825,13 @@ export default function Team() {
         })}
       </div>
 
+      <div className="recommend-buttons">
+        <button onClick={() => setShowRecommendPopup(true)}>
+          현재 팀 추천하기
+        </button>
+        <button onClick={() => setShowViewPopup(true)}>추천 팀 보기</button>
+      </div>
+
       {isPetPopupOpen && (
         <div className="pet-popup-overlay">
           <div className="pet-popup">
@@ -1845,6 +1939,135 @@ export default function Team() {
                     </div>
                   );
                 })}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showRecommendPopup && (
+        <div className="popup-overlay">
+          <div className="popup wide">
+            <h3>팀 추천하기</h3>
+
+            {!user ? (
+              <p
+                style={{
+                  color: "tomato",
+                  textAlign: "center",
+                  margin: "20px 0",
+                }}
+              >
+                팀을 추천하려면 먼저 로그인해주세요.
+              </p>
+            ) : (
+              <>
+                {/* 팀 구성 */}
+                <div className="recommend-team-preview column">
+                  {team.map((hero, i) =>
+                    hero ? (
+                      <div key={i} className="mini-hero-detail full">
+                        <img
+                          src={`/도감/${hero.group}/아이콘/${hero.name}.png`}
+                          alt={hero.name}
+                          className="mini-icon"
+                        />
+                        <div className="mini-hero-info">
+                          <div>
+                            <strong>{hero.name}</strong> (Lv.{hero.level})
+                          </div>
+                          <div>
+                            강화: +{hero.enhance}, 초월: {hero.transcend}성
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div key={i} className="mini-hero-empty">
+                        빈 슬롯
+                      </div>
+                    )
+                  )}
+                </div>
+
+                {/* 펫 정보 */}
+                <div className="recommend-pet-info">
+                  <strong>펫:</strong>{" "}
+                  {selectedPet ? (
+                    <div className="pet-info-block">
+                      <img
+                        src={`/도감/펫/아이콘/${selectedPet.name}.png`}
+                        alt={selectedPet.name}
+                        className="mini-icon"
+                      />
+                    </div>
+                  ) : (
+                    <span>없음</span>
+                  )}
+                </div>
+
+                {/* 진형 정보 */}
+                <div className="recommend-formation-info">
+                  <strong>진형:</strong> {formation} (Lv.
+                  {formationLevels[formation] ?? 1})
+                </div>
+
+                {/* 버튼 */}
+                <div className="popup-buttons">
+                  <button onClick={handleTeamRecommendSubmit}>추천 등록</button>
+                  <button onClick={() => setShowRecommendPopup(false)}>
+                    취소
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
+      {showViewPopup && (
+        <div className="popup-overlay">
+          <div className="popup wide">
+            <h3>추천된 팀 목록</h3>
+            <button
+              className="popup-close"
+              onClick={() => setShowViewPopup(false)}
+            >
+              ✕
+            </button>
+
+            <div className="recommendation-list">
+              {teamRecommendations.map((rec) => (
+                <div key={rec.id} className="recommend-card">
+                  <div className="recommend-team-preview">
+                    {rec.team?.map((member, i) =>
+                      member ? (
+                        <img
+                          key={i}
+                          src={`/도감/${member.group}/아이콘/${member.name}.png`}
+                          alt={member.name}
+                          className="mini-icon"
+                        />
+                      ) : (
+                        <div key={i} className="mini-empty" />
+                      )
+                    )}
+                  </div>
+
+                  <div className="recommend-info">
+                    <span>
+                      진형: {rec.formation} Lv.{rec.formationLevel}
+                    </span>
+                    {rec.pet && <span> | 펫: {rec.pet.name}</span>}
+                  </div>
+                  <button
+                    className={`vote-button ${
+                      user && rec.likes?.includes(user.uid) ? "voted" : ""
+                    }`}
+                    onClick={() => handleTeamVote(rec.id, rec.likes || [])}
+                  >
+                    추천 {rec.likes?.length || 0}
+                  </button>
+                </div>
+              ))}
             </div>
           </div>
         </div>

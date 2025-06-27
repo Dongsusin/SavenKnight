@@ -622,6 +622,263 @@
   padding: 5px;
 }
 
+/* --- 추천 팀 기능 관련 --- */
+
+.recommend-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.recommend-buttons button {
+  background: #444;
+  color: white;
+  border: 1px solid #888;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s;
+}
+
+.recommend-buttons button:hover {
+  background: #666;
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.75);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.popup {
+  background: #222;
+  padding: 20px;
+  border-radius: 10px;
+  width: 90%;
+  color: white;
+  position: relative;
+  box-shadow: 0 0 10px #000;
+}
+
+.popup.wide {
+  max-height: 80vh;
+  width: auto;
+  overflow-y: auto;
+}
+
+.popup h3 {
+  font-size: 1.2rem;
+  margin-bottom: 12px;
+  text-align: center;
+  color: #ffd700;
+}
+
+.popup p {
+  text-align: center;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.popup-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.popup-buttons button {
+  padding: 6px 16px;
+  border: none;
+  background: #444;
+  color: #fff;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.popup-buttons button:hover {
+  background: #666;
+}
+
+.popup-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  background: none;
+  color: #ccc;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.recommendation-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.recommend-card {
+  background: #2c2c2c;
+  border: 1px solid #555;
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+}
+
+.recommend-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: #ccc;
+}
+
+.recommend-top .author {
+  font-weight: bold;
+  color: #ffcc00;
+}
+
+.vote-button {
+  background: none;
+  color: #ccc;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
+
+.vote-button.voted {
+  color: #ffd700;
+  font-weight: bold;
+}
+
+.recommend-team-preview {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  align-items: center;
+}
+
+.mini-icon {
+  width: 50px;
+  object-fit: contain;
+  border-radius: 6px;
+  border: 1px solid #888;
+}
+
+.recommend-info {
+  font-size: 13px;
+  color: #ccc;
+  text-align: center;
+}
+
+/* =========================== */
+/* 추천 팝업: 팀 상세 정보 영역 */
+/* =========================== */
+
+.recommend-team-preview.column {
+  display: flex;
+  gap: 12px;
+  margin: 12px 0;
+}
+
+.mini-hero-detail.full {
+  background: #2b2b2b;
+  border: 1px solid #555;
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+.mini-hero-info {
+  display: flex;
+  flex-direction: column;
+  text-wrap: nowrap;
+  font-size: 13px;
+  color: #ddd;
+  gap: 4px;
+}
+
+.equip-icons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.equip-icon-with-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.equip-icon-mini {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  object-fit: cover;
+  background: #444;
+  border: 1px solid #777;
+}
+
+.equip-icon-mini.empty {
+  background: #222;
+  border: 1px dashed #666;
+}
+
+.equip-info {
+  font-size: 11px;
+  color: #aaa;
+  text-align: center;
+  max-width: 60px;
+}
+
+.mini-hero-empty {
+  background: #222;
+  color: #666;
+  padding: 12px;
+  border-radius: 6px;
+  text-align: center;
+  width: 100%;
+}
+
+/* =========================== */
+/* 추천 팝업: 펫 및 진형 정보  */
+/* =========================== */
+
+.recommend-pet-info,
+.recommend-formation-info {
+  margin: 14px;
+  font-size: 14px;
+  color: #ccc;
+  justify-items: center;
+}
+
+.pet-info-block {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 8px;
+}
+
 @media (max-width: 786px) {
   .team-slot-wrapper {
     justify-content: center;
