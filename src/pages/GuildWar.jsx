@@ -1,253 +1,6 @@
 import React, { useState } from "react";
+import monsterData from "../data/guildWarMonsters.json";
 import "./GuildWar.css";
-
-const monsterData = {
-  수호자의성: [
-    [
-      {
-        name: "룩",
-      },
-      {
-        name: "챈슬러",
-      },
-      {
-        name: "룩",
-      },
-    ],
-    [
-      {
-        name: "룩",
-      },
-      {
-        name: "챈슬러",
-      },
-      {
-        name: "룩",
-      },
-    ],
-    [
-      {
-        name: "룩",
-      },
-      {
-        name: "루디",
-      },
-      {
-        name: "챈슬러",
-      },
-    ],
-  ],
-  포디나의성: [
-    [
-      {
-        name: "룩",
-      },
-      {
-        name: "챈슬러",
-      },
-      {
-        name: "룩",
-      },
-    ],
-    [
-      {
-        name: "룩",
-      },
-      {
-        name: "챈슬러",
-      },
-      {
-        name: "룩",
-      },
-    ],
-    [
-      {
-        name: "룩",
-      },
-      {
-        name: "아일린",
-      },
-      {
-        name: "챈슬러",
-      },
-    ],
-  ],
-  불멸의성: [
-    [
-      {
-        name: "룩",
-      },
-      {
-        name: "챈슬러",
-      },
-      {
-        name: "룩",
-      },
-    ],
-    [
-      {
-        name: "룩",
-      },
-      {
-        name: "챈슬러",
-      },
-      {
-        name: "룩",
-      },
-    ],
-    [
-      {
-        name: "룩",
-      },
-      {
-        name: "레이첼",
-      },
-      {
-        name: "챈슬러",
-      },
-    ],
-  ],
-  죽음의성: [
-    [
-      {
-        name: "룩",
-      },
-      {
-        name: "챈슬러",
-      },
-      {
-        name: "룩",
-      },
-    ],
-    [
-      {
-        name: "룩",
-      },
-      {
-        name: "챈슬러",
-      },
-      {
-        name: "룩",
-      },
-    ],
-    [
-      {
-        name: "룩",
-      },
-      {
-        name: "델론즈",
-      },
-      {
-        name: "챈슬러",
-      },
-    ],
-  ],
-  고대용의성: [
-    [
-      {
-        name: "룩",
-      },
-      {
-        name: "챈슬러",
-      },
-      {
-        name: "룩",
-      },
-    ],
-    [
-      {
-        name: "룩",
-      },
-      {
-        name: "챈슬러",
-      },
-      {
-        name: "룩",
-      },
-    ],
-    [
-      {
-        name: "룩",
-      },
-      {
-        name: "제이브",
-      },
-      {
-        name: "챈슬러",
-      },
-    ],
-  ],
-  혹한의성: [
-    [
-      {
-        name: "룩",
-      },
-      {
-        name: "챈슬러",
-      },
-      {
-        name: "룩",
-      },
-    ],
-    [
-      {
-        name: "룩",
-      },
-      {
-        name: "챈슬러",
-      },
-      {
-        name: "룩",
-      },
-    ],
-    [
-      {
-        name: "룩",
-      },
-      {
-        name: "스파이크",
-      },
-      {
-        name: "챈슬러",
-      },
-    ],
-  ],
-  지옥의성: [
-    [
-      {
-        name: "룩",
-      },
-      {
-        name: "챈슬러",
-      },
-      {
-        name: "룩",
-      },
-    ],
-    [
-      {
-        name: "룩",
-      },
-      {
-        name: "챈슬러",
-      },
-      {
-        name: "룩",
-      },
-    ],
-    [
-      {
-        name: "룩",
-      },
-      {
-        name: "크리스",
-      },
-      {
-        name: "챈슬러",
-      },
-    ],
-  ],
-};
 
 const days = [
   "수호자의성",
@@ -261,13 +14,12 @@ const days = [
 
 export default function GuildWar() {
   const [selectedDay, setSelectedDay] = useState("수호자의성");
-  const rounds = monsterData[selectedDay] || [];
   const [selectedMonster, setSelectedMonster] = useState(null);
+
+  const rounds = monsterData[selectedDay] || [];
 
   return (
     <div className="guildwar-page page">
-      <h1>공성전</h1>
-
       {/* 요일 탭 */}
       <div className="day-tab-container">
         {days.map((day) => (
@@ -310,6 +62,7 @@ export default function GuildWar() {
         ))}
       </div>
 
+      {/* 팝업 */}
       {selectedMonster && (
         <div
           className="monster-detail-popup-overlay"
@@ -325,6 +78,7 @@ export default function GuildWar() {
             >
               ✕
             </button>
+            <h3>{selectedMonster.name}</h3>
             <img
               src={`/길드전/${selectedDay}/${selectedMonster.name}(${selectedMonster.round}라).png`}
               alt={selectedMonster.name}
