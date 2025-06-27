@@ -385,7 +385,7 @@ export default function Raid() {
                         alt={hero.name}
                       />
                       <button
-                        className={`vote-button ${liked ? "liked" : ""}`}
+                        className={`${liked ? "liked" : ""}`}
                         onClick={() => {
                           if (!user) {
                             alert("로그인이 필요합니다.");
@@ -423,7 +423,6 @@ export default function Raid() {
                         alt={hero.name}
                       />
                       <button
-                        className={`vote-button ${liked ? "liked" : ""}`}
                         onClick={() => {
                           if (!user) {
                             alert("로그인이 필요합니다.");

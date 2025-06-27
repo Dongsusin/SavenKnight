@@ -816,7 +816,6 @@ export default function Team() {
                 >
                   {position}
                 </div>
-                {/* ✕ 버튼 추가 */}
                 <button
                   className="clear-character-button"
                   onClick={() => handleClearCharacter(index)}
@@ -2024,8 +2023,8 @@ export default function Team() {
       )}
 
       {showViewPopup && (
-        <div className="popup-overlay">
-          <div className="popup wide">
+        <div className="team-popup-overlay">
+          <div className="team-popup">
             <h3>추천된 팀 목록</h3>
             <button
               className="popup-close"
@@ -2034,41 +2033,54 @@ export default function Team() {
               ✕
             </button>
 
-            <div className="recommendation-list">
-              {teamRecommendations.map((rec) => (
-                <div key={rec.id} className="recommend-card">
-                  <div className="recommend-team-preview">
-                    {rec.team?.map((member, i) =>
-                      member ? (
-                        <img
-                          key={i}
-                          src={`/도감/${member.group}/아이콘/${member.name}.png`}
-                          alt={member.name}
-                          className="mini-icon"
-                        />
-                      ) : (
-                        <div key={i} className="mini-empty" />
-                      )
-                    )}
-                  </div>
+            {teamRecommendations.length === 0 ? (
+              <p
+                style={{
+                  textAlign: "center",
+                  color: "#aaa",
+                  marginTop: "20px",
+                }}
+              >
+                현재 추천된 팀이 없습니다. 팀을 추천해주세요.
+              </p>
+            ) : (
+              <div className="recommendation-list">
+                {teamRecommendations.map((rec) => (
+                  <div key={rec.id} className="recommend-card">
+                    <div className="recommend-team-preview">
+                      {rec.team?.map((member, i) =>
+                        member ? (
+                          <img
+                            key={i}
+                            src={`/도감/${member.group}/아이콘/${member.name}.png`}
+                            alt={member.name}
+                            className="mini-icon"
+                          />
+                        ) : (
+                          <div key={i} className="mini-empty" />
+                        )
+                      )}
+                    </div>
 
-                  <div className="recommend-info">
-                    <span>
-                      진형: {rec.formation} Lv.{rec.formationLevel}
-                    </span>
-                    {rec.pet && <span> | 펫: {rec.pet.name}</span>}
+                    <div className="recommend-info">
+                      <span>
+                        진형: {rec.formation} Lv.{rec.formationLevel}
+                      </span>
+                      {rec.pet && <span> | 펫: {rec.pet.name}</span>}
+                    </div>
+
+                    <button
+                      className={`vote-button ${
+                        user && rec.likes?.includes(user.uid) ? "voted" : ""
+                      }`}
+                      onClick={() => handleTeamVote(rec.id, rec.likes || [])}
+                    >
+                      추천 {rec.likes?.length || 0}
+                    </button>
                   </div>
-                  <button
-                    className={`vote-button ${
-                      user && rec.likes?.includes(user.uid) ? "voted" : ""
-                    }`}
-                    onClick={() => handleTeamVote(rec.id, rec.likes || [])}
-                  >
-                    추천 {rec.likes?.length || 0}
-                  </button>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       )}

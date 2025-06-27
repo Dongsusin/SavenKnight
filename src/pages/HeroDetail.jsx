@@ -1530,7 +1530,7 @@ export default function HeroDetail() {
                   className="popup-close"
                   onClick={() => setShowRecommendPopup(false)}
                 >
-                  닫기
+                  ✕
                 </button>
                 <h3>현재 장비 추천하기</h3>
 
@@ -1618,7 +1618,7 @@ export default function HeroDetail() {
                   className="popup-close"
                   onClick={() => setShowViewPopup(false)}
                 >
-                  닫기
+                  ✕
                 </button>
                 <h3>추천 장비 보기</h3>
                 <div className="recommend-list">

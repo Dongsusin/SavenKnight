@@ -395,7 +395,7 @@ export default function GrowthDungeon() {
               className="popup-close"
               onClick={() => setShowHeroPopup(false)}
             >
-              닫기
+              ✕
             </button>
             <h3>{selectedDungeon.name} 추천 영웅</h3>
             <div className="hero-list">
@@ -419,7 +419,7 @@ export default function GrowthDungeon() {
                         alt={hero.name}
                       />
                       <button
-                        className={`vote-button ${liked ? "liked" : ""}`}
+                        className={`${liked ? "liked" : ""}`}
                         onClick={() => {
                           if (!user) {
                             alert("로그인이 필요합니다.");
@@ -457,7 +457,7 @@ export default function GrowthDungeon() {
                         alt={hero.name}
                       />
                       <button
-                        className={`vote-button ${liked ? "liked" : ""}`}
+                        className={`${liked ? "liked" : ""}`}
                         onClick={() => {
                           if (!user) {
                             alert("로그인이 필요합니다.");
@@ -483,7 +483,7 @@ export default function GrowthDungeon() {
               className="popup-close"
               onClick={() => setShowTeamPopup(false)}
             >
-              닫기
+              ✕
             </button>
             <h3>{selectedDungeon.name} 추천 덱</h3>
 
