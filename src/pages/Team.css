@@ -118,6 +118,7 @@
 .empty {
   font-size: 14px;
   color: #888;
+  width: 100%;
 }
 
 .stat-value-text {
@@ -632,18 +633,21 @@
 }
 
 .recommend-buttons button {
-  background: #444;
-  color: white;
-  border: 1px solid #888;
-  padding: 8px 16px;
-  border-radius: 6px;
+  background: rgba(255, 215, 0, 0.9);
+  border: none;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  padding: 4px 8px;
   cursor: pointer;
+  z-index: 10;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+  color: black;
   font-weight: bold;
   transition: background 0.2s;
 }
 
 .recommend-buttons button:hover {
-  background: #666;
+  background: #ffcc00;
 }
 
 .popup-overlay {
@@ -774,10 +778,6 @@
   text-align: center;
 }
 
-/* =========================== */
-/* 추천 팝업: 팀 상세 정보 영역 */
-/* =========================== */
-
 .recommend-team-preview.column {
   display: flex;
   gap: 12px;
@@ -848,10 +848,6 @@
   width: 100%;
 }
 
-/* =========================== */
-/* 추천 팝업: 펫 및 진형 정보  */
-/* =========================== */
-
 .recommend-pet-info,
 .recommend-formation-info {
   margin: 14px;
@@ -870,10 +866,14 @@
 @media (max-width: 786px) {
   .team-slot-wrapper {
     justify-content: center;
+    min-height: 100px;
   }
   .team-slot-top {
     flex-direction: column;
     align-items: center;
+  }
+  .team-slot {
+    min-height: 80px;
   }
   .team-slots {
     display: flex;

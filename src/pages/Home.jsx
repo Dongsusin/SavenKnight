@@ -6,6 +6,7 @@ import CharacterSelectPopup from "../components/CharacterSelectPopup";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "../firebase";
 import { doc, getDoc, setDoc, onSnapshot } from "firebase/firestore";
+import { collection, query, orderBy, limit } from "firebase/firestore";
 import heroes from "../data/heroes.json";
 import pets from "../data/pets.json";
 import Calendar from "react-calendar";
@@ -247,6 +248,23 @@ export default function Home() {
   };
   const [searchKeyword, setSearchKeyword] = useState("");
 
+  const [topTeam, setTopTeam] = useState(null);
+
+  useEffect(() => {
+    const q = query(
+      collection(db, "teamRecommendations"),
+      orderBy("likes", "desc"),
+      limit(1)
+    );
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const list = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      setTopTeam(list[0] || null);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   return (
     <div className="page home-layout">
       <div className="home-search-bar">
@@ -431,45 +449,46 @@ export default function Home() {
           </section>
 
           <section className="home-panel">
-            <h2>팀 편성</h2>
-            <div className="mini-team-preview">
-              {previewTeam.map((member, index) => (
-                <div
-                  key={index}
-                  className="mini-slot"
-                  onClick={() => setSelectingIndex(index)}
-                >
-                  {member ? (
-                    <img
-                      src={`/도감/${member.group}/아이콘/${member.name}.png`}
-                      alt={member.name}
-                      style={{ width: "60px", height: "60px" }}
-                    />
-                  ) : (
-                    <div className="empty-slot">+</div>
-                  )}
-                </div>
-              ))}
+            <div className="top">
+              <h3>인기 팀</h3>
+              <p className="more-link" onClick={() => navigate("/team")}>
+                팀 편성하기
+              </p>
             </div>
 
-            <div style={{ textAlign: "center", marginTop: "10px" }}>
-              <button
-                className="team-navigate-button"
-                onClick={() => navigate("/team")}
-              >
-                팀 편성하러 가기
-              </button>
-            </div>
-            {selectingIndex !== null && (
-              <CharacterSelectPopup
-                onSelect={(hero) => {
-                  const updated = [...previewTeam];
-                  updated[selectingIndex] = hero;
-                  setPreviewTeam(updated);
-                  setSelectingIndex(null);
-                }}
-                onClose={() => setSelectingIndex(null)}
-              />
+            {topTeam ? (
+              <>
+                <p>
+                  추천 수: <strong>{topTeam.likes?.length ?? 0}</strong> / 진형:{" "}
+                  {topTeam.formation} Lv.{topTeam.formationLevel}
+                </p>
+                <div className="top-team-preview">
+                  <div className="home-mini-team-preview">
+                    {topTeam.team.map((member, idx) => (
+                      <div key={idx} className="home-mini-slot">
+                        {member ? (
+                          <img
+                            src={`/도감/${member.group}/아이콘/${member.name}.png`}
+                            alt={member.name}
+                          />
+                        ) : (
+                          <div className="empty-slot">+</div>
+                        )}
+                      </div>
+                    ))}
+                    {topTeam.pet && (
+                      <div className="home-mini-slot">
+                        <img
+                          src={`/도감/펫/아이콘/${topTeam.pet.name}.png`}
+                          alt={topTeam.pet.name}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </>
+            ) : (
+              <p>추천된 팀이 없습니다.</p>
             )}
           </section>
         </main>

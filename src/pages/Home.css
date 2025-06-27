@@ -90,6 +90,13 @@
   font-size: 1.3rem;
   border-bottom: 1px solid #444;
   padding-bottom: 0.3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  p {
+    font-size: 16px;
+    color: white;
+  }
 }
 
 .home-panel ul {
@@ -221,31 +228,13 @@
   font-weight: bold;
 }
 
-.team-navigate-button {
-  padding: 10px 20px;
-  background: linear-gradient(135deg, #ffaa00, #ffcc00);
-  color: #1a1a1a;
-  font-weight: bold;
-  font-size: 1.05rem;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  box-shadow: 0 4px 10px rgba(255, 204, 0, 0.2);
-}
-
-.team-navigate-button:hover {
-  background: linear-gradient(135deg, #ffdd33, #ffee66);
-  box-shadow: 0 6px 14px rgba(255, 204, 0, 0.3);
-}
-
 .ability-shortcut-list {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 0.25rem;
   padding: 0.5rem 0;
   justify-content: center;
-  max-height: 400px;
+  max-height: 450px;
   overflow-y: auto;
 }
 
@@ -390,6 +379,58 @@ button.react-calendar__tile:enabled:hover {
   background-color: #00ff8c;
   border-radius: 2px;
   margin-top: 2px;
+}
+
+/* 인기 팀 섹션 */
+.top-team-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.home-mini-team-preview {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+  width: 100%;
+}
+
+.home-mini-slot {
+  width: 100%;
+  background-color: #222;
+  border: 1px solid #555;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.home-mini-slot img {
+  width: 50%;
+  object-fit: cover;
+}
+
+.team-navigate-button {
+  margin-top: 10px;
+  padding: 6px 12px;
+  background-color: #333;
+  border: 1px solid #888;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  display: inline-block;
+}
+
+.team-navigate-button:hover {
+  background-color: #ffcc00;
+  color: #000;
+  font-weight: bold;
 }
 
 @media (max-width: 768px) {

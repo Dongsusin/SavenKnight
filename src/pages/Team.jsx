@@ -663,7 +663,6 @@ export default function Team() {
     <div className="team-page page">
       <h1>팀 편성</h1>
 
-      {/* ✅ 진형 선택 드롭다운 */}
       <div className="formation-select">
         <label style={{ marginRight: "8px" }}>진형:</label>
         <select
@@ -690,9 +689,6 @@ export default function Team() {
           <span>{formation}</span>
           <span className="formation-level" style={{ color: "#fff" }}>
             진형 레벨:{" "}
-            <span style={{ color: "#ffcc00" }}>
-              {formationLevels[formation]}
-            </span>
             <button
               onClick={() => updateFormationLevel(-1)}
               disabled={formationLevels[formation] <= 1}
@@ -708,6 +704,9 @@ export default function Team() {
             >
               -
             </button>
+            <span style={{ color: "#ffcc00" }}>
+              {formationLevels[formation]}
+            </span>
             <button
               onClick={() => updateFormationLevel(1)}
               disabled={formationLevels[formation] >= 40}
@@ -1826,9 +1825,9 @@ export default function Team() {
 
       <div className="recommend-buttons">
         <button onClick={() => setShowRecommendPopup(true)}>
-          현재 팀 추천하기
+          현재 팀 추천
         </button>
-        <button onClick={() => setShowViewPopup(true)}>추천 팀 보기</button>
+        <button onClick={() => setShowViewPopup(true)}>추천 팀</button>
       </div>
 
       {isPetPopupOpen && (

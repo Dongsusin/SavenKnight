@@ -1001,7 +1001,7 @@ export default function HeroDetail() {
                   현재 장비 추천하기
                 </button>
                 <button onClick={() => setShowViewPopup(true)}>
-                  추천 장비 보기
+                  추천 장비
                 </button>
               </div>
 
@@ -1532,7 +1532,7 @@ export default function HeroDetail() {
                 >
                   ✕
                 </button>
-                <h3>현재 장비 추천하기</h3>
+                <h3>장비 추천</h3>
 
                 <div className="equip-summary">
                   {Object.entries(selectedEquipments).map(([key, item]) => {
@@ -1604,9 +1604,7 @@ export default function HeroDetail() {
                   })}
                 </div>
 
-                <button onClick={handleRecommendSubmit}>
-                  이 장비 추천하기
-                </button>
+                <button onClick={handleRecommendSubmit}>장비 추천하기</button>
               </div>
             </div>
           )}
@@ -1620,7 +1618,7 @@ export default function HeroDetail() {
                 >
                   ✕
                 </button>
-                <h3>추천 장비 보기</h3>
+                <h3>추천 장비</h3>
                 <div className="recommend-list">
                   {recommendations.length === 0 ? (
                     <p

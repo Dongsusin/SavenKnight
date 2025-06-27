@@ -7,6 +7,7 @@ import Raid from "./pages/Raid";
 import GrowthDungeon from "./pages/GrowthDungeon";
 import SummonSimulation from "./pages/SummonSimulation";
 import Team from "./pages/Team";
+import GuildWar from "./pages/GuildWar";
 import "./App.css";
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
         <Route path="/growth-dungeon" element={<GrowthDungeon />} />
         <Route path="/summon" element={<SummonSimulation />} />
         <Route path="/team" element={<Team />} />
+        <Route path="/guild-war" element={<GuildWar />} />
       </Routes>
     </Router>
   );

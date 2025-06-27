@@ -41,7 +41,6 @@ export default function Header() {
         </button>
 
         <nav className={`nav-right ${menuOpen ? "open" : ""}`}>
-          {/* ✅ 모바일 메뉴 최상단에 로그인 UI 배치 */}
           <div className="auth-buttons mobile-only">
             {user ? (
               <div className="user-box">
@@ -58,7 +57,6 @@ export default function Header() {
             )}
           </div>
 
-          {/* ✅ 메뉴 항목들 */}
           <NavLink to="/" onClick={closeMenu}>
             홈
           </NavLink>
@@ -70,6 +68,9 @@ export default function Header() {
           </NavLink>
           <NavLink to="/growth-dungeon" onClick={closeMenu}>
             성장던전
+          </NavLink>
+          <NavLink to="/guild-war" onClick={closeMenu}>
+            공성전
           </NavLink>
           <NavLink to="/summon" onClick={closeMenu}>
             소환

@@ -25,7 +25,7 @@ export default function CharacterSelectPopup({ onSelect, onClose }) {
   });
 
   return (
-    <div className="popup-overlay page" onClick={onClose}>
+    <div className="popup-overlay" onClick={onClose}>
       <div
         className="popup-select-content"
         onClick={(e) => e.stopPropagation()}

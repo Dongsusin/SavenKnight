@@ -1,0 +1,120 @@
+.guildwar-page {
+  padding: 1rem;
+  color: white;
+}
+
+.day-tab-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 1rem;
+  justify-content: center;
+}
+
+.day-tab {
+  padding: 6px 12px;
+  background-color: #333;
+  color: white;
+  border: 1px solid #555;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.day-tab.active {
+  background-color: #ffcc00;
+  color: black;
+  font-weight: bold;
+}
+
+.round-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+}
+
+.round-card {
+  background-color: #f2f2f2;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.round-card h2 {
+  margin-bottom: 0.5rem;
+  color: #ffcc00;
+  background-color: #555;
+  text-align: center;
+  border-radius: 25px;
+}
+
+.monster-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.monster-image {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  background-color: #333;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.no-data {
+  text-align: center;
+  margin-top: 2rem;
+  color: #aaa;
+}
+
+.round-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.1rem;
+  color: white;
+  margin-bottom: 0.5rem;
+}
+
+.monster-row {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-start;
+}
+
+.monster-detail-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.monster-detail-popup {
+  background: #222;
+  color: white;
+  padding: 20px;
+  border-radius: 12px;
+  max-width: 400px;
+  width: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.monster-detail-image {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  margin: 10px 0;
+  border-radius: 8px;
+}
