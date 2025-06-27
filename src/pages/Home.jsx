@@ -355,9 +355,17 @@ export default function Home() {
               onChange={setSelectedDate}
               value={selectedDate}
               tileClassName={({ date, view }) => {
-                if (view === "month" && date.getDay() === 4) {
-                  return "thursday-tile";
-                }
+                if (view !== "month") return null;
+
+                const isToday =
+                  date.getFullYear() === new Date().getFullYear() &&
+                  date.getMonth() === new Date().getMonth() &&
+                  date.getDate() === new Date().getDate();
+
+                const isThursday = date.getDay() === 4;
+
+                if (isToday) return "today-tile";
+                if (isThursday) return "thursday-tile";
                 return null;
               }}
               tileContent={({ date, view }) => {
@@ -376,6 +384,8 @@ export default function Home() {
                   ></div>
                 );
               }}
+              prev2Label={null}
+              next2Label={null}
             />
 
             {getEventsForDate(selectedDate).length > 0 && (

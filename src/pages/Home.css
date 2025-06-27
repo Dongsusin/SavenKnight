@@ -95,7 +95,7 @@
 .home-panel ul {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 5px;
 }
 
 .home-panel li {
@@ -245,7 +245,7 @@
   gap: 0.25rem;
   padding: 0.5rem 0;
   justify-content: center;
-  max-height: 470px;
+  max-height: 400px;
   overflow-y: auto;
 }
 
@@ -329,7 +329,18 @@ button.react-calendar__tile:enabled:hover {
 }
 
 .react-calendar__tile--now {
-  border: 1px solid #ffd700;
+  border: 2px solid #ffd700 !important;
+  background-color: rgba(255, 215, 0, 0.2) !important;
+  color: #ffd700 !important;
+  font-weight: bold;
+  border-radius: 6px;
+}
+
+.today-tile {
+  border: 2px solid #ffd700 !important;
+  background-color: rgba(255, 215, 0, 0.2) !important;
+  color: #ffd700 !important;
+  font-weight: bold;
   border-radius: 6px;
 }
 
