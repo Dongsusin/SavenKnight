@@ -1559,11 +1559,27 @@ export default function HeroDetail() {
                           }}
                         />
                         <div className="equip-label">
-                          <div style={{ fontWeight: "bold", color: "#ffd700" }}>
+                          <div
+                            style={{
+                              fontWeight: "bold",
+                              color: "#ffd700",
+                            }}
+                          >
+                            {item.type === "무기"
+                              ? ["마법", "치유"].includes(hero?.type)
+                                ? item.name2 || item.name1 || item.name
+                                : item.name1 || item.name
+                              : item.name}{" "}
                             +{level}
                           </div>
+
                           {mainStat && (
-                            <div style={{ fontSize: "0.8rem", color: "#7cf" }}>
+                            <div
+                              style={{
+                                fontSize: "0.8rem",
+                                color: "#7cf",
+                              }}
+                            >
                               {mainStat}: {mainValue}
                             </div>
                           )}
@@ -1573,7 +1589,10 @@ export default function HeroDetail() {
                             return (
                               <div
                                 key={i}
-                                style={{ fontSize: "0.75rem", color: "#ccc" }}
+                                style={{
+                                  fontSize: "0.75rem",
+                                  color: "#ccc",
+                                }}
                               >
                                 {sub}: {value}
                               </div>
@@ -1614,87 +1633,94 @@ export default function HeroDetail() {
                       아직 추천된 장비가 없습니다. 장비를 추천해주세요!
                     </p>
                   ) : (
-                    recommendations.map((rec) => (
-                      <div key={rec.id} className="recommend-card">
-                        <div className="equip-summary">
-                          {[
-                            "무기0",
-                            "방어구1",
-                            "무기2",
-                            "방어구3",
-                            "장신구0",
-                          ].map((key) => {
-                            const item = rec.equipment?.[key];
-                            if (!item) return null;
+                    [...recommendations]
+                      .sort(
+                        (a, b) =>
+                          (b.likes?.length || 0) - (a.likes?.length || 0)
+                      )
+                      .map((rec) => (
+                        <div key={rec.id} className="recommend-card">
+                          <div className="equip-summary">
+                            {[
+                              "무기0",
+                              "방어구1",
+                              "무기2",
+                              "방어구3",
+                              "장신구0",
+                            ].map((key) => {
+                              const item = rec.equipment?.[key];
+                              if (!item) return null;
 
-                            const level = item.level ?? 0;
-                            const isWeapon = item.type === "무기";
-                            const mainStat = rec.substats?.[key]?.main;
-                            const mainValue = mainStat
-                              ? calcMainStat(mainStat, level, isWeapon)
-                              : null;
+                              const level = item.level ?? 0;
+                              const isWeapon = item.type === "무기";
+                              const mainStat = rec.substats?.[key]?.main;
+                              const mainValue = mainStat
+                                ? calcMainStat(mainStat, level, isWeapon)
+                                : null;
 
-                            const subList = rec.substats?.[key]?.subs ?? [];
-                            const upgrades = rec.upgrades?.[key] ?? {};
+                              const subList = rec.substats?.[key]?.subs ?? [];
+                              const upgrades = rec.upgrades?.[key] ?? {};
 
-                            return (
-                              <div key={key} className="recommend-equip-box">
-                                <img
-                                  src={item.image}
-                                  alt={item.name}
-                                  style={{
-                                    width: "48px",
-                                    height: "48px",
-                                    borderRadius: "6px",
-                                  }}
-                                />
-                                <div className="equip-label">
-                                  <div
+                              return (
+                                <div key={key} className="recommend-equip-box">
+                                  <img
+                                    src={item.image}
+                                    alt={item.name}
                                     style={{
-                                      fontWeight: "bold",
-                                      color: "#ffd700",
+                                      width: "48px",
+                                      height: "48px",
+                                      borderRadius: "6px",
                                     }}
-                                  >
-                                    {item.name} +{level}
-                                  </div>
-                                  {mainStat && (
+                                  />
+                                  <div className="equip-label">
                                     <div
                                       style={{
-                                        fontSize: "0.8rem",
-                                        color: "#7cf",
+                                        fontWeight: "bold",
+                                        color: "#ffd700",
                                       }}
                                     >
-                                      {mainStat}: {mainValue}
+                                      {item.name} +{level}
                                     </div>
-                                  )}
-                                  {subList.map((sub, i) => {
-                                    const upLevel = (upgrades[i] ?? 0) * 3;
-                                    const value = calcSubStat(sub, upLevel);
-                                    return (
+                                    {mainStat && (
                                       <div
-                                        key={i}
                                         style={{
-                                          fontSize: "0.75rem",
-                                          color: "#ccc",
+                                          fontSize: "0.8rem",
+                                          color: "#7cf",
                                         }}
                                       >
-                                        {sub}: {value}
+                                        {mainStat}: {mainValue}
                                       </div>
-                                    );
-                                  })}
+                                    )}
+                                    {subList.map((sub, i) => {
+                                      const upLevel = (upgrades[i] ?? 0) * 3;
+                                      const value = calcSubStat(sub, upLevel);
+                                      return (
+                                        <div
+                                          key={i}
+                                          style={{
+                                            fontSize: "0.75rem",
+                                            color: "#ccc",
+                                          }}
+                                        >
+                                          {sub}: {value}
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
                                 </div>
-                              </div>
-                            );
-                          })}
-                        </div>
+                              );
+                            })}
+                          </div>
 
-                        <div className="suggestion">
-                          <button onClick={() => handleVote(rec.id, rec.likes)}>
-                            추천 {rec.likes.length}
-                          </button>
+                          <div className="suggestion">
+                            <button
+                              onClick={() => handleVote(rec.id, rec.likes)}
+                            >
+                              추천 {rec.likes.length}
+                            </button>
+                          </div>
                         </div>
-                      </div>
-                    ))
+                      ))
                   )}
                 </div>
               </div>

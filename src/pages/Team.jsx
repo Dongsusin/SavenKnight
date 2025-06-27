@@ -204,6 +204,8 @@ export default function Team() {
       "최대 생명력 증가",
       "주는 회복량 증가",
       "치명타 피해량 증가",
+      "마력 억류",
+      "축복",
     ];
 
     let highlighted = text;

@@ -47,30 +47,36 @@ export default function PetSlide() {
 
   return (
     <div className="hero-slide-container">
-      {pets.map((pet) => (
-        <div
-          key={pet.id}
-          className="hero-slide-card"
-          onClick={() => navigate("/dex", { state: { group: "펫" } })}
-        >
-          <img
-            src={`/도감/펫/아이콘/${pet.name}.png`}
-            alt={pet.name}
-            className="hero-slide-img"
-          />
-          <button
-            className={`like-button small ${
-              user && likes[pet.id]?.users?.includes(user.uid) ? "liked" : ""
-            }`}
-            onClick={(e) => {
-              e.stopPropagation();
-              handlePetLike(pet.id);
-            }}
+      {[...pets]
+        .sort((a, b) => {
+          const aLikes = likes[a.id]?.count || 0;
+          const bLikes = likes[b.id]?.count || 0;
+          return bLikes - aLikes;
+        })
+        .map((pet) => (
+          <div
+            key={pet.id}
+            className="hero-slide-card"
+            onClick={() => navigate("/dex", { state: { group: "펫" } })}
           >
-            추천 {likes[pet.id]?.count || 0}
-          </button>
-        </div>
-      ))}
+            <img
+              src={`/도감/펫/아이콘/${pet.name}.png`}
+              alt={pet.name}
+              className="hero-slide-img"
+            />
+            <button
+              className={`like-button small ${
+                user && likes[pet.id]?.users?.includes(user.uid) ? "liked" : ""
+              }`}
+              onClick={(e) => {
+                e.stopPropagation();
+                handlePetLike(pet.id);
+              }}
+            >
+              추천 {likes[pet.id]?.count || 0}
+            </button>
+          </div>
+        ))}
     </div>
   );
 }

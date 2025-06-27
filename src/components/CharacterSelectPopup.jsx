@@ -3,11 +3,11 @@ import heroes from "../data/heroes.json";
 import "./CharacterSelectPopup.css";
 
 export default function CharacterSelectPopup({ onSelect, onClose }) {
-  const filteredHeroes = heroes.filter((h) => h.group !== "펫");
+  const filteredHeroes = heroes.filter(
+    (h) => h.group !== "펫" && h.category !== "특수영웅"
+  );
 
-  const allGroups = [
-    ...new Set(filteredHeroes.map((h) => h.group)),
-  ];
+  const allGroups = [...new Set(filteredHeroes.map((h) => h.group))];
 
   const grouped = allGroups.map((group) => {
     const groupHeroes = filteredHeroes.filter((h) => h.group === group);
@@ -26,7 +26,10 @@ export default function CharacterSelectPopup({ onSelect, onClose }) {
 
   return (
     <div className="popup-overlay page" onClick={onClose}>
-      <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="popup-select-content"
+        onClick={(e) => e.stopPropagation()}
+      >
         <h3>캐릭터 선택</h3>
         {grouped.map(({ group, categorized }) => (
           <div key={group} className="group-section">

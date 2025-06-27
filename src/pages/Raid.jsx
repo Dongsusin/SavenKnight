@@ -365,14 +365,57 @@ export default function Raid() {
             </button>
             <h3>{selectedRaid.name} 추천 영웅</h3>
             <div className="hero-list">
+              {/* 1. 추천 수 있는 영웅 (likes.length > 0) */}
+              {[...heroVotes]
+                .filter((v) => (v.likes?.length || 0) > 0)
+                .sort((a, b) => (b.likes?.length || 0) - (a.likes?.length || 0))
+                .map((vote) => {
+                  const hero = heroes.find(
+                    (h) => h.id === parseInt(vote.heroId)
+                  );
+                  if (!hero || hero.category === "특수영웅") return null;
+
+                  const likes = vote.likes || [];
+                  const liked = user && likes.includes(user.uid);
+
+                  return (
+                    <div key={hero.id} className="hero-item">
+                      <img
+                        src={`/도감/${hero.group}/아이콘/${hero.name}.png`}
+                        alt={hero.name}
+                      />
+                      <button
+                        className={`vote-button ${liked ? "liked" : ""}`}
+                        onClick={() => {
+                          if (!user) {
+                            alert("로그인이 필요합니다.");
+                            return;
+                          }
+                          handleHeroVote(hero.id, likes);
+                        }}
+                      >
+                        추천:{likes.length}
+                      </button>
+                    </div>
+                  );
+                })}
+
+              {/* 2. 추천 정보가 없거나 추천 수가 0인 영웅 */}
               {heroes
-                .filter((hero) => hero.category !== "특수영웅")
+                .filter((hero) => {
+                  if (hero.category === "특수영웅") return false;
+                  const voted = heroVotes.find(
+                    (v) => parseInt(v.heroId) === hero.id
+                  );
+                  return !voted || (voted.likes?.length || 0) === 0;
+                })
                 .map((hero) => {
                   const vote = heroVotes.find(
                     (v) => parseInt(v.heroId) === hero.id
                   );
                   const likes = vote?.likes || [];
                   const liked = user && likes.includes(user.uid);
+
                   return (
                     <div key={hero.id} className="hero-item">
                       <img
@@ -428,39 +471,54 @@ export default function Raid() {
                       아직 등록된 덱이 없습니다. 덱을 추천해주세요!
                     </p>
                   ) : (
-                    teamVotes
-                      .filter((team) =>
-                        team.heroes.every((id) => {
-                          const hero = heroes.find((h) => h.id === id);
-                          return hero?.category !== "특수영웅";
-                        })
-                      )
-                      .map((team) => (
-                        <div key={team.id} className="team-card">
-                          <div className="team-heroes">
-                            {team.heroes.map((id) => {
-                              const hero = heroes.find((h) => h.id === id);
-                              return (
-                                <img
-                                  key={id}
-                                  src={`/도감/${hero.group}/아이콘/${hero.name}.png`}
-                                  alt={hero.name}
-                                  title={hero.name}
-                                />
-                              );
-                            })}
-                          </div>
-                          <div className="team-meta">
-                            <button
-                              onClick={() =>
-                                handleTeamVote(team.id, team.likes)
-                              }
-                            >
-                              추천 {team.likes?.length || 0}
-                            </button>
-                          </div>
+                    [
+                      // 1. 추천 수 ≥ 1 덱들 정렬
+                      ...teamVotes
+                        .filter((team) =>
+                          team.heroes.every((id) => {
+                            const hero = heroes.find((h) => h.id === id);
+                            return hero?.category !== "특수영웅";
+                          })
+                        )
+                        .filter((team) => (team.likes?.length || 0) > 0)
+                        .sort(
+                          (a, b) =>
+                            (b.likes?.length || 0) - (a.likes?.length || 0)
+                        ),
+
+                      // 2. 추천 수 0인 덱들
+                      ...teamVotes
+                        .filter((team) =>
+                          team.heroes.every((id) => {
+                            const hero = heroes.find((h) => h.id === id);
+                            return hero?.category !== "특수영웅";
+                          })
+                        )
+                        .filter((team) => (team.likes?.length || 0) === 0),
+                    ].map((team) => (
+                      <div key={team.id} className="team-card">
+                        <div className="team-heroes">
+                          {team.heroes.map((id) => {
+                            const hero = heroes.find((h) => h.id === id);
+                            return (
+                              <img
+                                key={id}
+                                src={`/도감/${hero.group}/아이콘/${hero.name}.png`}
+                                alt={hero.name}
+                                title={hero.name}
+                              />
+                            );
+                          })}
                         </div>
-                      ))
+                        <div className="team-meta">
+                          <button
+                            onClick={() => handleTeamVote(team.id, team.likes)}
+                          >
+                            추천 {team.likes?.length || 0}
+                          </button>
+                        </div>
+                      </div>
+                    ))
                   )}
                 </div>
 

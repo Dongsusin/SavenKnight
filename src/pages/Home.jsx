@@ -393,12 +393,28 @@ export default function Home() {
           </section>
 
           <section className="home-panel">
-            <h2>영웅 도감</h2>
+            <div className="top">
+              <h3>추천 영웅</h3>
+              <p
+                className="more-link"
+                onClick={() => navigate("/dex", { state: { group: "스페셜" } })}
+              >
+                더보기
+              </p>
+            </div>
             <HeroSlide likes={likes} handleLike={handleLike} user={user} />
           </section>
 
           <section className="home-panel">
-            <h2>펫 도감</h2>
+            <div className="top">
+              <h3>추천 펫</h3>
+              <p
+                className="more-link"
+                onClick={() => navigate("/dex", { state: { group: "펫" } })}
+              >
+                더보기
+              </p>
+            </div>
             <div>
               <PetSlide likes={likes} handleLike={handleLike} user={user} />
             </div>
