@@ -19,66 +19,72 @@ export default function GuildWar() {
   const rounds = monsterData[selectedDay] || [];
 
   const highlightKeywords = (text) => {
-    const goldColor = "#ffcc00";
-    const blueColor = "#00ccff";
-    const numberPatterns = [
-      /\d+턴/g,
-      /\d+회/g,
-      /\d+%/g,
-      /\d+번째/g,
-      /\b\d{1,3}(,\d{3})*\b/g,
-      /\b\d+\b/g,
-    ];
-    const buffKeywords = [
-      "현재 생명력 비율을",
-      "로 전환",
-      "기절",
-      "물리 피해량",
-      "1인 공격기",
-      "5인 공격기",
-      "링크",
-      "보호막",
-      "광폭화",
-      "감전",
-      "관통",
-      "화상",
-      "방어력 감소",
-      "모든 공격력 감소",
-      "침묵",
-      "마법 피해량",
-      "연속 발동",
-      "모든 피해 무효화",
-      "용염",
-      "피해 대상이 1명 줄어들 때마다",
-      "만큼 피해량 증가",
-      "치명타 확률",
-      "치명타 피해",
-      "반격",
-      "빙결",
-      "혹한의 기운",
-      "혹한의 숨결",
-      "즉사",
-    ];
+  const goldColor = "#ffcc00";
+  const blueColor = "#00ccff";
+  const numberPatterns = [
+    /\d+턴/g,
+    /\d+회/g,
+    /\d+%/g,
+    /\d+번째/g,
+    /\b\d{1,3}(,\d{3})*\b/g,
+    /\b\d+\b/g,
+  ];
+  const buffKeywords = [
+    "현재 생명력 비율을",
+    "로 전환",
+    "기절",
+    "물리 피해량",
+    "1인 공격기",
+    "5인 공격기",
+    "링크",
+    "보호막",
+    "광폭화",
+    "감전",
+    "관통",
+    "화상",
+    "방어력 감소",
+    "모든 공격력 감소",
+    "침묵",
+    "마법 피해량",
+    "연속 발동",
+    "모든 피해 무효화",
+    "용염",
+    "피해 대상이 1명 줄어들 때마다",
+    "만큼 피해량 증가",
+    "치명타 확률",
+    "치명타 피해",
+    "반격",
+    "빙결",
+    "혹한의 기운",
+    "혹한의 숨결",
+    "즉사",
+  ];
 
-    let highlighted = text;
-    numberPatterns.forEach((regex) => {
+  let highlighted = text;
+
+  // 1. buff 키워드를 먼저 처리
+  buffKeywords
+    .sort((a, b) => b.length - a.length)
+    .forEach((keyword) => {
+      const regex = new RegExp(keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"); // 이스케이프 처리
       highlighted = highlighted.replace(
         regex,
-        (match) =>
-          `<span style="color: ${goldColor}; font-weight: bold;">${match}</span>`
+        `<span style="color: ${blueColor}; font-weight: bold;">${keyword}</span>`
       );
     });
-    buffKeywords
-      .sort((a, b) => b.length - a.length)
-      .forEach((keyword) => {
-        const regex = new RegExp(keyword, "g");
-        highlighted = highlighted.replace(
-          regex,
-          `<span style="color: ${blueColor}; font-weight: bold;">${keyword}</span>`
-        );
-      });
-    return highlighted;
-  };
+
+  // 2. 숫자 패턴을 나중에 처리
+  numberPatterns.forEach((regex) => {
+    highlighted = highlighted.replace(
+      regex,
+      (match) =>
+        `<span style="color: ${goldColor}; font-weight: bold;">${match}</span>`
+    );
+  });
+
+  return highlighted;
+};
+
 
   return (
     <div className="guildwar-page page">

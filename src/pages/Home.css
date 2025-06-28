@@ -406,11 +406,14 @@ button.react-calendar__tile:enabled:hover {
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 10px;
 }
 
 .home-mini-slot img {
   width: 50%;
   object-fit: cover;
+  max-width: 60px;
+  max-height: 75px;
 }
 
 .team-navigate-button {
