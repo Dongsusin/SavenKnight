@@ -16,7 +16,6 @@ import {
 import { auth, db } from "../firebase";
 import raidData from "../data/raidData.json";
 import heroes from "../data/heroes.json";
-import pets from "../data/pets.json";
 import "./Raid.css";
 
 export default function Raid() {
@@ -354,6 +353,7 @@ export default function Raid() {
           </div>
         </div>
       </div>
+      
       {showHeroPopup && (
         <div className="hero-popup-overlay">
           <div className="hero-popup">
@@ -440,6 +440,7 @@ export default function Raid() {
           </div>
         </div>
       )}
+      
       {showTeamPopup && (
         <div className="team-popup-overlay">
           <div className="team-popup">

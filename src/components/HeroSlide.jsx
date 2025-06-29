@@ -20,18 +20,6 @@ export default function HeroSlide({ likes, handleLike, user }) {
             className="hero-slide-card"
             onClick={() => navigate(`/hero/${hero.name}`)}
           >
-            <button
-              className={`like-button ${
-                user && likes[hero.id]?.users?.includes(user.uid) ? "liked" : ""
-              }`}
-              onClick={(e) => {
-                e.stopPropagation();
-                if (!user) return alert("로그인이 필요합니다.");
-                handleLike(hero.id);
-              }}
-            >
-              추천 {likes[hero.id]?.count || 0}
-            </button>
             <img
               src={`/도감/${hero.group}/아이콘/${hero.name}.png`}
               alt={hero.name}

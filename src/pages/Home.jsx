@@ -2,13 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import HeroSlide from "../components/HeroSlide";
 import PetSlide from "../components/PetSlide";
-import CharacterSelectPopup from "../components/CharacterSelectPopup";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "../firebase";
 import { doc, getDoc, setDoc, onSnapshot } from "firebase/firestore";
 import { collection, query, orderBy, limit } from "firebase/firestore";
-import heroes from "../data/heroes.json";
-import pets from "../data/pets.json";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "./Home.css";
@@ -120,10 +117,8 @@ const ABILITY_SEARCH_KEYWORDS = [
 
 export default function Home() {
   const navigate = useNavigate();
-  const [previewTeam, setPreviewTeam] = useState(Array(5).fill(null));
-  const [selectingIndex, setSelectingIndex] = useState(null);
   const [user] = useAuthState(auth);
-  const [likes, setLikes] = useState({});
+  const [likes] = useState({});
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [events] = useState([
     {
@@ -200,32 +195,6 @@ export default function Home() {
     return events.filter((e) => e.start <= target && target <= e.end);
   };
 
-  useEffect(() => {
-    const heroUnsubs = heroes.map((hero) => {
-      const ref = doc(db, "likes", hero.id.toString());
-      return onSnapshot(ref, (snap) => {
-        setLikes((prev) => ({
-          ...prev,
-          [hero.id]: snap.exists() ? snap.data() : { count: 0, users: [] },
-        }));
-      });
-    });
-
-    const petUnsubs = pets.map((pet) => {
-      const ref = doc(db, "likes", pet.id.toString());
-      return onSnapshot(ref, (snap) => {
-        setLikes((prev) => ({
-          ...prev,
-          [pet.id]: snap.exists() ? snap.data() : { count: 0, users: [] },
-        }));
-      });
-    });
-
-    return () => {
-      [...heroUnsubs, ...petUnsubs].forEach((unsub) => unsub());
-    };
-  }, []);
-
   const handleLike = async (id) => {
     if (!user) return alert("로그인이 필요합니다.");
 
@@ -246,6 +215,7 @@ export default function Home() {
 
     await setDoc(ref, updated);
   };
+
   const [searchKeyword, setSearchKeyword] = useState("");
 
   const [topTeam, setTopTeam] = useState(null);
@@ -422,7 +392,7 @@ export default function Home() {
 
           <section className="home-panel">
             <div className="top">
-              <h3>추천 영웅</h3>
+              <h3>영웅 도감</h3>
               <p
                 className="more-link"
                 onClick={() => navigate("/dex", { state: { group: "스페셜" } })}
@@ -435,7 +405,7 @@ export default function Home() {
 
           <section className="home-panel">
             <div className="top">
-              <h3>추천 펫</h3>
+              <h3>펫 도감</h3>
               <p
                 className="more-link"
                 onClick={() => navigate("/dex", { state: { group: "펫" } })}

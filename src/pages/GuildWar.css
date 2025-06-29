@@ -170,12 +170,34 @@
   line-height: 1.4;
 }
 
-.skill-des {
-  max-height: 150px;
+.guildwar-page .dungeon-info{
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  margin-top: 5rem;
+} 
+
+.round-list {
+  flex: 1;
+}
+
+.monster-detail-side-panel {
+  padding: 16px;
+  background: #111;
+  border-left: 1px solid #333;
   overflow-y: auto;
 }
 
+
 @media (max-width: 768px) {
+   .guildwar-page {
+    flex-direction: column;
+  }
+  .monster-detail-side-panel {
+    display: none;
+  }
+  .guildwar-page .dungeon-info {
+    display: flex;
+  }
   .monster-detail-popup {
     max-height: 80vh;
     overflow-y: auto;
