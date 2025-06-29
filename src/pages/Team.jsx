@@ -1501,7 +1501,7 @@ export default function Team() {
                                       </div>
                                     </div>
                                   </div>
-                                  {/* 💡 부가옵션 설정 UI 추가 */}
+                                  {/* 부가옵션 설정 UI 추가 */}
                                   {item.type !== "장신구" && (
                                     <div className="substat-selection">
                                       <p className="substat-title">
@@ -1948,7 +1948,8 @@ export default function Team() {
             <h3>팀 추천하기</h3>
 
             {!user ? (
-              <p
+              <div>
+                 <p
                 style={{
                   color: "tomato",
                   textAlign: "center",
@@ -1957,6 +1958,13 @@ export default function Team() {
               >
                 팀을 추천하려면 먼저 로그인해주세요.
               </p>
+              <div className="popup-buttons">
+                  <button onClick={() => setShowRecommendPopup(false)}>
+                    취소
+                  </button>
+                </div>
+              
+              </div>
             ) : (
               <>
                 {/* 팀 구성 */}
