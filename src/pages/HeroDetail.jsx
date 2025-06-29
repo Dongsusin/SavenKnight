@@ -17,23 +17,28 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import "./HeroDetail.css";
 
 export default function HeroDetail() {
+  // URL 파라미터에서 영웅 이름 가져오기
   const { name } = useParams();
+  // 탭 상태, 레벨/강화/초월 등 수치 상태
   const [selectedSkillIndex, setSelectedSkillIndex] = useState(0);
   const [activeTab, setActiveTab] = useState("스킬");
   const [level, setLevel] = useState(1);
   const [enhance, setEnhance] = useState(0);
   const [transcend, setTranscend] = useState(0);
+  // 장비, 서브스탯 상태
   const [substats, setSubstats] = useState({});
   const [substatUpgrades, setSubstatUpgrades] = useState({});
   const [equipModalOpen, setEquipModalOpen] = useState(false);
   const [selectedEquipSlot, setSelectedEquipSlot] = useState(null);
   const [selectedEquipments, setSelectedEquipments] = useState({});
+  // 로그인 유저 정보 및 추천 관련 상태
   const [user] = useAuthState(auth);
   const [likeData, setLikeData] = useState({ count: 0, users: [] });
+  // 장비 추천 팝업 상태
   const [showRecommendPopup, setShowRecommendPopup] = useState(false);
   const [showViewPopup, setShowViewPopup] = useState(false);
   const [recommendations, setRecommendations] = useState([]);
-
+  // 장비 세트 종류별 착용 개수 계산
   function getSetCounts() {
     const counts = {};
     Object.values(selectedEquipments).forEach((item) => {
@@ -42,17 +47,17 @@ export default function HeroDetail() {
     });
     return counts;
   }
-
+  // 주스탯 옵션 반환
   function getMainStatOptions(itemType) {
     return Object.keys(
       itemType === "무기" ? weaponMainStatTable : armorMainStatTable
     );
   }
-
+  // 부스탯 옵션 반환
   function getSubStatOptions() {
     return Object.keys(subStatTable);
   }
-
+  // 주스탯 수치 계산 함수
   function calcMainStat(statName, level, isWeapon) {
     const table = isWeapon ? weaponMainStatTable : armorMainStatTable;
     const entry = table[statName];
@@ -61,7 +66,7 @@ export default function HeroDetail() {
     const total = entry.base + level * entry.perLevel;
     return entry.isPercent ? `${total.toFixed(1)}%` : Math.floor(total);
   }
-
+  // 부스탯 수치 계산 함수
   function calcSubStat(statName, level) {
     const entry = subStatTable[statName];
     if (!entry) return null;
@@ -70,7 +75,7 @@ export default function HeroDetail() {
     const total = entry.base + bonusSteps * entry.per3Level;
     return entry.isPercent ? `${total.toFixed(1)}%` : Math.floor(total);
   }
-
+  // 부스탯 강화 가능한 포인트 수 계산
   function getAvailableSubstatPoints(level) {
     let points = 0;
     if (level >= 9) points++;
@@ -78,7 +83,7 @@ export default function HeroDetail() {
     if (level >= 15) points++;
     return points;
   }
-
+  // 숫자 변화 애니메이션 효과 컴포넌트
   function AnimatedNumber({ value, duration = 500 }) {
     const [displayValue, setDisplayValue] = useState(value);
     const raf = useRef(null);
@@ -108,12 +113,12 @@ export default function HeroDetail() {
 
     return <span>{displayValue.toLocaleString()}</span>;
   }
-
+  // 이름이 변경되면 탭과 스킬 인덱스 초기화
   useEffect(() => {
     setSelectedSkillIndex(0);
     setActiveTab("스킬");
   }, [name]);
-
+  // 추천 버튼 클릭 핸들러
   const handleLike = async () => {
     if (!user || !hero?.id) return alert("로그인이 필요합니다.");
 
@@ -135,18 +140,17 @@ export default function HeroDetail() {
     await setDoc(ref, updated);
   };
   const isLiked = user && likeData.users.includes(user.uid);
-
+  // 모든 영웅 목록 중 현재 영웅 찾기
   const allHeroes = heroes.flat ? heroes.flat() : heroes;
   const hero = allHeroes.find((h) => h.name === name);
   if (!hero) return <div>존재하지 않는 영웅입니다.</div>;
-
+  // 이전/다음 영웅 탐색
   const sortedHeroes = [...allHeroes].sort((a, b) => a.id - b.id);
   const currentIndex = sortedHeroes.findIndex((h) => h.id === hero.id);
   const prevHero = sortedHeroes[currentIndex - 1] || null;
   const nextHero = sortedHeroes[currentIndex + 1] || null;
-
+  // 아이콘, 스킬 이미지 경로
   const imagePath = `/도감/${hero.group}/아이콘/${hero.name}.png`;
-
   const skillImages = Array.from(
     { length: hero.skills?.length || 0 },
     (_, i) => {
@@ -154,7 +158,7 @@ export default function HeroDetail() {
       return skillPath;
     }
   );
-
+  // 스킬 설명 내 숫자 및 버프 키워드 강조 처리 함수
   const highlightKeywords = (text) => {
     const goldColor = "#ffcc00";
     const blueColor = "#00ccff";
@@ -451,10 +455,11 @@ export default function HeroDetail() {
 
   return (
     <div className="hero-detail page">
+      {/* 도감으로 돌아가기 */}
       <Link to="/dex" className="back-button">
         ← 돌아가기
       </Link>
-
+      {/* 이전 영웅으로 이동 */}
       {prevHero ? (
         <Link to={`/hero/${prevHero.name}`} className="nav-button fixed-left">
           ←
@@ -462,7 +467,7 @@ export default function HeroDetail() {
       ) : (
         <span className="nav-button fixed-left disabled">←</span>
       )}
-
+      {/* 다음 영웅으로 이동 */}
       {nextHero ? (
         <Link to={`/hero/${nextHero.name}`} className="nav-button fixed-right">
           →
@@ -473,6 +478,7 @@ export default function HeroDetail() {
 
       <section className="hero-info">
         <div className="info-left">
+          {/* 이름, PV 버튼 */}
           <h2>{hero.name}</h2>
           {hero.youtube && (
             <button
@@ -482,7 +488,9 @@ export default function HeroDetail() {
               영웅 PV
             </button>
           )}
+          {/* 등급 */}
           <p className="info-category">{hero.category}</p>
+          {/* 영웅 아이콘, 추천 버튼 */}
           <div className="info-hero-card">
             <button
               className={`like-button ${isLiked ? "liked" : ""}`}
@@ -493,8 +501,9 @@ export default function HeroDetail() {
             </button>
             <img src={imagePath} alt={hero.name} className="main-image" />
           </div>
+          {/* 별칭 */}
           <p className="info-title">{hero.title}</p>
-
+          {/* 강화 / 초월 / 레벨 조정 UI */}
           <div className="stat-settings">
             {[
               { label: "레벨", toggle: true },
@@ -555,6 +564,7 @@ export default function HeroDetail() {
         </div>
 
         <div className="info-right">
+          {/* 탭 버튼: 스킬 / 스탯 / 장비 */}
           <div className="tab-buttons">
             {["스킬", "스탯", "장비"].map((tab) => (
               <button
@@ -566,7 +576,7 @@ export default function HeroDetail() {
               </button>
             ))}
           </div>
-
+          {/* 스킬 */}
           {activeTab === "스킬" && (
             <>
               <h3>스킬</h3>
@@ -582,7 +592,7 @@ export default function HeroDetail() {
                   />
                 ))}
               </div>
-
+              {/* 선택된 스킬의 상세 설명 */}
               {selectedSkillIndex !== null &&
                 hero.skills &&
                 hero.skills[selectedSkillIndex] && (
@@ -694,13 +704,14 @@ export default function HeroDetail() {
                 )}
             </>
           )}
-
+          {/* 스탯 */}
           {activeTab === "스탯" && (
             <div className="stat-section">
               <h3>스탯</h3>
-
+              {/* 스탯 계산 불가능 등급 처리 */}
               {["S", "A"].includes(hero.grade) ? (
                 <>
+                  {/* 스탯 계산 및 출력 (공/방/생/속공 등) */}
                   <div className="stat-list">
                     {(() => {
                       const statBase =
@@ -992,10 +1003,11 @@ export default function HeroDetail() {
               </div>
             </div>
           )}
-
+          {/* 장비 */}
           {activeTab === "장비" && (
             <div className="equipment-section">
               <h3>장비</h3>
+              {/* 장비 추천 등록/보기 버튼 */}
               <div className="recommend-buttons">
                 <button onClick={() => setShowRecommendPopup(true)}>
                   현재 장비 추천하기
@@ -1004,7 +1016,7 @@ export default function HeroDetail() {
                   추천 장비
                 </button>
               </div>
-
+              {/* 장비 슬롯 */}
               <div className="equipment-grid">
                 {[
                   { type: "무기", index: 0 },
@@ -1155,7 +1167,7 @@ export default function HeroDetail() {
                               </div>
                             </div>
                           </div>
-
+                          {/* 장신구 */}
                           <div className="equip-bottom">
                             {item.type !== "장신구" && (
                               <div className="substat-selection">
@@ -1332,7 +1344,7 @@ export default function HeroDetail() {
                   );
                 })}
               </div>
-
+              {/* 세트 효과 표시 */}
               <div
                 className="set-bonus-display"
                 style={{
@@ -1396,7 +1408,7 @@ export default function HeroDetail() {
                   return lines;
                 })}
               </div>
-
+              {/* 장비 선택 모달 */}
               {equipModalOpen && selectedEquipSlot && (
                 <div className="equipment-modal-overlay">
                   <div className="equipment-modal">
@@ -1478,6 +1490,7 @@ export default function HeroDetail() {
                       color: "#FFD700",
                     }}
                   >
+                    {/* 장신구 특수효과 표시 */}
                     <strong>장신구 효과</strong>
                     <div style={{ marginTop: "6px" }}>
                       {effects.map((label, idx) => (
@@ -1494,7 +1507,7 @@ export default function HeroDetail() {
               })()}
             </div>
           )}
-
+          {/* 유튜브 영상 팝업 */}
           {youtubeOpen && (
             <div
               className="youtube-popup-overlay"
@@ -1522,7 +1535,7 @@ export default function HeroDetail() {
               </div>
             </div>
           )}
-
+          {/* 장비 추천 등록 팝업 */}
           {showRecommendPopup && (
             <div className="popup-overlay">
               <div className="popup-content">
@@ -1608,7 +1621,7 @@ export default function HeroDetail() {
               </div>
             </div>
           )}
-
+          {/* 추천 장비 목록 팝업 */}
           {showViewPopup && (
             <div className="popup-overlay">
               <div className="popup-content">

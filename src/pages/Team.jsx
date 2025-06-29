@@ -40,7 +40,7 @@ export default function Team() {
   const [showRecommendPopup, setShowRecommendPopup] = useState(false);
   const [showViewPopup, setShowViewPopup] = useState(false);
   const [teamRecommendations, setTeamRecommendations] = useState([]);
-
+  // 현재 선택된 진형에 따라 각 슬롯의 위치(전열/후열) 함수
   const getPositionForFormation = (index) => {
     const formations = {
       "기본 진형": ["후열", "전열", "후열", "전열", "후열"],
@@ -50,7 +50,7 @@ export default function Team() {
     };
     return formations[formation]?.[index] ?? "";
   };
-
+  // 진형별 효과 수치와 진형 레벨 조정 함수
   const [formationLevels, setFormationLevels] = useState({
     "기본 진형": 1,
     "밸런스 진형": 1,
@@ -87,7 +87,7 @@ export default function Team() {
       };
     });
   };
-
+  // 캐릭터 선택, 클릭, 스탯 업데이트 등의 핸들러 함수
   const handleSelect = (hero) => {
     const updated = [...team];
     updated[selectingIndex] = {
@@ -111,7 +111,7 @@ export default function Team() {
     updated[index] = { ...updated[index], [key]: value };
     setTeam(updated);
   };
-
+  // 스킬 설명 내 숫자와 키워드에 색상 강조 처리 함수
   const highlightKeywords = (text) => {
     const goldColor = "#ffcc00";
     const blueColor = "#00ccff";
@@ -247,14 +247,14 @@ export default function Team() {
 
     return highlighted;
   };
-
+  // 기본 스탯과 최대 스탯 사이를 레벨에 따른 보간 함수
   const interpolateStat = (base, max, level) => {
     const ratio = (level - 1) / (30 - 1);
     return Math.round(base + (max - base) * ratio);
   };
-
+  // 현재 활성화된 탭 (스킬 / 스탯 / 장비) 상태값
   const [activeTab, setActiveTab] = useState("스킬");
-
+  // 캐릭터 초기화 함수
   const handleClearCharacter = (index) => {
     setTeam((prev) => {
       const updated = [...prev];
@@ -282,7 +282,7 @@ export default function Team() {
       return updated;
     });
   };
-
+  // 장비 아이템의 설명 생성 함수
   function getItemStatDescription(item) {
     if (!item) return "";
 
@@ -309,17 +309,17 @@ export default function Team() {
 
     return desc.join(", ");
   }
-
+  // 장비별 선택 가능한 주스탯 반환 함수
   function getMainStatOptions(itemType) {
     return Object.keys(
       itemType === "무기" ? weaponMainStatTable : armorMainStatTable
     );
   }
-
+  // 선택 가능한 부스탯 목록 반환 함수
   function getSubStatOptions() {
     return Object.keys(subStatTable);
   }
-
+  // 주스탯 계산 함수
   function calcMainStat(index, key, statName, level, isWeapon) {
     const table = isWeapon ? weaponMainStatTable : armorMainStatTable;
     const entry = table[statName];
@@ -328,7 +328,7 @@ export default function Team() {
     const total = entry.base + level * entry.perLevel;
     return entry.isPercent ? `${total.toFixed(1)}%` : Math.floor(total);
   }
-
+  // 부스탯 계산 함수
   function calcSubStat(statName, level) {
     const entry = subStatTable[statName];
     if (!entry) return null;
@@ -337,7 +337,7 @@ export default function Team() {
     const total = entry.base + bonusSteps * entry.per3Level;
     return entry.isPercent ? `${total.toFixed(1)}%` : Math.floor(total);
   }
-
+  // 장비 강화 레벨에 따라 부스탯 포인트 계산
   function getAvailableSubstatPoints(level) {
     let points = 0;
     if (level >= 9) points++;
@@ -345,7 +345,7 @@ export default function Team() {
     if (level >= 15) points++;
     return points;
   }
-
+  // 세트 장비 구성 개수 계산 함수
   function getTeamSetCounts(equipments) {
     const counts = {};
     Object.values(equipments).forEach((item) => {
@@ -354,7 +354,7 @@ export default function Team() {
     });
     return counts;
   }
-
+  // 특정 스탯에 대해 장비가 부여하는 보너스 계산
   function getEquipmentStatBonus(index, statKey) {
     let flatBonus = 0;
     let percentBonus = 0;
@@ -453,7 +453,7 @@ export default function Team() {
 
     return { flatBonus, percentBonus };
   }
-
+  // 주스탯 실제 수치 함수
   function getMainStatValue(statName, level, isWeapon) {
     const table = isWeapon ? weaponMainStatTable : armorMainStatTable;
     const entry = table[statName];
@@ -461,7 +461,7 @@ export default function Team() {
     const total = entry.base + level * entry.perLevel;
     return entry.isPercent ? total : Math.floor(total);
   }
-
+  // 패시브 효과 문자열을 파싱하여 스탯명과 수치 추출
   function parsePassiveEffectLine(effect) {
     const regex = /^(.+?)\s([\d.]+)%?$/;
     const match = effect.match(regex);
@@ -493,7 +493,7 @@ export default function Team() {
       type: "percent",
     };
   }
-
+  // 전체 패시브 및 펫 스킬 효과를 합산하여 스탯 보너스를 계산하는 함수
   function getTotalPassiveBonuses(team, index = null, pet = null) {
     const selfOnly = {};
     const teamWide = {};
@@ -570,7 +570,7 @@ export default function Team() {
       },
     };
   }
-
+  // 진형 보너스 계산 함수
   function getFormationBonus(index, statKey) {
     const position = getPositionForFormation(index);
     const level = formationLevels[formation] ?? 1;
@@ -586,7 +586,7 @@ export default function Team() {
 
     return { flat: 0, percent };
   }
-
+  // 팀 추천 등록 함수
   async function handleTeamRecommendSubmit() {
     if (!user) return alert("로그인이 필요합니다.");
 
@@ -633,7 +633,7 @@ export default function Team() {
       alert("추천 등록 실패: " + err.message);
     }
   }
-
+  // 추천 팀 보기 팝업
   useEffect(() => {
     if (!showViewPopup) return;
 
@@ -645,7 +645,7 @@ export default function Team() {
 
     return () => unsubscribe();
   }, [showViewPopup]);
-
+  // 추천 처리 함수
   async function handleTeamVote(recId, likes) {
     if (!user) return alert("로그인이 필요합니다.");
 
@@ -662,7 +662,7 @@ export default function Team() {
   return (
     <div className="team-page page">
       <h1>팀 편성</h1>
-
+      {/* 진형 선택 드롭다운 UI */}
       <div className="formation-select">
         <label style={{ marginRight: "8px" }}>진형:</label>
         <select
@@ -675,7 +675,7 @@ export default function Team() {
           <option>보호 진형</option>
         </select>
       </div>
-
+      {/* 진형 레벨 조정 UI */}
       <div
         className="formation-level-control"
         style={{
@@ -725,7 +725,7 @@ export default function Team() {
           </span>
         </div>
       </div>
-
+      {/* 펫 선택/해제 및 효과 설명 표시 UI */}
       <div className="pet-select-wrapper">
         {selectedPet ? (
           <div className="selected-pet-box">
@@ -769,7 +769,7 @@ export default function Team() {
           </div>
         )}
       </div>
-
+      {/* 팀 슬롯 5개 렌더링 */}
       <div className="team-slots">
         {team.map((member, index) => {
           const position = getPositionForFormation(index);
@@ -782,6 +782,7 @@ export default function Team() {
 
           if (!member) {
             return (
+              // 배치된 캐릭터 슬롯 UI
               <div
                 key={index}
                 className="team-slot-wrapper"
@@ -894,7 +895,7 @@ export default function Team() {
                   ))}
                 </div>
               </div>
-
+              {/*  탭 버튼 (스킬 / 스탯 / 장비) 전환 UI */}
               <div className="team-info-bottom">
                 <div className="tab-buttons">
                   {["스킬", "스탯", "장비"].map((tab) => (
@@ -908,6 +909,7 @@ export default function Team() {
                   ))}
                 </div>
                 <div className="tab-content">
+                  {/*  // 스킬 탭: 스킬 아이콘, 설명, 스킬 강화/초월 효과 표시 */}
                   {activeTab === "스킬" && (
                     <div className="skill-window">
                       <div className="skill-icons">
@@ -930,7 +932,7 @@ export default function Team() {
                           />
                         ))}
                       </div>
-
+                      {/* 선택된 스킬의 상세 설명 */}
                       {skillIndex !== null && member.skills?.[skillIndex] && (
                         <div className="selected-skill-box">
                           <p className="skill-title">
@@ -938,7 +940,7 @@ export default function Team() {
                             {member.skillcooldown?.[skillIndex] > 0 &&
                               ` (쿨타임 ${member.skillcooldown[skillIndex]}초)`}
                           </p>
-
+                          {/* 스킬 효과 상세 */}
                           {member.skills[skillIndex].map((line, i) => {
                             let targetColor = "#ffcc00";
                             if (line.detail === "버프") targetColor = "#00ccff";
@@ -963,7 +965,7 @@ export default function Team() {
                               </div>
                             );
                           })}
-
+                          {/* 스킬 강화 효과 */}
                           {member.skillup?.[skillIndex] && (
                             <div className="skill-upgrade-box">
                               <div className="skill-upgrade-title">
@@ -979,6 +981,7 @@ export default function Team() {
                               ))}
                             </div>
                           )}
+                          {/* 2/6초월 스킬 효과 */}
                           {(member.twotranscendenceSkillUp?.[skillIndex]
                             ?.length > 0 ||
                             member.sixtranscendenceSkillUp?.[skillIndex]
@@ -1034,8 +1037,10 @@ export default function Team() {
                       )}
                     </div>
                   )}
+                  {/* 스탯 탭: 기본/강화/초월/장비/패시브/펫/진형 보정 포함한 최종 스탯 표시 */}
                   {activeTab === "스탯" && (
                     <div className="stat-table">
+                      {/* 주요 스탯 및 보정 항목 계산 후 테이블 형태로 출력 */}
                       {(() => {
                         const {
                           grade,
@@ -1391,6 +1396,7 @@ export default function Team() {
                       })()}
                     </div>
                   )}
+                  {/* 장비 탭: 각 부위별 장비 선택, 강화, 부옵션 설정 UI */}
                   {activeTab === "장비" && (
                     <div className="equipment-grid">
                       {["무기0", "무기1", "방어구0", "방어구1", "장신구0"].map(
@@ -1424,6 +1430,7 @@ export default function Team() {
                             >
                               {item ? (
                                 <div className="equipped-item">
+                                  {/* 장비 이미지, 강화 조절, 부옵션 선택, 해제 버튼 */}
                                   <div className="equipped-item-top">
                                     <img
                                       src={item.image}
@@ -1727,6 +1734,7 @@ export default function Team() {
                       )}
                     </div>
                   )}
+                  {/*장비 세트 효과*/}
                   {(() => {
                     const setCounts = getTeamSetCounts(teamEquipments[index]);
                     return (
@@ -1783,6 +1791,7 @@ export default function Team() {
                       </div>
                     );
                   })()}
+                  {/*장신구 특수효과*/}
                   {(() => {
                     const accessories = Object.values(
                       teamEquipments[index]
@@ -1822,14 +1831,14 @@ export default function Team() {
           );
         })}
       </div>
-
+      {/*추천 팝업 버튼*/}
       <div className="recommend-buttons">
         <button onClick={() => setShowRecommendPopup(true)}>
           현재 팀 추천
         </button>
         <button onClick={() => setShowViewPopup(true)}>추천 팀</button>
       </div>
-
+      {/*펫 선택 팝업*/}
       {isPetPopupOpen && (
         <div className="pet-popup-overlay">
           <div className="pet-popup">
@@ -1858,14 +1867,14 @@ export default function Team() {
           </div>
         </div>
       )}
-
+      {/*캐릭터 선택 팝업*/}
       {selectingIndex !== null && (
         <CharacterSelectPopup
           onSelect={handleSelect}
           onClose={() => setSelectingIndex(null)}
         />
       )}
-
+      {/*장비 선택 팝업*/}
       {equipmentModalOpen && selectedEquipSlot && (
         <div className="equipment-modal-overlay">
           <div className="equipment-modal">
@@ -1941,7 +1950,7 @@ export default function Team() {
           </div>
         </div>
       )}
-
+      {/*팀 등록 팝업*/}
       {showRecommendPopup && (
         <div className="popup-overlay">
           <div className="popup wide">
@@ -1949,21 +1958,20 @@ export default function Team() {
 
             {!user ? (
               <div>
-                 <p
-                style={{
-                  color: "tomato",
-                  textAlign: "center",
-                  margin: "20px 0",
-                }}
-              >
-                팀을 추천하려면 먼저 로그인해주세요.
-              </p>
-              <div className="popup-buttons">
+                <p
+                  style={{
+                    color: "tomato",
+                    textAlign: "center",
+                    margin: "20px 0",
+                  }}
+                >
+                  팀을 추천하려면 먼저 로그인해주세요.
+                </p>
+                <div className="popup-buttons">
                   <button onClick={() => setShowRecommendPopup(false)}>
                     취소
                   </button>
                 </div>
-              
               </div>
             ) : (
               <>
@@ -2028,7 +2036,7 @@ export default function Team() {
           </div>
         </div>
       )}
-
+      {/*추천 팀 목록 팝업*/}
       {showViewPopup && (
         <div className="team-popup-overlay">
           <div className="team-popup">

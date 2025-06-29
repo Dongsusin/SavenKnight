@@ -9,7 +9,7 @@ import { collection, query, orderBy, limit } from "firebase/firestore";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "./Home.css";
-
+// 효과별 검색 키워드
 const ABILITY_SEARCH_KEYWORDS = [
   "물리 공격력 증가",
   "마법 공격력 증가",
@@ -118,8 +118,11 @@ const ABILITY_SEARCH_KEYWORDS = [
 export default function Home() {
   const navigate = useNavigate();
   const [user] = useAuthState(auth);
+  // 추천 수 관리용 상태
   const [likes] = useState({});
+  // 날짜 선택 상태
   const [selectedDate, setSelectedDate] = useState(new Date());
+  // 고정 이벤트 목록
   const [events] = useState([
     {
       title: "정식 오픈",
@@ -182,19 +185,19 @@ export default function Home() {
       end: "2025-07-09",
     },
   ]);
-
+  // 날짜 포맷 문자열 변환
   const formatDate = (date) => {
     const year = date.getFullYear();
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
     const day = date.getDate().toString().padStart(2, "0");
     return `${year}-${month}-${day}`;
   };
-
+  // 특정 날짜 이벤트 리스트
   const getEventsForDate = (date) => {
     const target = formatDate(date);
     return events.filter((e) => e.start <= target && target <= e.end);
   };
-
+  // 추천 버튼 클릭
   const handleLike = async (id) => {
     if (!user) return alert("로그인이 필요합니다.");
 
@@ -215,9 +218,9 @@ export default function Home() {
 
     await setDoc(ref, updated);
   };
-
+  // 검색 키워드 입력 상태
   const [searchKeyword, setSearchKeyword] = useState("");
-
+  // 추천 수 1위 팀 정보 상태
   const [topTeam, setTopTeam] = useState(null);
 
   useEffect(() => {
@@ -237,6 +240,7 @@ export default function Home() {
 
   return (
     <div className="page home-layout">
+      {/* 검색 바 */}
       <div className="home-search-bar">
         <input
           type="text"
@@ -259,6 +263,7 @@ export default function Home() {
       <div className="main">
         {/* 왼쪽 섹션 */}
         <aside className="home-sidebar">
+          {/* 업데이트 게시판 */}
           <section className="home-panel">
             <h2>업데이트 게시판</h2>
             <ul>
@@ -284,7 +289,7 @@ export default function Home() {
               </li>
             </ul>
           </section>
-
+          {/* 쿠폰 코드 목록 */}
           <section className="home-panel">
             <h2>쿠폰 코드</h2>
             <ul className="coupon-list">
@@ -314,7 +319,7 @@ export default function Home() {
               </li>
             </ul>
           </section>
-
+          {/* 효과별 검색 버튼 */}
           <section className="home-panel">
             <h2>효과별 검색</h2>
             <div className="ability-shortcut-list">
@@ -337,6 +342,7 @@ export default function Home() {
 
         {/* 중앙 섹션 */}
         <main className="home-main">
+          {/* 이벤트 캘린더 */}
           <section className="home-panel">
             <h2>이벤트 캘린더</h2>
             <Calendar
@@ -389,7 +395,7 @@ export default function Home() {
               </div>
             )}
           </section>
-
+          {/* 영웅 도감 슬라이드 */}
           <section className="home-panel">
             <div className="top">
               <h3>영웅 도감</h3>
@@ -402,7 +408,7 @@ export default function Home() {
             </div>
             <HeroSlide likes={likes} handleLike={handleLike} user={user} />
           </section>
-
+          {/* 펫 도감 슬라이드 */}
           <section className="home-panel">
             <div className="top">
               <h3>펫 도감</h3>
@@ -417,7 +423,7 @@ export default function Home() {
               <PetSlide likes={likes} handleLike={handleLike} user={user} />
             </div>
           </section>
-
+          {/* 인기 팀 추천 */}
           <section className="home-panel">
             <div className="top">
               <h3>인기 팀</h3>
@@ -465,6 +471,7 @@ export default function Home() {
 
         {/* 오른쪽 섹션 */}
         <aside className="home-sidebar">
+          {/* 레이드 바로가기 패널 */}
           <section className="home-panel">
             <h2>레이드</h2>
             <ul className="home-raid-list">
@@ -486,7 +493,7 @@ export default function Home() {
               ))}
             </ul>
           </section>
-
+          {/* 성장 던전 바로가기 패널 */}
           <section className="home-panel">
             <h2>성장 던전</h2>
             <ul className="GrowthDungeon-list">

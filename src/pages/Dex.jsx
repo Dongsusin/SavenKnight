@@ -9,6 +9,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import "./Dex.css";
 
 const GROUPS = ["스페셜", "일반", "아소드", "아이사", "기타", "펫", "검색"];
+// 검색 필터용 키워드 상수 배열
 const ABILITY_KEYWORDS = [
   "물리 공격력 증가",
   "마법 공격력 증가",
@@ -112,7 +113,7 @@ const ABILITY_KEYWORDS13 = [
   "처형",
   "쿨타임 증가",
 ];
-
+// 스킬 설명 내 숫자/키워드 강조 처리 함수
 const highlightKeywords = (text) => {
   const goldColor = "#ffcc00";
   const blueColor = "#00ccff";
@@ -144,9 +145,12 @@ export default function Dex() {
   const initialGroup = location.state?.group || "스페셜";
   const initialAbility = location.state?.ability || null;
   const initialSearchName = location.state?.name || "";
+  // 현재 선택된 그룹: 스페셜 / 일반 / 펫 / 검색 등
   const [selectedGroup, setSelectedGroup] = useState(initialGroup);
+  // 효과 검색 키워드 상태
   const [selectedAbility, setSelectedAbility] = useState(initialAbility);
   const [user] = useAuthState(auth);
+  // 추천 수 상태: 영웅 / 펫
   const [likes, setLikes] = useState({});
   const [petLikes, setPetLikes] = useState({});
   const [searchName, setSearchName] = useState(initialSearchName);
@@ -157,8 +161,9 @@ export default function Dex() {
   const nameFilteredPets = pets.filter((pet) =>
     pet.name.toLowerCase().includes(searchName.toLowerCase())
   );
-
+  // 현재 그룹이 '펫'인지 여부
   const isPetGroup = selectedGroup === "펫";
+  // 현재 그룹이 '검색'인지 여부
   const isSearchGroup = selectedGroup === "검색";
 
   const entries = isPetGroup
@@ -179,7 +184,7 @@ export default function Dex() {
         return effects.some((text) => text.includes(selectedAbility));
       })
     : [];
-
+  // Firestore에서 추천 수 실시간 구독
   useEffect(() => {
     const heroUnsubs = heroes.map((hero) => {
       const ref = doc(db, "likes", hero.id.toString());
@@ -217,7 +222,7 @@ export default function Dex() {
       );
     };
   }, []);
-
+  // 영웅 추천 클릭 시 처리
   const handleLike = async (heroId) => {
     if (!user) return alert("로그인이 필요합니다.");
 
@@ -238,7 +243,7 @@ export default function Dex() {
 
     await setDoc(ref, updated);
   };
-
+  // 펫 추천 클릭 시 처리
   const handlePetLike = async (petId) => {
     if (!user) return alert("로그인이 필요합니다.");
 

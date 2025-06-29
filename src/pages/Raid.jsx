@@ -19,29 +19,30 @@ import heroes from "../data/heroes.json";
 import "./Raid.css";
 
 export default function Raid() {
+  // 홈에서 선택된 레이드 이름으로 초기 ID 설정
   const location = useLocation();
   const selectedNameFromHome = location.state?.name;
   const initialId = selectedNameFromHome
     ? raidData.find((r) => r.name === selectedNameFromHome)?.id ||
       raidData[0].id
     : raidData[0].id;
-
+  //상태값 정의
   const [selectedId, setSelectedId] = useState(initialId);
   const [selectedStage, setSelectedStage] = useState(1);
   const [visibleSkills, setVisibleSkills] = useState([]);
   const [user] = useAuthState(auth);
-
+  // 선택된 레이드, 보스, 스킬 정보 추출
   const selectedRaid = raidData.find((r) => r.id === selectedId);
   const boss = selectedRaid?.bossStatsByStage?.[selectedStage - 1];
   const selectedSkills =
     selectedRaid?.skillsByStage?.[selectedStage - 1] ||
     selectedRaid?.skills ||
     [];
-
+  // 레이드 변경 시 스킬 툴팁 초기화
   useEffect(() => {
     setVisibleSkills(Array(selectedSkills.length).fill(true));
   }, [selectedId, selectedStage]);
-
+  // 팝업 및 추천 관련 상태
   const [showHeroPopup, setShowHeroPopup] = useState(false);
   const [showTeamPopup, setShowTeamPopup] = useState(false);
   const [showTeamRegister, setShowTeamRegister] = useState(false);
@@ -55,7 +56,7 @@ export default function Raid() {
     null,
   ]);
   const [activeSlotIndex, setActiveSlotIndex] = useState(null);
-
+  // 영웅 추천 데이터 실시간 구독
   useEffect(() => {
     const q = collection(db, "raids", selectedId.toString(), "heroVotes");
     return onSnapshot(q, (snap) => {
@@ -65,7 +66,7 @@ export default function Raid() {
       );
     });
   }, [selectedId, selectedStage]);
-
+  // 추천 팀 데이터 실시간 구독
   useEffect(() => {
     const q = collection(db, "raids", selectedId.toString(), "teams");
     return onSnapshot(q, (snap) => {
@@ -75,7 +76,7 @@ export default function Raid() {
       );
     });
   }, [selectedId, selectedStage]);
-
+  // 영웅 추천 처리
   const handleHeroVote = async (heroId, likes = []) => {
     if (!user) return alert("로그인이 필요합니다.");
     const ref = doc(
@@ -101,7 +102,7 @@ export default function Raid() {
       });
     }
   };
-
+  // 팀 추천 처리
   const handleTeamVote = async (teamId, likes = []) => {
     if (!user) return alert("로그인이 필요합니다.");
     const ref = doc(db, "raids", selectedId.toString(), "teams", teamId);
@@ -112,13 +113,13 @@ export default function Raid() {
         : [...likes, user.uid],
     });
   };
-
+  // 특정 슬롯에 영웅 선택
   const handleSelectHeroSlot = (slotIndex, heroId) => {
     const updated = [...selectedTeamHeroes];
     updated[slotIndex] = heroId;
     setSelectedTeamHeroes(updated);
   };
-
+  // 선택된 덱 등록 처리
   const handleSubmitTeam = async () => {
     if (!user) return alert("로그인이 필요합니다.");
     if (selectedTeamHeroes.some((id) => !id))
@@ -135,7 +136,7 @@ export default function Raid() {
     setActiveSlotIndex(null);
     setShowTeamRegister(false);
   };
-
+  // 스킬 설명 강조 처리 함수
   const highlightKeywords = (text) => {
     const goldColor = "#ffcc00";
     const blueColor = "#00ccff";
@@ -187,6 +188,7 @@ export default function Raid() {
 
   return (
     <div className="raid-container page">
+      {/* 레이드 탭 리스트 */}
       <div className="raid-list">
         {raidData.map((raid) => (
           <div
@@ -208,7 +210,7 @@ export default function Raid() {
             <div className="raid-bg">
               <img src={selectedRaid.bg} alt={selectedRaid.name} />
             </div>
-
+            {/* 보스 능력치 표기 */}
             {boss && (
               <div className="raid-stats-box">
                 <div className="raid-stat-list">
@@ -253,7 +255,7 @@ export default function Raid() {
               </div>
             )}
           </div>
-
+          {/* 단계 선택 버튼 */}
           <div className="stage-skill-wrapper">
             <div className="stage">
               <p>단계 선택</p>
@@ -269,7 +271,7 @@ export default function Raid() {
                 ))}
               </div>
             </div>
-
+            {/* 보스 스킬 이미지 및 설명 툴팁 */}
             <div className="skill-section">
               <p>보스 스킬</p>
               <div className="raid-skill-images">
@@ -336,7 +338,7 @@ export default function Raid() {
               </div>
             </div>
           </div>
-
+          {/* 보상 */}
           <div className="reward-section">
             <p>획득 가능 보상</p>
             <div className="reward-text">
@@ -347,13 +349,14 @@ export default function Raid() {
                 ))}
             </div>
           </div>
+          {/* 추천 팝업 열기 버튼 */}
           <div className="suggestion">
             <button onClick={() => setShowHeroPopup(true)}>추천 영웅</button>
             <button onClick={() => setShowTeamPopup(true)}>추천 덱</button>
           </div>
         </div>
       </div>
-      
+      {/* 추천 영웅 팝업 */}
       {showHeroPopup && (
         <div className="hero-popup-overlay">
           <div className="hero-popup">
@@ -440,7 +443,7 @@ export default function Raid() {
           </div>
         </div>
       )}
-      
+      {/* 추천 덱 팝업 */}
       {showTeamPopup && (
         <div className="team-popup-overlay">
           <div className="team-popup">
@@ -533,6 +536,7 @@ export default function Raid() {
               </>
             ) : (
               <>
+                {/* 덱 등록 UI - 슬롯 5개 */}
                 <div className="team-selection-area">
                   <div className="selected-team">
                     {selectedTeamHeroes.map((heroId, i) => {
@@ -557,6 +561,7 @@ export default function Raid() {
                       );
                     })}
                   </div>
+                  {/* 덱 등록 버튼 */}
                   <button
                     onClick={handleSubmitTeam}
                     className="submit-team-button"
@@ -564,6 +569,7 @@ export default function Raid() {
                     등록 완료
                   </button>
                 </div>
+                {/* 영웅 선택 목록 */}
                 {activeSlotIndex !== null && (
                   <div className="hero-select-list">
                     {heroes

@@ -19,19 +19,22 @@ import dungeonList from "../data/dungeonData.json";
 import "./GrowthDungeon.css";
 
 export default function GrowthDungeon() {
+  // 홈에서 전달된 선택 던전 이름 기반 초기 ID 설정
   const location = useLocation();
   const selectedNameFromHome = location.state?.name;
   const initialId = selectedNameFromHome
     ? dungeonList.find((d) => d.name === selectedNameFromHome)?.id || 1
     : 1;
-
+  // 사용자 인증 상태
   const [user] = useAuthState(auth);
+  // 추천 영웅, 팀 관련 팝업 상태
   const [showHeroPopup, setShowHeroPopup] = useState(false);
   const [showTeamPopup, setShowTeamPopup] = useState(false);
   const [showTeamRegister, setShowTeamRegister] = useState(false);
-
+  // 추천 데이터 상태
   const [heroVotes, setHeroVotes] = useState([]);
   const [teamVotes, setTeamVotes] = useState([]);
+  // 추천 덱 등록용 슬롯 및 선택된 슬롯 인덱스
   const [selectedTeamHeroes, setSelectedTeamHeroes] = useState([
     null,
     null,
@@ -40,21 +43,23 @@ export default function GrowthDungeon() {
     null,
   ]);
   const [activeSlotIndex, setActiveSlotIndex] = useState(null);
-
+  // 현재 선택된 던전 ID 및 스테이지
   const [selectedId, setSelectedId] = useState(initialId);
   const [selectedStage, setSelectedStage] = useState(1);
+  // 스킬 툴팁 표시 여부 배열
   const [visibleSkills, setVisibleSkills] = useState([]);
+  // 현재 선택된 던전, 보스, 스킬 정보
   const selectedDungeon = dungeonList.find((d) => d.id === selectedId);
   const boss = selectedDungeon?.bossStatsByStage?.[selectedStage - 1];
   const selectedSkills =
     selectedDungeon?.skillsByStage?.[selectedStage - 1] ||
     selectedDungeon?.skills ||
     [];
-
+  // 스테이지 변경 시 스킬 툴팁 초기화
   useEffect(() => {
     setVisibleSkills(Array(selectedSkills.length).fill(true));
   }, [selectedId, selectedStage]);
-
+  // 추천 영웅 데이터 구독
   useEffect(() => {
     const q = collection(
       db,
@@ -70,7 +75,7 @@ export default function GrowthDungeon() {
     });
     return () => unsubscribe();
   }, [selectedId]);
-
+  // 추천 팀 데이터 구독
   useEffect(() => {
     const q = collection(db, "growthDungeons", selectedId.toString(), "teams");
 
@@ -81,7 +86,7 @@ export default function GrowthDungeon() {
       );
     });
   }, [selectedId, selectedStage]);
-
+  // 영웅 추천 버튼 클릭 처리
   const handleHeroVote = async (heroId, likes = []) => {
     if (!user) return alert("로그인이 필요합니다.");
     const ref = doc(
@@ -108,7 +113,7 @@ export default function GrowthDungeon() {
       });
     }
   };
-
+  // 덱 추천 버튼 클릭 처리
   const handleTeamVote = async (teamId, likes = []) => {
     if (!user) return alert("로그인이 필요합니다.");
     const ref = doc(
@@ -125,13 +130,13 @@ export default function GrowthDungeon() {
         : [...likes, user.uid],
     });
   };
-
+  // 추천 덱 등록용 슬롯 선택 처리
   const handleSelectHeroSlot = (slotIndex, heroId) => {
     const updated = [...selectedTeamHeroes];
     updated[slotIndex] = heroId;
     setSelectedTeamHeroes(updated);
   };
-
+  // 추천 덱 등록 처리
   const handleSubmitTeam = async () => {
     if (!user) return alert("로그인이 필요합니다.");
     if (selectedTeamHeroes.some((id) => !id))
@@ -150,7 +155,7 @@ export default function GrowthDungeon() {
     setActiveSlotIndex(null);
     setShowTeamRegister(false);
   };
-
+  // 스킬 설명에서 숫자와 키워드 강조 처리
   const highlightKeywords = (text) => {
     const goldColor = "#ffcc00";
     const blueColor = "#00ccff";
@@ -203,11 +208,12 @@ export default function GrowthDungeon() {
 
     return highlighted;
   };
-
+  // 보스 정보가 없을 경우 렌더링 생략
   if (!selectedDungeon || !boss) return null;
 
   return (
     <div className="growth-container page">
+      {/* 상단 던전 선택 탭 */}
       <div className="dungeon-list">
         {dungeonList.map((dungeon) => (
           <div
@@ -226,11 +232,12 @@ export default function GrowthDungeon() {
 
       <div className="dungeon-detail">
         <div className="dungeon-info">
+          {/* 보스 이미지 및 능력치 */}
           <div className="dungeon-top">
             <div className="dungeon-image">
               <img src={selectedDungeon.bg} alt="보스 이미지" />
             </div>
-
+            {/* 스탯 박스 */}
             <div className="boss-stats-box">
               <div className="boss-stat-list two-column">
                 <div>
@@ -279,7 +286,7 @@ export default function GrowthDungeon() {
               </div>
             </div>
           </div>
-
+          {/* 스테이지 및 스킬 */}
           <div className="dungeon-bottom">
             <div className="stage-skill-wrapper">
               <div className="stage">
@@ -367,7 +374,7 @@ export default function GrowthDungeon() {
               </div>
             </div>
           </div>
-
+          {/* 보상 설명 */}
           <div className="reward-section">
             <p>획득 가능 보상</p>
             <div className="reward-text">
@@ -381,13 +388,14 @@ export default function GrowthDungeon() {
                 ))}
             </div>
           </div>
+          {/* 추천 버튼 */}
           <div className="suggestion">
             <button onClick={() => setShowHeroPopup(true)}>추천 영웅</button>
             <button onClick={() => setShowTeamPopup(true)}>추천 덱</button>
           </div>
         </div>
       </div>
-
+      {/* 추천 영웅 팝업 */}
       {showHeroPopup && (
         <div className="hero-popup-overlay">
           <div className="hero-popup">
@@ -475,7 +483,7 @@ export default function GrowthDungeon() {
           </div>
         </div>
       )}
-
+      {/* 추천 덱 팝업 */}
       {showTeamPopup && (
         <div className="team-popup-overlay">
           <div className="team-popup">

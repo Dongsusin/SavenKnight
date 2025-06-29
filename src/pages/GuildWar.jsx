@@ -18,7 +18,7 @@ import siegeSkillData from "../data/siegeSkillData.json";
 import heroes from "../data/heroes.json";
 
 import "./GuildWar.css";
-
+// 요일 탭 배열
 const days = [
   "수호자의성",
   "포디나의성",
@@ -30,169 +30,185 @@ const days = [
 ];
 
 export default function GuildWar() {
+  // 요일, 몬스터, 팝업 관련 상태값
   const [selectedDay, setSelectedDay] = useState("수호자의성");
   const [selectedMonster, setSelectedMonster] = useState(null);
   const [showHeroPopup, setShowHeroPopup] = useState(false);
   const [showTeamPopup, setShowTeamPopup] = useState(false);
+  // 추천 영웅/팀 관련 상태값
   const [heroVotes, setHeroVotes] = useState([]);
   const [teamVotes, setTeamVotes] = useState([]);
-  const [selectedTeamHeroes, setSelectedTeamHeroes] = useState([null, null, null, null, null]);
+  const [selectedTeamHeroes, setSelectedTeamHeroes] = useState([
+    null,
+    null,
+    null,
+    null,
+    null,
+  ]);
   const [activeSlotIndex, setActiveSlotIndex] = useState(null);
+  // 로그인 유저
   const [user] = useAuthState(auth);
+  // 해당 요일의 몬스터 라운드 배열
   const [showTeamRegister, setShowTeamRegister] = useState(false);
   const rounds = monsterData[selectedDay] || [];
-
+  // 모바일 감지
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  // 창 크기 변경 시 반응형 업데이트
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
-useEffect(() => {
-  const handleResize = () => {
-    setIsMobile(window.innerWidth <= 768);
-  };
-  window.addEventListener("resize", handleResize);
-  return () => window.removeEventListener("resize", handleResize);
-}, []);
-
-
+  // 스킬 설명에서 숫자 및 키워드 강조 처리
   const highlightKeywords = (text) => {
-  const goldColor = "#ffcc00";
-  const blueColor = "#00ccff";
-  const numberPatterns = [
-    /\d+턴/g,
-    /\d+회/g,
-    /\d+%/g,
-    /\d+번째/g,
-    /\b\d{1,3}(,\d{3})*\b/g,
-    /\b\d+\b/g,
-  ];
-  const buffKeywords = [
-    "현재 생명력 비율을",
-    "로 전환",
-    "기절",
-    "물리 피해량",
-    "1인 공격기",
-    "5인 공격기",
-    "링크",
-    "보호막",
-    "광폭화",
-    "감전",
-    "관통",
-    "화상",
-    "방어력 감소",
-    "모든 공격력 감소",
-    "침묵",
-    "마법 피해량",
-    "연속 발동",
-    "모든 피해 무효화",
-    "용염",
-    "피해 대상이 1명 줄어들 때마다",
-    "만큼 피해량 증가",
-    "치명타 확률",
-    "치명타 피해",
-    "반격",
-    "빙결",
-    "혹한의 기운",
-    "혹한의 숨결",
-    "즉사",
-  ];
+    const goldColor = "#ffcc00";
+    const blueColor = "#00ccff";
+    const numberPatterns = [
+      /\d+턴/g,
+      /\d+회/g,
+      /\d+%/g,
+      /\d+번째/g,
+      /\b\d{1,3}(,\d{3})*\b/g,
+      /\b\d+\b/g,
+    ];
+    const buffKeywords = [
+      "현재 생명력 비율을",
+      "로 전환",
+      "기절",
+      "물리 피해량",
+      "1인 공격기",
+      "5인 공격기",
+      "링크",
+      "보호막",
+      "광폭화",
+      "감전",
+      "관통",
+      "화상",
+      "방어력 감소",
+      "모든 공격력 감소",
+      "침묵",
+      "마법 피해량",
+      "연속 발동",
+      "모든 피해 무효화",
+      "용염",
+      "피해 대상이 1명 줄어들 때마다",
+      "만큼 피해량 증가",
+      "치명타 확률",
+      "치명타 피해",
+      "반격",
+      "빙결",
+      "혹한의 기운",
+      "혹한의 숨결",
+      "즉사",
+    ];
 
-  let highlighted = text;
+    let highlighted = text;
 
-  buffKeywords
-    .sort((a, b) => b.length - a.length)
-    .forEach((keyword) => {
-      const regex = new RegExp(keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"); 
+    buffKeywords
+      .sort((a, b) => b.length - a.length)
+      .forEach((keyword) => {
+        const regex = new RegExp(
+          keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+          "g"
+        );
+        highlighted = highlighted.replace(
+          regex,
+          `<span style="color: ${blueColor}; font-weight: bold;">${keyword}</span>`
+        );
+      });
+
+    numberPatterns.forEach((regex) => {
       highlighted = highlighted.replace(
         regex,
-        `<span style="color: ${blueColor}; font-weight: bold;">${keyword}</span>`
+        (match) =>
+          `<span style="color: ${goldColor}; font-weight: bold;">${match}</span>`
       );
     });
 
-  numberPatterns.forEach((regex) => {
-    highlighted = highlighted.replace(
-      regex,
-      (match) =>
-        `<span style="color: ${goldColor}; font-weight: bold;">${match}</span>`
-    );
-  });
-
-  return highlighted;
-};
-
-const handleSelectHeroSlot = (slotIndex, heroId) => {
-  const updated = [...selectedTeamHeroes];
-  updated[slotIndex] = heroId;
-  setSelectedTeamHeroes(updated);
-};
-
-
-useEffect(() => {
-  const q = collection(db, "guildwars", selectedDay, "heroVotes");
-  return onSnapshot(q, (snap) => {
-    const votes = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-    setHeroVotes(votes);
-  });
-}, [selectedDay]);
-
-useEffect(() => {
-  const q = collection(db, "guildwars", selectedDay, "teams");
-  return onSnapshot(q, (snap) => {
-    const teams = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-    setTeamVotes(teams);
-  });
-}, [selectedDay]);
-
-const handleHeroVote = async (heroId, likes = []) => {
-  if (!user) return alert("로그인이 필요합니다.");
-  const ref = doc(db, "guildwars", selectedDay, "heroVotes", heroId.toString());
-
-  const snap = await getDoc(ref);
-  if (!snap.exists()) {
-    await setDoc(ref, {
-      heroId,
-      likes: [user.uid],
-      createdAt: serverTimestamp(),
+    return highlighted;
+  };
+  // 슬롯 클릭 시 영웅 선택
+  const handleSelectHeroSlot = (slotIndex, heroId) => {
+    const updated = [...selectedTeamHeroes];
+    updated[slotIndex] = heroId;
+    setSelectedTeamHeroes(updated);
+  };
+  // 추천 영웅 구독
+  useEffect(() => {
+    const q = collection(db, "guildwars", selectedDay, "heroVotes");
+    return onSnapshot(q, (snap) => {
+      const votes = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      setHeroVotes(votes);
     });
-  } else {
+  }, [selectedDay]);
+  // 추천 팀 구독
+  useEffect(() => {
+    const q = collection(db, "guildwars", selectedDay, "teams");
+    return onSnapshot(q, (snap) => {
+      const teams = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      setTeamVotes(teams);
+    });
+  }, [selectedDay]);
+  // 영웅 추천 등록/취소 처리
+  const handleHeroVote = async (heroId, likes = []) => {
+    if (!user) return alert("로그인이 필요합니다.");
+    const ref = doc(
+      db,
+      "guildwars",
+      selectedDay,
+      "heroVotes",
+      heroId.toString()
+    );
+
+    const snap = await getDoc(ref);
+    if (!snap.exists()) {
+      await setDoc(ref, {
+        heroId,
+        likes: [user.uid],
+        createdAt: serverTimestamp(),
+      });
+    } else {
+      await updateDoc(ref, {
+        likes: likes.includes(user.uid)
+          ? likes.filter((id) => id !== user.uid)
+          : [...likes, user.uid],
+      });
+    }
+  };
+  // 팀 추천 등록/취소 처리
+  const handleTeamVote = async (teamId, likes = []) => {
+    if (!user) return alert("로그인이 필요합니다.");
+    const ref = doc(db, "guildwars", selectedDay, "teams", teamId);
     await updateDoc(ref, {
       likes: likes.includes(user.uid)
         ? likes.filter((id) => id !== user.uid)
         : [...likes, user.uid],
     });
-  }
-};
+  };
+  // 새 추천 덱 등록 처리
+  const handleSubmitTeam = async () => {
+    if (!user) return alert("로그인이 필요합니다.");
+    if (selectedTeamHeroes.some((id) => !id))
+      return alert("빈 슬롯이 있습니다.");
 
-const handleTeamVote = async (teamId, likes = []) => {
-  if (!user) return alert("로그인이 필요합니다.");
-  const ref = doc(db, "guildwars", selectedDay, "teams", teamId);
-  await updateDoc(ref, {
-    likes: likes.includes(user.uid)
-      ? likes.filter((id) => id !== user.uid)
-      : [...likes, user.uid],
-  });
-};
+    await addDoc(collection(db, "guildwars", selectedDay, "teams"), {
+      heroes: selectedTeamHeroes,
+      likes: [],
+      authorName: user.displayName || user.email,
+      createdAt: serverTimestamp(),
+    });
 
+    setSelectedTeamHeroes([null, null, null, null, null]);
+    setActiveSlotIndex(null);
+    setShowTeamRegister(false);
+  };
 
-const handleSubmitTeam = async () => {
-  if (!user) return alert("로그인이 필요합니다.");
-  if (selectedTeamHeroes.some((id) => !id)) return alert("빈 슬롯이 있습니다.");
-
-  await addDoc(collection(db, "guildwars", selectedDay, "teams"), {
-    heroes: selectedTeamHeroes,
-    likes: [],
-    authorName: user.displayName || user.email,
-    createdAt: serverTimestamp(),
-  });
-
-  setSelectedTeamHeroes([null, null, null, null, null]);
-  setActiveSlotIndex(null);
-  setShowTeamRegister(false);
-};
-
-useEffect(() => {
-  setSelectedMonster(null);
-}, [selectedDay]);
-
-
+  useEffect(() => {
+    setSelectedMonster(null);
+  }, [selectedDay]);
 
   return (
     <div className="guildwar-page page">
@@ -208,201 +224,216 @@ useEffect(() => {
           </button>
         ))}
       </div>
-
+      {/* 라운드별 몬스터 출력 */}
       <div className="dungeon-info">
         <div className="round-list">
-        {rounds.map((round, idx) => (
-          <div className="round-card" key={idx}>
-            <h2>Round {idx + 1}</h2>
-            <div className="monster-row">
-              {round.length > 0 ? (
-                round.map((monster, mIdx) => (
-                  <div key={mIdx} className="monster-card">
-                    <img
-                      src={`/공성전/${selectedDay}/아이콘/${monster.name}(${
-                        idx + 1
-                      }라).png`}
-                      alt={monster.name}
-                      className="monster-image"
-                      onClick={() =>
-                        setSelectedMonster({ ...monster, round: idx + 1 })
-                      }
-                    />
-                  </div>
-                ))
-              ) : (
-                <div className="no-data">해당 라운드 정보 없음</div>
-              )}
+          {rounds.map((round, idx) => (
+            <div className="round-card" key={idx}>
+              <h2>Round {idx + 1}</h2>
+              <div className="monster-row">
+                {round.length > 0 ? (
+                  round.map((monster, mIdx) => (
+                    <div key={mIdx} className="monster-card">
+                      <img
+                        src={`/공성전/${selectedDay}/아이콘/${monster.name}(${
+                          idx + 1
+                        }라).png`}
+                        alt={monster.name}
+                        className="monster-image"
+                        onClick={() =>
+                          setSelectedMonster({ ...monster, round: idx + 1 })
+                        }
+                      />
+                    </div>
+                  ))
+                ) : (
+                  <div className="no-data">해당 라운드 정보 없음</div>
+                )}
+              </div>
             </div>
+          ))}
+          {/* 추천 버튼 */}
+          <div className="suggestion">
+            <button onClick={() => setShowHeroPopup(true)}>추천 영웅</button>
+            <button onClick={() => setShowTeamPopup(true)}>추천 덱</button>
           </div>
-        ))}
-        <div className="suggestion">
-        <button onClick={() => setShowHeroPopup(true)}>추천 영웅</button>
-        <button onClick={() => setShowTeamPopup(true)}>추천 덱</button>
-      </div>
-      </div>
-        {!isMobile && (
-        <div className="monster-detail-side-panel">
-          {selectedMonster ? (
-            <div className="monster-detail-popup">
-              <h3>{selectedMonster.name}</h3>
-              <img
-                src={`/공성전/${selectedDay}/아이콘/${selectedMonster.name}(${selectedMonster.round}라).png`}
-                alt={selectedMonster.name}
-                className="monster-detail-image"
-              />
-              {/* 스킬 이미지 + 설명 툴팁 (레이드 스타일) */}
-                  <div className="guildwar-skill-list">
-                    {[1, 2, 3, 4].map((n) => {
-                      const skillData =
-                        siegeSkillData?.[selectedDay]?.[selectedMonster.name]?.[
-                          selectedMonster.round
-                        ]?.[n - 1];
-                      if (!skillData) return null;
-
-                      const skillList = Array.isArray(skillData)
-                        ? skillData
-                        : [skillData];
-
-                      return (
-                        <div className="guildwar-skill-block" key={n}>
-                          <img
-                            src={`/공성전/${selectedDay}/스킬/${selectedMonster.name}-${n}.png`}
-                            alt={`${selectedMonster.name} 스킬${n}`}
-                            className="skill-image"
-                            onError={(e) => (e.target.style.display = "none")}
-                            style={{ marginBottom: "8px" }}
-                          />
-                          <div className="skill-des">
-                            {skillList.map((skill, i) => (
-                              <div key={i}>
-                                {skill.name && <strong>{skill.name}</strong>}
-                                {skill.target && (
-                                  <div
-                                    className="target"
-                                    style={{
-                                      color:
-                                        skill.detail === "버프"
-                                          ? "#00ccff"
-                                          : skill.detail === "공격"
-                                          ? "#ff3300"
-                                          : "#ffcc00",
-                                    }}
-                                  >
-                                    {skill.target}
-                                  </div>
-                                )}
-                                {Array.isArray(skill.description)
-                                  ? skill.description.map((line, j) => (
-                                      <div
-                                        className="line"
-                                        key={j}
-                                        dangerouslySetInnerHTML={{
-                                          __html: highlightKeywords(line),
-                                        }}
-                                      />
-                                    ))
-                                  : skill.description && (
-                                      <div
-                                        className="line"
-                                        dangerouslySetInnerHTML={{
-                                          __html: highlightKeywords(
-                                            skill.description
-                                          ),
-                                        }}
-                                      />
-                                    )}
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-            </div>
-          ) : (
-            <div className="monster-detail-placeholder">몬스터를 클릭해 상세 정보를 확인하세요</div>
-          )}
         </div>
-      )}
+        {/* 데스크탑용 스킬 정보 사이드 패널 */}
+        {!isMobile && (
+          <div className="monster-detail-side-panel">
+            {selectedMonster ? (
+              <div className="monster-detail-popup">
+                <h3>{selectedMonster.name}</h3>
+                <img
+                  src={`/공성전/${selectedDay}/아이콘/${selectedMonster.name}(${selectedMonster.round}라).png`}
+                  alt={selectedMonster.name}
+                  className="monster-detail-image"
+                />
+                {/* 스킬 이미지 + 설명 툴팁 (레이드 스타일) */}
+                <div className="guildwar-skill-list">
+                  {[1, 2, 3, 4].map((n) => {
+                    const skillData =
+                      siegeSkillData?.[selectedDay]?.[selectedMonster.name]?.[
+                        selectedMonster.round
+                      ]?.[n - 1];
+                    if (!skillData) return null;
+
+                    const skillList = Array.isArray(skillData)
+                      ? skillData
+                      : [skillData];
+
+                    return (
+                      <div className="guildwar-skill-block" key={n}>
+                        <img
+                          src={`/공성전/${selectedDay}/스킬/${selectedMonster.name}-${n}.png`}
+                          alt={`${selectedMonster.name} 스킬${n}`}
+                          className="skill-image"
+                          onError={(e) => (e.target.style.display = "none")}
+                          style={{ marginBottom: "8px" }}
+                        />
+                        <div className="skill-des">
+                          {skillList.map((skill, i) => (
+                            <div key={i}>
+                              {skill.name && <strong>{skill.name}</strong>}
+                              {skill.target && (
+                                <div
+                                  className="target"
+                                  style={{
+                                    color:
+                                      skill.detail === "버프"
+                                        ? "#00ccff"
+                                        : skill.detail === "공격"
+                                        ? "#ff3300"
+                                        : "#ffcc00",
+                                  }}
+                                >
+                                  {skill.target}
+                                </div>
+                              )}
+                              {Array.isArray(skill.description)
+                                ? skill.description.map((line, j) => (
+                                    <div
+                                      className="line"
+                                      key={j}
+                                      dangerouslySetInnerHTML={{
+                                        __html: highlightKeywords(line),
+                                      }}
+                                    />
+                                  ))
+                                : skill.description && (
+                                    <div
+                                      className="line"
+                                      dangerouslySetInnerHTML={{
+                                        __html: highlightKeywords(
+                                          skill.description
+                                        ),
+                                      }}
+                                    />
+                                  )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ) : (
+              <div className="monster-detail-placeholder">
+                몬스터를 클릭해 상세 정보를 확인하세요
+              </div>
+            )}
+          </div>
+        )}
       </div>
       {/* 팝업 */}
       {selectedMonster && isMobile && (
-        <div className="monster-detail-popup-overlay" onClick={() => setSelectedMonster(null)}>
-          <div className="monster-detail-popup" onClick={(e) => e.stopPropagation()}>
-            <button className="close-button" onClick={() => setSelectedMonster(null)}>✕</button>
+        <div
+          className="monster-detail-popup-overlay"
+          onClick={() => setSelectedMonster(null)}
+        >
+          <div
+            className="monster-detail-popup"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className="close-button"
+              onClick={() => setSelectedMonster(null)}
+            >
+              ✕
+            </button>
             {/* 스킬 이미지 + 설명 툴팁 (레이드 스타일) */}
-                  <div className="guildwar-skill-list">
-                    {[1, 2, 3, 4].map((n) => {
-                      const skillData =
-                        siegeSkillData?.[selectedDay]?.[selectedMonster.name]?.[
-                          selectedMonster.round
-                        ]?.[n - 1];
-                      if (!skillData) return null;
+            <div className="guildwar-skill-list">
+              {[1, 2, 3, 4].map((n) => {
+                const skillData =
+                  siegeSkillData?.[selectedDay]?.[selectedMonster.name]?.[
+                    selectedMonster.round
+                  ]?.[n - 1];
+                if (!skillData) return null;
 
-                      const skillList = Array.isArray(skillData)
-                        ? skillData
-                        : [skillData];
+                const skillList = Array.isArray(skillData)
+                  ? skillData
+                  : [skillData];
 
-                      return (
-                        <div className="guildwar-skill-block" key={n}>
-                          <img
-                            src={`/공성전/${selectedDay}/스킬/${selectedMonster.name}-${n}.png`}
-                            alt={`${selectedMonster.name} 스킬${n}`}
-                            className="skill-image"
-                            onError={(e) => (e.target.style.display = "none")}
-                            style={{ marginBottom: "8px" }}
-                          />
-                          <div className="skill-des">
-                            {skillList.map((skill, i) => (
-                              <div key={i}>
-                                {skill.name && <strong>{skill.name}</strong>}
-                                {skill.target && (
-                                  <div
-                                    className="target"
-                                    style={{
-                                      color:
-                                        skill.detail === "버프"
-                                          ? "#00ccff"
-                                          : skill.detail === "공격"
-                                          ? "#ff3300"
-                                          : "#ffcc00",
-                                    }}
-                                  >
-                                    {skill.target}
-                                  </div>
-                                )}
-                                {Array.isArray(skill.description)
-                                  ? skill.description.map((line, j) => (
-                                      <div
-                                        className="line"
-                                        key={j}
-                                        dangerouslySetInnerHTML={{
-                                          __html: highlightKeywords(line),
-                                        }}
-                                      />
-                                    ))
-                                  : skill.description && (
-                                      <div
-                                        className="line"
-                                        dangerouslySetInnerHTML={{
-                                          __html: highlightKeywords(
-                                            skill.description
-                                          ),
-                                        }}
-                                      />
-                                    )}
-                              </div>
-                            ))}
-                          </div>
+                return (
+                  <div className="guildwar-skill-block" key={n}>
+                    <img
+                      src={`/공성전/${selectedDay}/스킬/${selectedMonster.name}-${n}.png`}
+                      alt={`${selectedMonster.name} 스킬${n}`}
+                      className="skill-image"
+                      onError={(e) => (e.target.style.display = "none")}
+                      style={{ marginBottom: "8px" }}
+                    />
+                    <div className="skill-des">
+                      {skillList.map((skill, i) => (
+                        <div key={i}>
+                          {skill.name && <strong>{skill.name}</strong>}
+                          {skill.target && (
+                            <div
+                              className="target"
+                              style={{
+                                color:
+                                  skill.detail === "버프"
+                                    ? "#00ccff"
+                                    : skill.detail === "공격"
+                                    ? "#ff3300"
+                                    : "#ffcc00",
+                              }}
+                            >
+                              {skill.target}
+                            </div>
+                          )}
+                          {Array.isArray(skill.description)
+                            ? skill.description.map((line, j) => (
+                                <div
+                                  className="line"
+                                  key={j}
+                                  dangerouslySetInnerHTML={{
+                                    __html: highlightKeywords(line),
+                                  }}
+                                />
+                              ))
+                            : skill.description && (
+                                <div
+                                  className="line"
+                                  dangerouslySetInnerHTML={{
+                                    __html: highlightKeywords(
+                                      skill.description
+                                    ),
+                                  }}
+                                />
+                              )}
                         </div>
-                      );
-                    })}
+                      ))}
+                    </div>
                   </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       )}
-
+      {/* 추천 영웅 팝업 */}
       {showHeroPopup && (
         <div className="hero-popup-overlay">
           <div className="hero-popup">
@@ -489,7 +520,7 @@ useEffect(() => {
           </div>
         </div>
       )}
-      
+      {/* 추천 덱 팝업 */}
       {showTeamPopup && (
         <div className="team-popup-overlay">
           <div className="team-popup">
