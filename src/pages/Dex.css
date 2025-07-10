@@ -330,6 +330,10 @@
     font-size: 0.5rem;
     padding: 2px 4px;
   }
+
+  .search-bottom {
+    flex-direction: column;
+  }
 }
 
 @media (max-width: 350px) {
