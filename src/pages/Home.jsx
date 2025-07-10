@@ -130,17 +130,17 @@ export default function Home() {
       end: "2025-05-15",
     },
     {
-      title: "제이브, 레이첼, 바네사 영웅 픽업 소환 및 성장 이벤트 안내",
+      title: "제이브 & 레이첼 & 바네사 영웅 픽업 소환 및 성장 이벤트",
       start: "2025-05-15",
       end: "2025-05-28",
     },
     {
-      title: "태오/타카 업데이트",
+      title: "태오 & 타카 업데이트",
       start: "2025-05-29",
       end: "2025-05-29",
     },
     {
-      title: "태오, 타카 영웅 픽업 소환 및 영웅 성장 이벤트",
+      title: "태오 & 타카 영웅 픽업 소환 및 영웅 성장 이벤트",
       start: "2025-05-29",
       end: "2025-06-11",
     },
@@ -175,7 +175,7 @@ export default function Home() {
       end: "2025-07-09",
     },
     {
-      title: "멜키르 픽업 소환 및 영웅 성장 이벤트 안내",
+      title: "멜키르 픽업 소환 및 영웅 성장 이벤트",
       start: "2025-06-26",
       end: "2025-07-09",
     },
@@ -183,6 +183,31 @@ export default function Home() {
       title: "길드전 대비! 레이드 장비 추가 획득 이벤트",
       start: "2025-06-26",
       end: "2025-07-09",
+    },
+    {
+      title: "린 & 카르마 업데이트",
+      start: "2025-07-10",
+      end: "2025-07-10",
+    },
+    {
+      title: "린 & 카르마 시나리오 이벤트 [침묵하는 뿔 나팔과 길 잃은 전사들]",
+      start: "2025-07-10",
+      end: "2025-07-24",
+    },
+    {
+      title: "린 & 카르마 픽업 소환 및 영웅 성장 이벤트",
+      start: "2025-07-10",
+      end: "2025-07-24",
+    },
+    {
+      title: "세나의 달 기념! 대보물시대 이벤트",
+      start: "2025-07-10",
+      end: "2025-08-07",
+    },
+    {
+      title: "세나의 달 기념 대보물시대 출석 이벤트",
+      start: "2025-07-10",
+      end: "2025-08-21",
     },
   ]);
   // 날짜 포맷 문자열 변환
@@ -267,6 +292,11 @@ export default function Home() {
           <section className="home-panel">
             <h2>업데이트 게시판</h2>
             <ul>
+              <li>
+                <a href="https://game.naver.com/lounge/sena_rebirth/board/detail/6332179">
+                  [2025-07-10]업데이트 내역
+                </a>
+              </li>
               <li>
                 <a href="https://game.naver.com/lounge/sena_rebirth/board/detail/6254363">
                   [2025-06-26]업데이트 내역
