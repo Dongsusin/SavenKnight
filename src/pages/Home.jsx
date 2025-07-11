@@ -322,7 +322,7 @@ export default function Home() {
           </section>
           {/* 쿠폰 코드 목록 */}
           <section className="home-panel">
-            <h2>대보물 시대</h2>
+            <h2>대보물 시대 (07/10~8/7)</h2>
             <CouponBoxGrid />
           </section>
           {/* 효과별 검색 버튼 */}
