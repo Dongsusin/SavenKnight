@@ -263,6 +263,9 @@ export default function HeroDetail() {
       "집중 공격",
       "마력 억류",
       "축복",
+      "혼란",
+      "공격력 비례 치명타 확률 증가",
+      "인고",
     ];
 
     let highlighted = text;

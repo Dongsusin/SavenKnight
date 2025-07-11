@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import HeroSlide from "../components/HeroSlide";
 import PetSlide from "../components/PetSlide";
+import CouponBoxGrid from "../components/CouponBoxGrid";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db } from "../firebase";
 import { doc, getDoc, setDoc, onSnapshot } from "firebase/firestore";
@@ -321,33 +322,8 @@ export default function Home() {
           </section>
           {/* 쿠폰 코드 목록 */}
           <section className="home-panel">
-            <h2>쿠폰 코드</h2>
-            <ul className="coupon-list">
-              <li>
-                <div className="coupon-code">SENARESAMEWAY</div>
-                <div className="coupon-reward">열쇠 상자 3개</div>
-              </li>
-              <li>
-                <div className="coupon-code">SENAREYOUNGLAEGI</div>
-                <div className="coupon-reward">골드 30만</div>
-              </li>
-              <li>
-                <div className="coupon-code">SENAREGSIK</div>
-                <div className="coupon-reward">희귀 영웅 소환권 1개</div>
-              </li>
-              <li>
-                <div className="coupon-code">SENAREMOOVING</div>
-                <div className="coupon-reward">진화 재료 상자(중) 30개</div>
-              </li>
-              <li>
-                <div className="coupon-code">SORRY4WAITING</div>
-                <div className="coupon-reward">진화 재료 상자(상) 30개</div>
-              </li>
-              <li>
-                <div className="coupon-code">SEVENKNIGHTSFOREVER</div>
-                <div className="coupon-reward">희귀 영웅 선택권 1개 </div>
-              </li>
-            </ul>
+            <h2>대보물 시대</h2>
+            <CouponBoxGrid />
           </section>
           {/* 효과별 검색 버튼 */}
           <section className="home-panel">
