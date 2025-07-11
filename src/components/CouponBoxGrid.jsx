@@ -31,7 +31,7 @@ export default function CouponBoxGrid() {
     46: "RELEASEPET",
     48: "NOHOSCHRONICLE",
     49: "UPDATES",
-    50: "HANKYOU",
+    50: "THANKYOU",
     51: "SENAHAJASENA",
     55: "FORTAGNIA",
     56: "YUISSONG",
