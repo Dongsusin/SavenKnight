@@ -266,6 +266,7 @@ export default function HeroDetail() {
       "혼란",
       "공격력 비례 치명타 확률 증가",
       "인고",
+      "폭탄",
     ];
 
     let highlighted = text;
@@ -1531,7 +1532,6 @@ export default function HeroDetail() {
                   height="315"
                   src={hero.youtube}
                   title="YouTube video player"
-                  frameBorder="0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                 ></iframe>
