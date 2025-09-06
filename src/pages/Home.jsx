@@ -1,15 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import HeroSlide from "../components/HeroSlide";
 import PetSlide from "../components/PetSlide";
-import CouponBoxGrid from "../components/CouponBoxGrid";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, db } from "../firebase";
-import { doc, getDoc, setDoc, onSnapshot } from "firebase/firestore";
-import { collection, query, orderBy, limit } from "firebase/firestore";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "./Home.css";
+
 // 효과별 검색 키워드
 const ABILITY_SEARCH_KEYWORDS = [
   "물리 공격력 증가",
@@ -118,11 +114,10 @@ const ABILITY_SEARCH_KEYWORDS = [
 
 export default function Home() {
   const navigate = useNavigate();
-  const [user] = useAuthState(auth);
-  // 추천 수 관리용 상태
-  const [likes] = useState({});
+
   // 날짜 선택 상태
   const [selectedDate, setSelectedDate] = useState(new Date());
+
   // 고정 이벤트 목록
   const [events] = useState([
     {
@@ -210,7 +205,58 @@ export default function Home() {
       start: "2025-07-10",
       end: "2025-08-21",
     },
+    {
+      title: "콜트 업데이트",
+      start: "2025-07-24",
+      end: "2025-07-24",
+    },
+    {
+      title: "콜트 픽업 소환 및 영웅 성장 이벤트",
+      start: "2025-07-24",
+      end: "2025-08-08",
+    },
+    {
+      title: "플라튼 업데이트",
+      start: "2025-08-07",
+      end: "2025-08-07",
+    },
+    {
+      title: "플라튼 소환 및 영웅 성장 이벤트",
+      start: "2025-08-07",
+      end: "2025-08-21",
+    },
+    {
+      title: "비스킷 업데이트",
+      start: "2025-08-21",
+      end: "2025-09-04",
+    },
+    {
+      title: "비스킷 소환 및 영웅 성장 이벤트",
+      start: "2025-08-21",
+      end: "2025-09-04",
+    },
+    {
+      title: "비스킷 시나리오 이벤트 [물려받은 대장간이 폐업 위기?!]",
+      start: "2025-08-21",
+      end: "2025-09-04",
+    },
+    {
+      title: "✨100일 기념✨ 이벤트",
+      start: "2025-08-21",
+      end: "2025-09-18",
+    },
+    {
+      title: "데이지 & 오를리 업데이트",
+      start: "2025-09-04",
+      end: "2025-09-18",
+    },
+    {
+      title: "데이지 & 오를리 소환 및 영웅 성장 이벤트",
+      start: "2025-09-04",
+      end: "2025-09-18",
+    },
   ]);
+
   // 날짜 포맷 문자열 변환
   const formatDate = (date) => {
     const year = date.getFullYear();
@@ -218,51 +264,15 @@ export default function Home() {
     const day = date.getDate().toString().padStart(2, "0");
     return `${year}-${month}-${day}`;
   };
+
   // 특정 날짜 이벤트 리스트
   const getEventsForDate = (date) => {
     const target = formatDate(date);
     return events.filter((e) => e.start <= target && target <= e.end);
   };
-  // 추천 버튼 클릭
-  const handleLike = async (id) => {
-    if (!user) return alert("로그인이 필요합니다.");
 
-    const ref = doc(db, "likes", id.toString());
-    const snap = await getDoc(ref);
-    const data = snap.exists() ? snap.data() : { count: 0, users: [] };
-    const alreadyLiked = data.users.includes(user.uid);
-
-    const updated = alreadyLiked
-      ? {
-          count: Math.max(0, data.count - 1),
-          users: data.users.filter((uid) => uid !== user.uid),
-        }
-      : {
-          count: data.count + 1,
-          users: [...data.users, user.uid],
-        };
-
-    await setDoc(ref, updated);
-  };
   // 검색 키워드 입력 상태
   const [searchKeyword, setSearchKeyword] = useState("");
-  // 추천 수 1위 팀 정보 상태
-  const [topTeam, setTopTeam] = useState(null);
-
-  useEffect(() => {
-    const q = query(
-      collection(db, "teamRecommendations"),
-      orderBy("likes", "desc"),
-      limit(1)
-    );
-
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const list = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      setTopTeam(list[0] || null);
-    });
-
-    return () => unsubscribe();
-  }, []);
 
   return (
     <div className="page home-layout">
@@ -294,6 +304,26 @@ export default function Home() {
             <h2>업데이트 게시판</h2>
             <ul>
               <li>
+                <a href="https://game.naver.com/lounge/sena_rebirth/board/detail/6619898">
+                  [2025-08-21]업데이트 내역
+                </a>
+              </li>
+              <li>
+                <a href="https://game.naver.com/lounge/sena_rebirth/board/detail/6554778">
+                  [2025-08-21]업데이트 내역
+                </a>
+              </li>
+              <li>
+                <a href="https://game.naver.com/lounge/sena_rebirth/board/detail/6493269">
+                  [2025-08-07]업데이트 내역
+                </a>
+              </li>
+              <li>
+                <a href="https://game.naver.com/lounge/sena_rebirth/board/detail/6418126">
+                  [2025-07-24]업데이트 내역
+                </a>
+              </li>
+              <li>
                 <a href="https://game.naver.com/lounge/sena_rebirth/board/detail/6332179">
                   [2025-07-10]업데이트 내역
                 </a>
@@ -319,11 +349,6 @@ export default function Home() {
                 </a>
               </li>
             </ul>
-          </section>
-          {/* 쿠폰 코드 목록 */}
-          <section className="home-panel">
-            <h2>대보물 시대 (07/10~8/7)</h2>
-            <CouponBoxGrid />
           </section>
           {/* 효과별 검색 버튼 */}
           <section className="home-panel">
@@ -412,7 +437,7 @@ export default function Home() {
                 더보기
               </p>
             </div>
-            <HeroSlide likes={likes} handleLike={handleLike} user={user} />
+            <HeroSlide />
           </section>
           {/* 펫 도감 슬라이드 */}
           <section className="home-panel">
@@ -426,52 +451,8 @@ export default function Home() {
               </p>
             </div>
             <div>
-              <PetSlide likes={likes} handleLike={handleLike} user={user} />
+              <PetSlide />
             </div>
-          </section>
-          {/* 인기 팀 추천 */}
-          <section className="home-panel">
-            <div className="top">
-              <h3>인기 팀</h3>
-              <p className="more-link" onClick={() => navigate("/team")}>
-                팀 편성하기
-              </p>
-            </div>
-
-            {topTeam ? (
-              <>
-                <p>
-                  추천 수: <strong>{topTeam.likes?.length ?? 0}</strong> / 진형:{" "}
-                  {topTeam.formation} Lv.{topTeam.formationLevel}
-                </p>
-                <div className="top-team-preview">
-                  <div className="home-mini-team-preview">
-                    {topTeam.team.map((member, idx) => (
-                      <div key={idx} className="home-mini-slot">
-                        {member ? (
-                          <img
-                            src={`/도감/${member.group}/아이콘/${member.name}.png`}
-                            alt={member.name}
-                          />
-                        ) : (
-                          <div className="empty-slot">+</div>
-                        )}
-                      </div>
-                    ))}
-                    {topTeam.pet && (
-                      <div className="home-mini-slot">
-                        <img
-                          src={`/도감/펫/아이콘/${topTeam.pet.name}.png`}
-                          alt={topTeam.pet.name}
-                        />
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </>
-            ) : (
-              <p>추천된 팀이 없습니다.</p>
-            )}
           </section>
         </main>
 

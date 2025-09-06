@@ -1,6 +1,4 @@
-import { auth, provider } from "../firebase";
-import { signInWithPopup, signOut } from "firebase/auth";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import "./Header.css";
 
@@ -8,15 +6,6 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
   const closeMenu = () => setMenuOpen(false);
-
-  const handleLogin = async () => {
-    try {
-      const result = await signInWithPopup(auth, provider);
-      setUser(result.user);
-    } catch (err) {
-      console.error("로그인 실패", err);
-    }
-  };
 
   const handleLogout = () => {
     signOut(auth);
@@ -41,22 +30,6 @@ export default function Header() {
         </button>
 
         <nav className={`nav-right ${menuOpen ? "open" : ""}`}>
-          <div className="auth-buttons mobile-only">
-            {user ? (
-              <div className="user-box">
-                <img src={user.photoURL} alt="user" className="user-avatar" />
-                <span className="user-name">{user.displayName}</span>
-                <button className="logout-button" onClick={handleLogout}>
-                  로그아웃
-                </button>
-              </div>
-            ) : (
-              <button className="login-button" onClick={handleLogin}>
-                로그인
-              </button>
-            )}
-          </div>
-
           <NavLink to="/" onClick={closeMenu}>
             홈
           </NavLink>
@@ -75,26 +48,7 @@ export default function Header() {
           <NavLink to="/summon" onClick={closeMenu}>
             소환
           </NavLink>
-          <NavLink to="/team" onClick={closeMenu}>
-            팀 편성
-          </NavLink>
         </nav>
-
-        <div className="auth-buttons desktop-only">
-          {user ? (
-            <div className="user-box">
-              <img src={user.photoURL} alt="user" className="user-avatar" />
-              <span className="user-name">{user.displayName}</span>
-              <button className="logout-button" onClick={handleLogout}>
-                로그아웃
-              </button>
-            </div>
-          ) : (
-            <button className="login-button" onClick={handleLogin}>
-              로그인
-            </button>
-          )}
-        </div>
       </header>
 
       {/* 오버레이 추가 */}

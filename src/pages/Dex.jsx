@@ -3,9 +3,6 @@ import { Link } from "react-router-dom";
 import heroes from "../data/heroes.json";
 import pets from "../data/pets.json";
 import { useLocation } from "react-router-dom";
-import { auth, db } from "../firebase";
-import { doc, getDoc, setDoc, onSnapshot } from "firebase/firestore";
-import { useAuthState } from "react-firebase-hooks/auth";
 import "./Dex.css";
 
 const GROUPS = ["스페셜", "일반", "아소드", "아이사", "기타", "펫", "검색"];
@@ -149,10 +146,7 @@ export default function Dex() {
   const [selectedGroup, setSelectedGroup] = useState(initialGroup);
   // 효과 검색 키워드 상태
   const [selectedAbility, setSelectedAbility] = useState(initialAbility);
-  const [user] = useAuthState(auth);
   // 추천 수 상태: 영웅 / 펫
-  const [likes, setLikes] = useState({});
-  const [petLikes, setPetLikes] = useState({});
   const [searchName, setSearchName] = useState(initialSearchName);
 
   const nameFilteredHeroes = heroes.filter((hero) =>
@@ -184,86 +178,6 @@ export default function Dex() {
         return effects.some((text) => text.includes(selectedAbility));
       })
     : [];
-  // Firestore에서 추천 수 실시간 구독
-  useEffect(() => {
-    const heroUnsubs = heroes.map((hero) => {
-      const ref = doc(db, "likes", hero.id.toString());
-      return onSnapshot(ref, (snap) => {
-        setLikes((prev) => ({
-          ...prev,
-          [hero.id]: snap.exists() ? snap.data() : { count: 0, users: [] },
-        }));
-      });
-    });
-
-    const petUnsubs = pets.map((pet) => {
-      const ref = doc(db, "likes", pet.id.toString());
-      return onSnapshot(ref, (snap) => {
-        setLikes((prev) => ({
-          ...prev,
-          [pet.id]: snap.exists() ? snap.data() : { count: 0, users: [] },
-        }));
-      });
-    });
-
-    const petLikeUnsubs = pets.map((pet) => {
-      const ref = doc(db, "petLikes", pet.id.toString());
-      return onSnapshot(ref, (snap) => {
-        setPetLikes((prev) => ({
-          ...prev,
-          [pet.id]: snap.exists() ? snap.data() : { count: 0, users: [] },
-        }));
-      });
-    });
-
-    return () => {
-      [...heroUnsubs, ...petUnsubs, ...petLikeUnsubs].forEach((unsub) =>
-        unsub()
-      );
-    };
-  }, []);
-  // 영웅 추천 클릭 시 처리
-  const handleLike = async (heroId) => {
-    if (!user) return alert("로그인이 필요합니다.");
-
-    const ref = doc(db, "likes", heroId.toString());
-    const snap = await getDoc(ref);
-    const data = snap.exists() ? snap.data() : { count: 0, users: [] };
-    const alreadyLiked = data.users.includes(user.uid);
-
-    const updated = alreadyLiked
-      ? {
-          count: Math.max(0, data.count - 1),
-          users: data.users.filter((uid) => uid !== user.uid),
-        }
-      : {
-          count: data.count + 1,
-          users: [...data.users, user.uid],
-        };
-
-    await setDoc(ref, updated);
-  };
-  // 펫 추천 클릭 시 처리
-  const handlePetLike = async (petId) => {
-    if (!user) return alert("로그인이 필요합니다.");
-
-    const ref = doc(db, "petLikes", petId.toString());
-    const snap = await getDoc(ref);
-    const data = snap.exists() ? snap.data() : { count: 0, users: [] };
-    const alreadyLiked = data.users.includes(user.uid);
-
-    const updated = alreadyLiked
-      ? {
-          count: Math.max(0, data.count - 1),
-          users: data.users.filter((uid) => uid !== user.uid),
-        }
-      : {
-          count: data.count + 1,
-          users: [...data.users, user.uid],
-        };
-
-    await setDoc(ref, updated);
-  };
 
   return (
     <div className="page hero-dex">
@@ -340,20 +254,6 @@ export default function Dex() {
                       {nameFilteredHeroes.map((hero) => (
                         <Link to={`/hero/${hero.name}`} key={hero.id}>
                           <div className="hero-card">
-                            <button
-                              className={`like-button ${
-                                user &&
-                                likes[hero.id]?.users?.includes(user.uid)
-                                  ? "liked"
-                                  : ""
-                              }`}
-                              onClick={(e) => {
-                                e.preventDefault();
-                                handleLike(hero.id);
-                              }}
-                            >
-                              추천 {likes[hero.id]?.count || 0}
-                            </button>
                             <img
                               src={`/도감/${hero.group}/아이콘/${hero.name}.png`}
                               alt={hero.name}
@@ -369,20 +269,6 @@ export default function Dex() {
                             alt={pet.name}
                             className="image"
                           />
-                          <button
-                            className={`like-button ${
-                              user &&
-                              petLikes[pet.id]?.users?.includes(user.uid)
-                                ? "liked"
-                                : ""
-                            }`}
-                            onClick={(e) => {
-                              e.preventDefault();
-                              handlePetLike(pet.id);
-                            }}
-                          >
-                            추천 {petLikes[pet.id]?.count || 0}
-                          </button>
                         </div>
                       ))}
                       {nameFilteredHeroes.length === 0 &&
@@ -399,19 +285,6 @@ export default function Dex() {
                     {filteredHeroes.map((hero) => (
                       <Link to={`/hero/${hero.name}`} key={hero.id}>
                         <div className="hero-card">
-                          <button
-                            className={`like-button ${
-                              user && likes[hero.id]?.users?.includes(user.uid)
-                                ? "liked"
-                                : ""
-                            }`}
-                            onClick={(e) => {
-                              e.preventDefault();
-                              handleLike(hero.id);
-                            }}
-                          >
-                            추천 {likes[hero.id]?.count || 0}
-                          </button>
                           <img
                             src={`/도감/${hero.group}/아이콘/${hero.name}.png`}
                             alt={hero.name}
@@ -450,25 +323,6 @@ export default function Dex() {
                           alt={entry.name}
                           className="image"
                         />
-                        <button
-                          className={`like-button ${
-                            user &&
-                            petLikes[entry.id]?.users?.includes(user.uid)
-                              ? "liked"
-                              : ""
-                          }`}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            if (!user) {
-                              alert("로그인이 필요합니다.");
-                              return;
-                            }
-                            handlePetLike(entry.id);
-                          }}
-                        >
-                          추천 {petLikes[entry.id]?.count || 0}
-                        </button>
                         {skillPath && (
                           <div className="pet-skill-tooltip-wrapper">
                             <img
@@ -503,24 +357,6 @@ export default function Dex() {
                     ) : (
                       <Link to={`/hero/${entry.name}`} key={entry.id}>
                         <div className="hero-card">
-                          <button
-                            className={`like-button ${
-                              user && likes[entry.id]?.users?.includes(user.uid)
-                                ? "liked"
-                                : ""
-                            }`}
-                            onClick={(e) => {
-                              e.preventDefault();
-                              if (!user) {
-                                alert("로그인이 필요합니다.");
-                                return;
-                              }
-                              handleLike(entry.id);
-                            }}
-                          >
-                            추천 {likes[entry.id]?.count || 0}
-                          </button>
-
                           <img
                             src={imagePath}
                             alt={entry.name}

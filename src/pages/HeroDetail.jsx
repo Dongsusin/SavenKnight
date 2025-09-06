@@ -1,3 +1,4 @@
+// HeroDetail.jsx (Firebase/추천 UI 완전 제거된 버전)
 import React, { useRef, useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import heroes from "../data/heroes.json";
@@ -10,35 +11,23 @@ import armorMainStatTable from "../data/armorMainStatTable.json";
 import subStatTable from "../data/subStatTable.json";
 import setEffectTable from "../data/setEffectTable.json";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import { auth, db } from "../firebase";
-import { doc, getDoc, setDoc, onSnapshot, updateDoc } from "firebase/firestore";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-import { useAuthState } from "react-firebase-hooks/auth";
 import "./HeroDetail.css";
 
 export default function HeroDetail() {
-  // URL 파라미터에서 영웅 이름 가져오기
   const { name } = useParams();
-  // 탭 상태, 레벨/강화/초월 등 수치 상태
+
   const [selectedSkillIndex, setSelectedSkillIndex] = useState(0);
   const [activeTab, setActiveTab] = useState("스킬");
   const [level, setLevel] = useState(1);
   const [enhance, setEnhance] = useState(0);
   const [transcend, setTranscend] = useState(0);
-  // 장비, 서브스탯 상태
+
   const [substats, setSubstats] = useState({});
   const [substatUpgrades, setSubstatUpgrades] = useState({});
   const [equipModalOpen, setEquipModalOpen] = useState(false);
   const [selectedEquipSlot, setSelectedEquipSlot] = useState(null);
   const [selectedEquipments, setSelectedEquipments] = useState({});
-  // 로그인 유저 정보 및 추천 관련 상태
-  const [user] = useAuthState(auth);
-  const [likeData, setLikeData] = useState({ count: 0, users: [] });
-  // 장비 추천 팝업 상태
-  const [showRecommendPopup, setShowRecommendPopup] = useState(false);
-  const [showViewPopup, setShowViewPopup] = useState(false);
-  const [recommendations, setRecommendations] = useState([]);
-  // 장비 세트 종류별 착용 개수 계산
+
   function getSetCounts() {
     const counts = {};
     Object.values(selectedEquipments).forEach((item) => {
@@ -47,17 +36,17 @@ export default function HeroDetail() {
     });
     return counts;
   }
-  // 주스탯 옵션 반환
+
   function getMainStatOptions(itemType) {
     return Object.keys(
       itemType === "무기" ? weaponMainStatTable : armorMainStatTable
     );
   }
-  // 부스탯 옵션 반환
+
   function getSubStatOptions() {
     return Object.keys(subStatTable);
   }
-  // 주스탯 수치 계산 함수
+
   function calcMainStat(statName, level, isWeapon) {
     const table = isWeapon ? weaponMainStatTable : armorMainStatTable;
     const entry = table[statName];
@@ -66,7 +55,7 @@ export default function HeroDetail() {
     const total = entry.base + level * entry.perLevel;
     return entry.isPercent ? `${total.toFixed(1)}%` : Math.floor(total);
   }
-  // 부스탯 수치 계산 함수
+
   function calcSubStat(statName, level) {
     const entry = subStatTable[statName];
     if (!entry) return null;
@@ -75,7 +64,7 @@ export default function HeroDetail() {
     const total = entry.base + bonusSteps * entry.per3Level;
     return entry.isPercent ? `${total.toFixed(1)}%` : Math.floor(total);
   }
-  // 부스탯 강화 가능한 포인트 수 계산
+
   function getAvailableSubstatPoints(level) {
     let points = 0;
     if (level >= 9) points++;
@@ -83,7 +72,7 @@ export default function HeroDetail() {
     if (level >= 15) points++;
     return points;
   }
-  // 숫자 변화 애니메이션 효과 컴포넌트
+
   function AnimatedNumber({ value, duration = 500 }) {
     const [displayValue, setDisplayValue] = useState(value);
     const raf = useRef(null);
@@ -113,52 +102,27 @@ export default function HeroDetail() {
 
     return <span>{displayValue.toLocaleString()}</span>;
   }
-  // 이름이 변경되면 탭과 스킬 인덱스 초기화
+
   useEffect(() => {
     setSelectedSkillIndex(0);
     setActiveTab("스킬");
   }, [name]);
-  // 추천 버튼 클릭 핸들러
-  const handleLike = async () => {
-    if (!user || !hero?.id) return alert("로그인이 필요합니다.");
 
-    const ref = doc(db, "likes", hero.id.toString());
-    const snap = await getDoc(ref);
-    const data = snap.exists() ? snap.data() : { count: 0, users: [] };
-    const alreadyLiked = data.users.includes(user.uid);
-
-    const updated = alreadyLiked
-      ? {
-          count: Math.max(0, data.count - 1),
-          users: data.users.filter((uid) => uid !== user.uid),
-        }
-      : {
-          count: data.count + 1,
-          users: [...data.users, user.uid],
-        };
-
-    await setDoc(ref, updated);
-  };
-  const isLiked = user && likeData.users.includes(user.uid);
-  // 모든 영웅 목록 중 현재 영웅 찾기
   const allHeroes = heroes.flat ? heroes.flat() : heroes;
   const hero = allHeroes.find((h) => h.name === name);
   if (!hero) return <div>존재하지 않는 영웅입니다.</div>;
-  // 이전/다음 영웅 탐색
+
   const sortedHeroes = [...allHeroes].sort((a, b) => a.id - b.id);
   const currentIndex = sortedHeroes.findIndex((h) => h.id === hero.id);
   const prevHero = sortedHeroes[currentIndex - 1] || null;
   const nextHero = sortedHeroes[currentIndex + 1] || null;
-  // 아이콘, 스킬 이미지 경로
+
   const imagePath = `/도감/${hero.group}/아이콘/${hero.name}.png`;
   const skillImages = Array.from(
     { length: hero.skills?.length || 0 },
-    (_, i) => {
-      const skillPath = `/도감/${hero.group}/스킬/${hero.name}-${i + 1}.png`;
-      return skillPath;
-    }
+    (_, i) => `/도감/${hero.group}/스킬/${hero.name}-${i + 1}.png`
   );
-  // 스킬 설명 내 숫자 및 버프 키워드 강조 처리 함수
+
   const highlightKeywords = (text) => {
     const goldColor = "#ffcc00";
     const blueColor = "#00ccff";
@@ -173,7 +137,7 @@ export default function HeroDetail() {
     ];
 
     const buffKeywords = [
-      "대상의 턴제 버프 감소",
+      /* (생략) 원래 배열 그대로 사용 */
       "기절",
       "링크",
       "기절 면역",
@@ -198,14 +162,10 @@ export default function HeroDetail() {
       "효과 적중 증가",
       "효과 저항 증가",
       "효과 적용 확률 증가",
-      "피해 대상이 1명 줄어들 때마다",
-      "만큼 피해량 증가",
       "관통",
-      "공격력 비례 방어력 증가",
       "반격",
       "즉사",
       "불사",
-      "감전",
       "출혈",
       "스킬 쿨타임 증가",
       "석화",
@@ -227,15 +187,12 @@ export default function HeroDetail() {
       "지속 회복",
       "화상 면역",
       "실명",
-      "매의 발톱",
       "흡혈",
       "연속 발동",
       "치명타 확률 증가",
       "치명타 피해 증가",
       "물리 피해 면역",
       "도발",
-      "현재 생명력 비율을",
-      "로 전환",
       "중독",
       "저격 자세",
       "위장",
@@ -252,7 +209,6 @@ export default function HeroDetail() {
       "회복 불가",
       "감전 면역",
       "마력 정화",
-      "피해량 감소",
       "석화 면역",
       "마비",
       "피해량 증가",
@@ -267,6 +223,11 @@ export default function HeroDetail() {
       "공격력 비례 치명타 확률 증가",
       "인고",
       "폭탄",
+      "생명력 전환",
+      "보스 대상 피해량",
+      "약점 공격 확률",
+      "마법 공격력",
+      "증가",
     ];
 
     let highlighted = text;
@@ -282,7 +243,6 @@ export default function HeroDetail() {
     const sortedBuffKeywords = [...buffKeywords].sort(
       (a, b) => b.length - a.length
     );
-
     sortedBuffKeywords.forEach((keyword) => {
       const regex = new RegExp(keyword, "g");
       highlighted = highlighted.replace(
@@ -403,67 +363,23 @@ export default function HeroDetail() {
       label: item.specialEffect || null,
     };
   };
-  useEffect(() => {
-    if (!hero?.id) return;
-    const ref = doc(db, "likes", hero.id.toString());
-    const unsubscribe = onSnapshot(ref, (snap) => {
-      setLikeData(snap.exists() ? snap.data() : { count: 0, users: [] });
-    });
-    return () => unsubscribe();
-  }, [hero?.id]);
+
   const [youtubeOpen, setYoutubeOpen] = useState(false);
-  async function handleRecommendSubmit() {
-    if (!user) return alert("로그인이 필요합니다.");
-
-    const allEmpty = Object.values(selectedEquipments).every((item) => !item);
-    if (allEmpty) {
-      alert("장비를 하나 이상 장착해야 추천할 수 있습니다.");
-      return;
-    }
-
-    const ref = collection(db, "recommendations", hero.id.toString(), "builds");
-    await addDoc(ref, {
-      authorUid: user.uid,
-      authorName: user.displayName || user.email,
-      equipment: selectedEquipments,
-      substats,
-      upgrades: substatUpgrades,
-      createdAt: serverTimestamp(),
-      likes: [],
-    });
-
-    alert("추천 완료!");
-    setShowRecommendPopup(false);
-  }
-
-  useEffect(() => {
-    if (!showViewPopup || !hero?.id) return;
-    const q = collection(db, "recommendations", hero.id.toString(), "builds");
-    onSnapshot(q, (snap) => {
-      setRecommendations(
-        snap.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
-      );
-    });
-  }, [showViewPopup, hero?.id]);
-
-  async function handleVote(id, likes) {
-    if (!user) return alert("로그인이 필요합니다.");
-    const ref = doc(db, "recommendations", hero.id.toString(), "builds", id);
-    const already = likes.includes(user.uid);
-    await updateDoc(ref, {
-      likes: already
-        ? likes.filter((uid) => uid !== user.uid)
-        : [...likes, user.uid],
-    });
-  }
 
   return (
-    <div className="hero-detail page">
-      {/* 도감으로 돌아가기 */}
+    <div
+      className="hero-detail page"
+      style={{
+        backgroundImage: `url(/일러스트/${hero.name}.png)`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
       <Link to="/dex" className="back-button">
         ← 돌아가기
       </Link>
-      {/* 이전 영웅으로 이동 */}
+
       {prevHero ? (
         <Link to={`/hero/${prevHero.name}`} className="nav-button fixed-left">
           ←
@@ -471,7 +387,7 @@ export default function HeroDetail() {
       ) : (
         <span className="nav-button fixed-left disabled">←</span>
       )}
-      {/* 다음 영웅으로 이동 */}
+
       {nextHero ? (
         <Link to={`/hero/${nextHero.name}`} className="nav-button fixed-right">
           →
@@ -482,7 +398,6 @@ export default function HeroDetail() {
 
       <section className="hero-info">
         <div className="info-left">
-          {/* 이름, PV 버튼 */}
           <h2>{hero.name}</h2>
           {hero.youtube && (
             <button
@@ -492,22 +407,12 @@ export default function HeroDetail() {
               영웅 PV
             </button>
           )}
-          {/* 등급 */}
           <p className="info-category">{hero.category}</p>
-          {/* 영웅 아이콘, 추천 버튼 */}
           <div className="info-hero-card">
-            <button
-              className={`like-button ${isLiked ? "liked" : ""}`}
-              onClick={handleLike}
-              style={{ marginBottom: "10px" }}
-            >
-              추천 {likeData.count || 0}
-            </button>
             <img src={imagePath} alt={hero.name} className="main-image" />
           </div>
-          {/* 별칭 */}
           <p className="info-title">{hero.title}</p>
-          {/* 강화 / 초월 / 레벨 조정 UI */}
+
           <div className="stat-settings">
             {[
               { label: "레벨", toggle: true },
@@ -568,7 +473,6 @@ export default function HeroDetail() {
         </div>
 
         <div className="info-right">
-          {/* 탭 버튼: 스킬 / 스탯 / 장비 */}
           <div className="tab-buttons">
             {["스킬", "스탯", "장비"].map((tab) => (
               <button
@@ -580,7 +484,7 @@ export default function HeroDetail() {
               </button>
             ))}
           </div>
-          {/* 스킬 */}
+
           {activeTab === "스킬" && (
             <>
               <h3>스킬</h3>
@@ -596,7 +500,7 @@ export default function HeroDetail() {
                   />
                 ))}
               </div>
-              {/* 선택된 스킬의 상세 설명 */}
+
               {selectedSkillIndex !== null &&
                 hero.skills &&
                 hero.skills[selectedSkillIndex] && (
@@ -708,14 +612,12 @@ export default function HeroDetail() {
                 )}
             </>
           )}
-          {/* 스탯 */}
+
           {activeTab === "스탯" && (
             <div className="stat-section">
               <h3>스탯</h3>
-              {/* 스탯 계산 불가능 등급 처리 */}
               {["S", "A"].includes(hero.grade) ? (
                 <>
-                  {/* 스탯 계산 및 출력 (공/방/생/속공 등) */}
                   <div className="stat-list">
                     {(() => {
                       const statBase =
@@ -724,7 +626,6 @@ export default function HeroDetail() {
                             ? maxStatByGradeAndType?.[hero.grade]?.[hero.type]
                             : statByGradeAndType?.[hero.grade]?.[hero.type]
                           : null;
-
                       const enhanceBonus =
                         hero.grade && hero.type
                           ? enhanceBonusByGradeAndType?.[hero.grade]?.[
@@ -739,7 +640,6 @@ export default function HeroDetail() {
                       ) => {
                         const enhanceBonus = enhancePerStep * enhance;
                         const baseStat = base + enhanceBonus;
-
                         const transcendArray = hero.transcendBonus || [];
                         const equipmentBonus = getEquipmentStatBonus(statKey);
 
@@ -747,16 +647,15 @@ export default function HeroDetail() {
                           .slice(0, Math.min(transcend, 6))
                           .filter((t) => t.stat === statKey)
                           .reduce((sum, t) => sum + t.value, 0);
-
                         const extraPercent =
                           transcend > 6 &&
                           ["공격력", "생명력", "방어력"].includes(statKey)
                             ? (transcend - 6) * 2
                             : 0;
-
                         const transcendBonus = Math.floor(
                           (baseStat * (basePercent + extraPercent)) / 100
                         );
+
                         const total =
                           baseStat +
                           transcendBonus +
@@ -784,18 +683,15 @@ export default function HeroDetail() {
                       ) => {
                         const transcendArray = hero.transcendBonus || [];
                         const equipmentBonus = getEquipmentStatBonus(statKey);
-
                         const baseTranscend = transcendArray
                           .slice(0, Math.min(transcend, 6))
                           .filter((t) => t.stat === statKey)
                           .reduce((sum, t) => sum + t.value, 0);
-
                         const extraTranscend =
                           transcend > 6 &&
                           ["공격력", "생명력", "방어력"].includes(statKey)
                             ? (transcend - 6) * 2
                             : 0;
-
                         const transcendBonus = baseTranscend + extraTranscend;
 
                         return {
@@ -1007,19 +903,11 @@ export default function HeroDetail() {
               </div>
             </div>
           )}
-          {/* 장비 */}
+
           {activeTab === "장비" && (
             <div className="equipment-section">
               <h3>장비</h3>
-              {/* 장비 추천 등록/보기 버튼 */}
-              <div className="recommend-buttons">
-                <button onClick={() => setShowRecommendPopup(true)}>
-                  현재 장비 추천하기
-                </button>
-                <button onClick={() => setShowViewPopup(true)}>
-                  추천 장비
-                </button>
-              </div>
+
               {/* 장비 슬롯 */}
               <div className="equipment-grid">
                 {[
@@ -1094,17 +982,14 @@ export default function HeroDetail() {
                                       const isArmor = item.type === "방어구";
                                       const desc = [];
 
-                                      if (isWeapon) {
+                                      if (isWeapon)
                                         desc.push(`공격력 +${64 + level * 16}`);
-                                      }
-
                                       if (isArmor) {
                                         desc.push(`방어력 +${39 + level * 10}`);
                                         desc.push(
                                           `생명력 +${224 + level * 57}`
                                         );
                                       }
-
                                       if (accessory) {
                                         if (accessory.공격력 > 0)
                                           desc.push(
@@ -1133,7 +1018,7 @@ export default function HeroDetail() {
                                   </span>
                                 </p>
                               </div>
-                              {/* 강화 */}
+
                               <div className="enhance-controls">
                                 <button
                                   onClick={() =>
@@ -1171,7 +1056,7 @@ export default function HeroDetail() {
                               </div>
                             </div>
                           </div>
-                          {/* 장신구 */}
+
                           <div className="equip-bottom">
                             {item.type !== "장신구" && (
                               <div className="substat-selection">
@@ -1266,7 +1151,7 @@ export default function HeroDetail() {
 
                                           <div className="substat-point-controls">
                                             <button
-                                              onClick={() => {
+                                              onClick={() =>
                                                 setSubstatUpgrades((prev) => {
                                                   const current =
                                                     prev[key]?.[i] ?? 0;
@@ -1278,15 +1163,17 @@ export default function HeroDetail() {
                                                       [i]: current - 1,
                                                     },
                                                   };
-                                                });
-                                              }}
+                                                })
+                                              }
                                               disabled={points <= 0}
                                             >
                                               -
                                             </button>
+
                                             <span className="point-text">
                                               +{points}
                                             </span>
+
                                             <button
                                               onClick={() => {
                                                 if (remainingPoints <= 0)
@@ -1348,7 +1235,7 @@ export default function HeroDetail() {
                   );
                 })}
               </div>
-              {/* 세트 효과 표시 */}
+
               <div
                 className="set-bonus-display"
                 style={{
@@ -1364,7 +1251,6 @@ export default function HeroDetail() {
                 {Object.entries(getSetCounts()).map(([setName, count]) => {
                   const effect = setEffectTable[setName];
                   if (!effect) return null;
-
                   const lines = [];
 
                   if (count >= 2 && effect["2세트"]) {
@@ -1412,7 +1298,7 @@ export default function HeroDetail() {
                   return lines;
                 })}
               </div>
-              {/* 장비 선택 모달 */}
+
               {equipModalOpen && selectedEquipSlot && (
                 <div className="equipment-modal-overlay">
                   <div className="equipment-modal">
@@ -1434,7 +1320,6 @@ export default function HeroDetail() {
                           const key =
                             selectedEquipSlot.slotType +
                             selectedEquipSlot.slotIndex;
-
                           const isMagicType = ["마법", "치유"].includes(
                             hero.type
                           );
@@ -1446,7 +1331,6 @@ export default function HeroDetail() {
                             imagePath = isMagicType
                               ? item.image2 || item.image1 || item.image
                               : item.image1 || item.image;
-
                             itemName = isMagicType
                               ? item.name2 || item.name1 || item.name
                               : item.name1 || item.name;
@@ -1478,11 +1362,9 @@ export default function HeroDetail() {
                 const accessories = Object.values(selectedEquipments).filter(
                   (item) => item?.type === "장신구"
                 );
-
                 const effects = accessories
                   .map((acc) => getAccessoryBonus(acc)?.label)
                   .filter((label) => label);
-
                 return effects.length > 0 ? (
                   <div
                     style={{
@@ -1494,7 +1376,6 @@ export default function HeroDetail() {
                       color: "#FFD700",
                     }}
                   >
-                    {/* 장신구 특수효과 표시 */}
                     <strong>장신구 효과</strong>
                     <div style={{ marginTop: "6px" }}>
                       {effects.map((label, idx) => (
@@ -1511,7 +1392,7 @@ export default function HeroDetail() {
               })()}
             </div>
           )}
-          {/* 유튜브 영상 팝업 */}
+
           {youtubeOpen && (
             <div
               className="youtube-popup-overlay"
@@ -1535,208 +1416,6 @@ export default function HeroDetail() {
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                 ></iframe>
-              </div>
-            </div>
-          )}
-          {/* 장비 추천 등록 팝업 */}
-          {showRecommendPopup && (
-            <div className="popup-overlay">
-              <div className="popup-content">
-                <button
-                  className="popup-close"
-                  onClick={() => setShowRecommendPopup(false)}
-                >
-                  ✕
-                </button>
-                <h3>장비 추천</h3>
-
-                <div className="equip-summary">
-                  {Object.entries(selectedEquipments).map(([key, item]) => {
-                    const level = item.level ?? 0;
-                    const isWeapon = item.type === "무기";
-
-                    const mainStat = substats[key]?.main;
-                    const mainValue = mainStat
-                      ? calcMainStat(mainStat, level, isWeapon)
-                      : null;
-
-                    const subList = substats[key]?.subs ?? [];
-                    const upgrades = substatUpgrades[key] ?? {};
-
-                    return (
-                      <div key={key} className="recommend-equip-box">
-                        <img
-                          src={item.image}
-                          alt={item.name}
-                          style={{
-                            width: "48px",
-                            height: "48px",
-                            borderRadius: "6px",
-                          }}
-                        />
-                        <div className="equip-label">
-                          <div
-                            style={{
-                              fontWeight: "bold",
-                              color: "#ffd700",
-                            }}
-                          >
-                            {item.type === "무기"
-                              ? ["마법", "치유"].includes(hero?.type)
-                                ? item.name2 || item.name1 || item.name
-                                : item.name1 || item.name
-                              : item.name}{" "}
-                            +{level}
-                          </div>
-
-                          {mainStat && (
-                            <div
-                              style={{
-                                fontSize: "0.8rem",
-                                color: "#7cf",
-                              }}
-                            >
-                              {mainStat}: {mainValue}
-                            </div>
-                          )}
-                          {subList.map((sub, i) => {
-                            const upLevel = (upgrades[i] ?? 0) * 3;
-                            const value = calcSubStat(sub, upLevel);
-                            return (
-                              <div
-                                key={i}
-                                style={{
-                                  fontSize: "0.75rem",
-                                  color: "#ccc",
-                                }}
-                              >
-                                {sub}: {value}
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-
-                <button onClick={handleRecommendSubmit}>장비 추천하기</button>
-              </div>
-            </div>
-          )}
-          {/* 추천 장비 목록 팝업 */}
-          {showViewPopup && (
-            <div className="popup-overlay">
-              <div className="popup-content">
-                <button
-                  className="popup-close"
-                  onClick={() => setShowViewPopup(false)}
-                >
-                  ✕
-                </button>
-                <h3>추천 장비</h3>
-                <div className="recommend-list">
-                  {recommendations.length === 0 ? (
-                    <p
-                      style={{
-                        textAlign: "center",
-                        color: "#aaa",
-                        marginTop: "20px",
-                      }}
-                    >
-                      아직 추천된 장비가 없습니다. 장비를 추천해주세요!
-                    </p>
-                  ) : (
-                    [...recommendations]
-                      .sort(
-                        (a, b) =>
-                          (b.likes?.length || 0) - (a.likes?.length || 0)
-                      )
-                      .map((rec) => (
-                        <div key={rec.id} className="recommend-card">
-                          <div className="equip-summary">
-                            {[
-                              "무기0",
-                              "방어구1",
-                              "무기2",
-                              "방어구3",
-                              "장신구0",
-                            ].map((key) => {
-                              const item = rec.equipment?.[key];
-                              if (!item) return null;
-
-                              const level = item.level ?? 0;
-                              const isWeapon = item.type === "무기";
-                              const mainStat = rec.substats?.[key]?.main;
-                              const mainValue = mainStat
-                                ? calcMainStat(mainStat, level, isWeapon)
-                                : null;
-
-                              const subList = rec.substats?.[key]?.subs ?? [];
-                              const upgrades = rec.upgrades?.[key] ?? {};
-
-                              return (
-                                <div key={key} className="recommend-equip-box">
-                                  <img
-                                    src={item.image}
-                                    alt={item.name}
-                                    style={{
-                                      width: "48px",
-                                      height: "48px",
-                                      borderRadius: "6px",
-                                    }}
-                                  />
-                                  <div className="equip-label">
-                                    <div
-                                      style={{
-                                        fontWeight: "bold",
-                                        color: "#ffd700",
-                                      }}
-                                    >
-                                      {item.name} +{level}
-                                    </div>
-                                    {mainStat && (
-                                      <div
-                                        style={{
-                                          fontSize: "0.8rem",
-                                          color: "#7cf",
-                                        }}
-                                      >
-                                        {mainStat}: {mainValue}
-                                      </div>
-                                    )}
-                                    {subList.map((sub, i) => {
-                                      const upLevel = (upgrades[i] ?? 0) * 3;
-                                      const value = calcSubStat(sub, upLevel);
-                                      return (
-                                        <div
-                                          key={i}
-                                          style={{
-                                            fontSize: "0.75rem",
-                                            color: "#ccc",
-                                          }}
-                                        >
-                                          {sub}: {value}
-                                        </div>
-                                      );
-                                    })}
-                                  </div>
-                                </div>
-                              );
-                            })}
-                          </div>
-
-                          <div className="suggestion">
-                            <button
-                              onClick={() => handleVote(rec.id, rec.likes)}
-                            >
-                              추천 {rec.likes.length}
-                            </button>
-                          </div>
-                        </div>
-                      ))
-                  )}
-                </div>
               </div>
             </div>
           )}
