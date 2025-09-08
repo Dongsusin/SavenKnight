@@ -11,6 +11,14 @@ import armorMainStatTable from "../data/armorMainStatTable.json";
 import subStatTable from "../data/subStatTable.json";
 import setEffectTable from "../data/setEffectTable.json";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 import "./HeroDetail.css";
 
 export default function HeroDetail() {
@@ -1394,42 +1402,77 @@ export default function HeroDetail() {
           )}
 
           {activeTab === "통계" && hero.stats && (
-            <div className="stat-section">
-              <h3>주로 사용되는 콘텐츠 TOP3</h3>
-              <div className="content-top3">
-                {hero.stats.contentsTop3.map((content, i) => (
-                  <div key={i} className="content-box">
-                    {i + 1}. {content}
-                  </div>
-                ))}
-              </div>
+            <div className="statsection">
+              {/* === 통계 섹션 === */}
+              <section className="hero-stats">
+                <h3>주요 콘텐츠 TOP3</h3>
+                <ul className="contents-list">
+                  {hero.stats?.contentsTop3?.map((c, i) => (
+                    <li key={i}>{c}</li>
+                  ))}
+                </ul>
 
-              <h3>세트 순위 TOP3</h3>
-              <ul>
-                {hero.stats.setTop3.map((s, i) => (
-                  <li key={i}>
-                    {s.name} - {s.value}%
-                  </li>
-                ))}
-              </ul>
+                <div className="charts-grid">
+                  {[
+                    { key: "setTop3", label: "세트 장비" },
+                    { key: "weaponTop3", label: "무기 옵션" },
+                    { key: "armorTop3", label: "방어구 옵션" },
+                  ].map(({ key, label }) => (
+                    <div className="chart-box" key={key}>
+                      <h4>{label}</h4>
+                      <ResponsiveContainer width={200} height={200}>
+                        <PieChart>
+                          <Pie
+                            data={hero.stats?.[key]}
+                            dataKey="value"
+                            nameKey="name"
+                            cx="50%"
+                            cy="50%"
+                            outerRadius={70}
+                            labelLine={false} // 라벨 선 제거
+                          >
+                            {hero.stats?.[key]?.map((entry, index) => (
+                              <Cell
+                                key={`cell-${index}`}
+                                fill={
+                                  ["#ffcc00", "#00ccff", "#ff6666"][index % 3]
+                                }
+                              />
+                            ))}
+                          </Pie>
+                          <Tooltip
+                            formatter={(value, name) => [
+                              `${value.toFixed(1)}%`,
+                              name,
+                            ]}
+                          />
+                        </PieChart>
+                      </ResponsiveContainer>
 
-              <h3>무기 메인 옵션 TOP3</h3>
-              <ul>
-                {hero.stats.weaponTop3.map((s, i) => (
-                  <li key={i}>
-                    {s.name} - {s.value}%
-                  </li>
-                ))}
-              </ul>
-
-              <h3>방어구 메인 옵션 TOP3</h3>
-              <ul>
-                {hero.stats.armorTop3.map((s, i) => (
-                  <li key={i}>
-                    {s.name} - {s.value}%
-                  </li>
-                ))}
-              </ul>
+                      {/* 하단 범례 */}
+                      <div className="chart-legend">
+                        {hero.stats?.[key]?.map((entry, index) => (
+                          <div key={index} className="legend-item">
+                            <span
+                              className="legend-color"
+                              style={{
+                                backgroundColor: [
+                                  "#ffcc00",
+                                  "#00ccff",
+                                  "#ff6666",
+                                ][index % 3],
+                              }}
+                            />
+                            <span className="legend-text">
+                              {entry.name} {entry.value.toFixed(1)}%
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
             </div>
           )}
 
