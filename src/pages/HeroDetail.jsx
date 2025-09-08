@@ -474,7 +474,7 @@ export default function HeroDetail() {
 
         <div className="info-right">
           <div className="tab-buttons">
-            {["스킬", "스탯", "장비"].map((tab) => (
+            {["스킬", "스탯", "장비", "통계"].map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -1390,6 +1390,46 @@ export default function HeroDetail() {
                   </div>
                 ) : null;
               })()}
+            </div>
+          )}
+
+          {activeTab === "통계" && hero.stats && (
+            <div className="stat-section">
+              <h3>주로 사용되는 콘텐츠 TOP3</h3>
+              <div className="content-top3">
+                {hero.stats.contentsTop3.map((content, i) => (
+                  <div key={i} className="content-box">
+                    {i + 1}. {content}
+                  </div>
+                ))}
+              </div>
+
+              <h3>세트 순위 TOP3</h3>
+              <ul>
+                {hero.stats.setTop3.map((s, i) => (
+                  <li key={i}>
+                    {s.name} - {s.value}%
+                  </li>
+                ))}
+              </ul>
+
+              <h3>무기 메인 옵션 TOP3</h3>
+              <ul>
+                {hero.stats.weaponTop3.map((s, i) => (
+                  <li key={i}>
+                    {s.name} - {s.value}%
+                  </li>
+                ))}
+              </ul>
+
+              <h3>방어구 메인 옵션 TOP3</h3>
+              <ul>
+                {hero.stats.armorTop3.map((s, i) => (
+                  <li key={i}>
+                    {s.name} - {s.value}%
+                  </li>
+                ))}
+              </ul>
             </div>
           )}
 
