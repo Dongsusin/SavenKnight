@@ -75,6 +75,8 @@ export default function HeroDetail() {
 
   function getAvailableSubstatPoints(level) {
     let points = 0;
+    if (level >= 3) points++;
+    if (level >= 6) points++;
     if (level >= 9) points++;
     if (level >= 12) points++;
     if (level >= 15) points++;
