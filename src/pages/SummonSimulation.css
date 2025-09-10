@@ -35,8 +35,8 @@
 
 .wishlist-toggle-button {
   position: fixed;
-  bottom: 50px;
-  right: 50px;
+  bottom: 20px;
+  right: 100px;
   z-index: 9999;
 }
 
