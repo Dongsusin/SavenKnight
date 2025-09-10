@@ -36,6 +36,25 @@
   scrollbar-color: #444 transparent;
 }
 
+.github-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #24292f; /* GitHub 다크 컬러 */
+  padding: 12px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+  z-index: 1000;
+}
+
+.github-btn:hover {
+  transform: scale(1.1);
+  background-color: #444c56;
+}
+
 @media (max-width: 426px) {
   .page {
     margin-top: 50px;
