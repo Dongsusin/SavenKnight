@@ -1,4 +1,9 @@
-# 세나위키 <img src="/public/logo.png" alt="Project Icon" width="40" style="vertical-align:middle;">
+<h1 align="left">
+  <img src="/public/logo.png" alt="Project Icon" width="40" style="vertical-align:middle;">
+  세나위키
+</h1>
+
+![Project Main](/public/readme/메인.png)
 
 ![Project Main](/public/readme/메인.png)
 
