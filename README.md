@@ -1,7 +1,4 @@
-<h1 align="left">
-  <img src="/public/logo.png" alt="Project Icon" width="40" style="vertical-align:middle;">
-  세나위키
-</h1>
+# <h1 align="left"><img src="/public/logo.png" alt="Project Icon" width="40" style="vertical-align:middle;"> 세나위키</h1>
 
 ![Project Main](/public/readme/메인.png)
 
@@ -17,13 +14,21 @@
 
 ## 🛠 사용 기술
 
+### 🖥 프론트엔드
+
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![React Router](https://img.shields.io/badge/React_Router-CA4245?style=for-the-badge&logo=react-router&logoColor=white)
 ![React Calendar](https://img.shields.io/badge/React_Calendar-61DAFB?style=for-the-badge&logo=react&logoColor=white)
 ![CSS Modules](https://img.shields.io/badge/CSS%20Modules-1572B6?style=for-the-badge&logo=css3&logoColor=white)
-![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=FFD62E)
+
+### ⚙️ 백엔드/데이터 관리
+
 ![JSON](https://img.shields.io/badge/JSON-000000?style=for-the-badge&logo=json&logoColor=white)
 ![Fetch API](https://img.shields.io/badge/Fetch_API-35495E?style=for-the-badge&logo=javascript&logoColor=F7DF1E)
+
+### 🛠 환경 및 배포
+
+![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=FFD62E)
 ![NPM](https://img.shields.io/badge/NPM-CB3837?style=for-the-badge&logo=npm&logoColor=white)
 ![Netlify](https://img.shields.io/badge/Netlify-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)
 ![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white)
