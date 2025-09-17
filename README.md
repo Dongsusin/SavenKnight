@@ -1,6 +1,5 @@
-# 세나위키
+# 세나위키 <img src="/public/logo.png" alt="Project Icon" width="40" style="vertical-align:middle;">
 
-![Project Icon](/public/logo.png)
 ![Project Main](/public/readme/메인.png)
 
 세븐나이츠 기반 게임 커뮤니티 웹 애플리케이션입니다. 영웅·펫·장비 데이터 관리, 팀 시뮬레이션, 소환 시뮬레이터 등 다양한 기능을 React와 Vite를 기반으로 구현했습니다.
