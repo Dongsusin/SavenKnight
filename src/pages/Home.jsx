@@ -257,6 +257,22 @@ export default function Home() {
       start: "2025-09-04",
       end: "2025-09-18",
     },
+    ,
+    {
+      title: "클라한 & 미호 업데이트",
+      start: "2025-09-18",
+      end: "2025-10-02",
+    },
+    {
+      title: "클라한 & 미호 소환 및 영웅 성장 이벤트",
+      start: "2025-09-18",
+      end: "2025-10-02",
+    },
+    {
+      title: "시나리오 이벤트 [버림받은 꽃은 하늘을 탐한다]",
+      start: "2025-09-18",
+      end: "2025-10-02",
+    },
   ]);
 
   // 날짜 포맷 문자열 변환
@@ -306,8 +322,13 @@ export default function Home() {
             <h2>업데이트 게시판</h2>
             <ul>
               <li>
+                <a href="https://game.naver.com/lounge/sena_rebirth/board/detail/6679745">
+                  [2025-09-18]업데이트 내역
+                </a>
+              </li>
+              <li>
                 <a href="https://game.naver.com/lounge/sena_rebirth/board/detail/6619898">
-                  [2025-08-21]업데이트 내역
+                  [2025-09-04]업데이트 내역
                 </a>
               </li>
               <li>
@@ -387,7 +408,7 @@ export default function Home() {
             >
               <div className="youtube-slide">
                 <iframe
-                  src="https://www.youtube.com/embed/oLQwY0PjnMo?si=tDBnobAXcj9IfguE"
+                  src="https://www.youtube.com/embed/cYIQ6eCaZZY?si=Frlq9VWOCNq0Mx80"
                   title="Video 1"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -395,7 +416,7 @@ export default function Home() {
               </div>
               <div className="youtube-slide">
                 <iframe
-                  src="https://www.youtube.com/embed/1ZU2XymKMrQ?si=4rxXMKj-mN7W-ua0"
+                  src="https://www.youtube.com/embed/JCOr-cnIyRI?si=gUuAPdxGd-XfffVX"
                   title="Video 2"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -403,7 +424,7 @@ export default function Home() {
               </div>
               <div className="youtube-slide">
                 <iframe
-                  src="https://www.youtube.com/embed/g3N385AR62M?si=ndLIKk8Be-d9qsRY"
+                  src="https://www.youtube.com/embed/oLQwY0PjnMo?si=tDBnobAXcj9IfguE"
                   title="Video 3"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -411,7 +432,7 @@ export default function Home() {
               </div>
               <div className="youtube-slide">
                 <iframe
-                  src="https://www.youtube.com/embed/IUEtGmNr3Fs?si=heH_wOPn-9um_stf"
+                  src="https://www.youtube.com/embed/1ZU2XymKMrQ?si=4rxXMKj-mN7W-ua0"
                   title="Video 4"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -419,7 +440,7 @@ export default function Home() {
               </div>
               <div className="youtube-slide">
                 <iframe
-                  src="https://www.youtube.com/embed/vqUWJkINvNw?si=2fGm0hq0L-MUf0Vv"
+                  src="https://www.youtube.com/embed/g3N385AR62M?si=ndLIKk8Be-d9qsRY"
                   title="Video 5"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -427,7 +448,7 @@ export default function Home() {
               </div>
               <div className="youtube-slide">
                 <iframe
-                  src="https://www.youtube.com/embed/IFloybp-jAA?si=aZ7Famb48ivaHq1x"
+                  src="https://www.youtube.com/embed/IUEtGmNr3Fs?si=heH_wOPn-9um_stf"
                   title="Video 6"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -435,8 +456,24 @@ export default function Home() {
               </div>
               <div className="youtube-slide">
                 <iframe
-                  src="https://www.youtube.com/embed/EnOkopRFwEU?si=ShCZr-pGjdZVWFNE"
+                  src="https://www.youtube.com/embed/vqUWJkINvNw?si=2fGm0hq0L-MUf0Vv"
                   title="Video 7"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
+              </div>
+              <div className="youtube-slide">
+                <iframe
+                  src="https://www.youtube.com/embed/IFloybp-jAA?si=aZ7Famb48ivaHq1x"
+                  title="Video 8"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
+              </div>
+              <div className="youtube-slide">
+                <iframe
+                  src="https://www.youtube.com/embed/EnOkopRFwEU?si=ShCZr-pGjdZVWFNE"
+                  title="Video 9"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                 ></iframe>
@@ -452,7 +489,7 @@ export default function Home() {
               <div className="youtube-slide">
                 <iframe
                   src="https://www.youtube.com/embed/d_3vkvDTh_Q?si=8ZvuCZSHV15--64d"
-                  title="Video 9"
+                  title="Video 10"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                 ></iframe>
@@ -460,22 +497,6 @@ export default function Home() {
               <div className="youtube-slide">
                 <iframe
                   src="https://www.youtube.com/embed/_aSDFxuZOqM?si=Be5geaxd-cud32KP"
-                  title="Video 10"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                ></iframe>
-              </div>
-              <div className="youtube-slide">
-                <iframe
-                  src="https://www.youtube.com/embed/o2XgDY-Sa64?si=bHgbY1haGLhXzPHL"
-                  title="Video 10"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                ></iframe>
-              </div>
-              <div className="youtube-slide">
-                <iframe
-                  src="https://www.youtube.com/embed/iDre1B2VKo4?si=f89eVSuULxaqZyXY"
                   title="Video 11"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -483,7 +504,7 @@ export default function Home() {
               </div>
               <div className="youtube-slide">
                 <iframe
-                  src="https://www.youtube.com/embed/aD_PiRg3W64?si=vocuPbj42s5zbENg"
+                  src="https://www.youtube.com/embed/o2XgDY-Sa64?si=bHgbY1haGLhXzPHL"
                   title="Video 12"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -491,7 +512,7 @@ export default function Home() {
               </div>
               <div className="youtube-slide">
                 <iframe
-                  src="https://www.youtube.com/embed/n_57XYC7RlM?si=Lz2eWqTFlZzfg3bl"
+                  src="https://www.youtube.com/embed/iDre1B2VKo4?si=f89eVSuULxaqZyXY"
                   title="Video 13"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -499,7 +520,7 @@ export default function Home() {
               </div>
               <div className="youtube-slide">
                 <iframe
-                  src="https://www.youtube.com/embed/lpCCxFjBVXs?si=N3eNfkLf7mmpp36b"
+                  src="https://www.youtube.com/embed/aD_PiRg3W64?si=vocuPbj42s5zbENg"
                   title="Video 14"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -507,7 +528,7 @@ export default function Home() {
               </div>
               <div className="youtube-slide">
                 <iframe
-                  src="https://www.youtube.com/embed/E0RNQxitvRo?si=uzYq3F5LWuhChhV6"
+                  src="https://www.youtube.com/embed/n_57XYC7RlM?si=Lz2eWqTFlZzfg3bl"
                   title="Video 15"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -515,7 +536,7 @@ export default function Home() {
               </div>
               <div className="youtube-slide">
                 <iframe
-                  src="https://www.youtube.com/embed/ibfSpdseLRE?si=mnqMRDvC9IlZt5Mw"
+                  src="https://www.youtube.com/embed/lpCCxFjBVXs?si=N3eNfkLf7mmpp36b"
                   title="Video 16"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -523,7 +544,7 @@ export default function Home() {
               </div>
               <div className="youtube-slide">
                 <iframe
-                  src="https://www.youtube.com/embed/etB--_9ChFw?si=q_kF78FXY07LWI3N"
+                  src="https://www.youtube.com/embed/E0RNQxitvRo?si=uzYq3F5LWuhChhV6"
                   title="Video 17"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -531,7 +552,7 @@ export default function Home() {
               </div>
               <div className="youtube-slide">
                 <iframe
-                  src="https://www.youtube.com/embed/_61N2S7MV30?si=Sm3KGij4mD9eURVO"
+                  src="https://www.youtube.com/embed/ibfSpdseLRE?si=mnqMRDvC9IlZt5Mw"
                   title="Video 18"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -539,7 +560,7 @@ export default function Home() {
               </div>
               <div className="youtube-slide">
                 <iframe
-                  src="https://www.youtube.com/embed/xST7BL3NoYM?si=QUoR9gww1SXosfIq"
+                  src="https://www.youtube.com/embed/etB--_9ChFw?si=q_kF78FXY07LWI3N"
                   title="Video 19"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -547,7 +568,7 @@ export default function Home() {
               </div>
               <div className="youtube-slide">
                 <iframe
-                  src="https://www.youtube.com/embed/uyU-r8nh0sA?si=TvIhwONDwA9VbZQH"
+                  src="https://www.youtube.com/embed/_61N2S7MV30?si=Sm3KGij4mD9eURVO"
                   title="Video 20"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -555,7 +576,7 @@ export default function Home() {
               </div>
               <div className="youtube-slide">
                 <iframe
-                  src="https://www.youtube.com/embed/9o0NqifUIrI?si=HbqlgcsNRCq1MPMv"
+                  src="https://www.youtube.com/embed/xST7BL3NoYM?si=QUoR9gww1SXosfIq"
                   title="Video 21"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -563,7 +584,7 @@ export default function Home() {
               </div>
               <div className="youtube-slide">
                 <iframe
-                  src="https://www.youtube.com/embed/aB5RO_EvRT8?si=z_MsuCFUz_HjVfeN"
+                  src="https://www.youtube.com/embed/uyU-r8nh0sA?si=TvIhwONDwA9VbZQH"
                   title="Video 22"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -571,7 +592,7 @@ export default function Home() {
               </div>
               <div className="youtube-slide">
                 <iframe
-                  src="https://www.youtube.com/embed/LHD6Ib-5M90?si=hbC1sQxvaqVHcz3r"
+                  src="https://www.youtube.com/embed/9o0NqifUIrI?si=HbqlgcsNRCq1MPMv"
                   title="Video 23"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -579,8 +600,24 @@ export default function Home() {
               </div>
               <div className="youtube-slide">
                 <iframe
-                  src="https://www.youtube.com/embed/RrRM7rW_Oho?si=UNnB03XWVOBEyU2z"
+                  src="https://www.youtube.com/embed/aB5RO_EvRT8?si=z_MsuCFUz_HjVfeN"
                   title="Video 24"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
+              </div>
+              <div className="youtube-slide">
+                <iframe
+                  src="https://www.youtube.com/embed/LHD6Ib-5M90?si=hbC1sQxvaqVHcz3r"
+                  title="Video 25"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
+              </div>
+              <div className="youtube-slide">
+                <iframe
+                  src="https://www.youtube.com/embed/RrRM7rW_Oho?si=UNnB03XWVOBEyU2z"
+                  title="Video 26"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                 ></iframe>
