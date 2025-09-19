@@ -3,7 +3,7 @@
     "id": 1,
     "name": "루디",
     "group": "스페셜",
-    "grade": "S",
+    "grade": "SS",
     "type": "방어",
     "youtube": "https://www.youtube.com/embed/OonjleriOVI?si=aapDsP1lwGA03_wT",
     "transcendBonus": [
@@ -101,7 +101,7 @@
     "id": 2,
     "name": "아일린",
     "group": "스페셜",
-    "grade": "S",
+    "grade": "SS",
     "type": "만능",
     "youtube": "https://www.youtube.com/embed/aB5RO_EvRT8?si=kw-XN4Q-sghV_SPa",
     "transcendBonus": [
@@ -199,7 +199,7 @@
     "id": 3,
     "name": "레이첼",
     "group": "스페셜",
-    "grade": "S",
+    "grade": "SS",
     "type": "만능",
     "youtube": "https://www.youtube.com/embed/lpCCxFjBVXs?si=gynLKOv-RALcXljR",
     "transcendBonus": [
@@ -305,7 +305,7 @@
     "id": 4,
     "name": "델론즈",
     "group": "스페셜",
-    "grade": "S",
+    "grade": "SS",
     "type": "공격",
     "youtube": "https://www.youtube.com/embed/_61N2S7MV30?si=DMYAnYxUhbD0-Foz",
     "transcendBonus": [
@@ -410,7 +410,7 @@
     "id": 5,
     "name": "스파이크",
     "group": "스페셜",
-    "grade": "S",
+    "grade": "SS",
     "type": "만능",
     "youtube": "https://www.youtube.com/embed/9o0NqifUIrI?si=G2uY7fgNuzhCzwta",
     "transcendBonus": [
@@ -535,7 +535,7 @@
     "id": 6,
     "name": "제이브",
     "group": "스페셜",
-    "grade": "S",
+    "grade": "SS",
     "type": "만능",
     "youtube": "https://www.youtube.com/embed/xST7BL3NoYM?si=PUMLbZ6blPyxKUfL",
     "transcendBonus": [
@@ -651,7 +651,7 @@
     "id": 7,
     "name": "크리스",
     "group": "스페셜",
-    "grade": "S",
+    "grade": "SS",
     "type": "만능",
     "youtube": "https://www.youtube.com/embed/uyU-r8nh0sA?si=mLO7K56gib5moF5y",
     "transcendBonus": [
@@ -751,7 +751,7 @@
     "id": 8,
     "name": "바네사",
     "group": "스페셜",
-    "grade": "S",
+    "grade": "SS",
     "type": "마법",
     "youtube": "https://www.youtube.com/embed/etB--_9ChFw?si=jy0D9rcIM5d25dJH",
     "transcendBonus": [
@@ -850,7 +850,7 @@
     "id": 9,
     "name": "파이",
     "group": "스페셜",
-    "grade": "S",
+    "grade": "SS",
     "type": "공격",
     "youtube": "https://www.youtube.com/embed/E0RNQxitvRo?si=icX2eJkUViid7QGk",
     "excludeFromSummon": true,
@@ -956,7 +956,7 @@
     "id": 10,
     "name": "로지",
     "group": "스페셜",
-    "grade": "S",
+    "grade": "SS",
     "type": "치유",
     "youtube": "https://www.youtube.com/embed/n_57XYC7RlM?si=0Aq1XXxW4ODB3d0_",
     "excludeFromSummon": true,
@@ -1042,7 +1042,7 @@
     "id": 11,
     "name": "쥬리",
     "group": "스페셜",
-    "grade": "S",
+    "grade": "SS",
     "type": "마법",
     "youtube": "https://www.youtube.com/embed/iDre1B2VKo4?si=KySO3FxQTEMDwZfM",
     "excludeFromSummon": true,
@@ -1141,7 +1141,7 @@
     "id": 12,
     "name": "멜키르",
     "group": "스페셜",
-    "grade": "S",
+    "grade": "SS",
     "type": "마법",
     "youtube": "https://www.youtube.com/embed/FIjwDZz-7To?si=mu3uw6z3I3L1NesW",
     "transcendBonus": [
@@ -1257,7 +1257,7 @@
     "id": 13,
     "name": "콜트",
     "group": "스페셜",
-    "grade": "S",
+    "grade": "SS",
     "type": "공격",
     "youtube": "https://www.youtube.com/embed/vqUWJkINvNw?si=5NZWmJYuymlxdWsG",
     "transcendBonus": [
@@ -1374,7 +1374,7 @@
     "id": 14,
     "name": "플라튼",
     "group": "스페셜",
-    "grade": "S",
+    "grade": "SS",
     "type": "치유",
     "youtube": "https://www.youtube.com/embed/IUEtGmNr3Fs?si=L7dEXTl7JTs9Jtg4",
     "transcendBonus": [
@@ -1477,7 +1477,7 @@
     "id": 15,
     "name": "에이스",
     "group": "스페셜",
-    "grade": "S",
+    "grade": "SS",
     "type": "만능",
     "youtube": "https://www.youtube.com/embed/ibfSpdseLRE?si=tQLnFHO9Zz008S2S",
     "transcendBonus": [
@@ -1580,7 +1580,7 @@
     "id": 16,
     "name": "린",
     "group": "스페셜",
-    "grade": "S",
+    "grade": "SS",
     "type": "마법",
     "youtube": "https://www.youtube.com/embed/EnOkopRFwEU?si=V7UFwGSj4O9Pryxj",
     "transcendBonus": [
@@ -1694,7 +1694,7 @@
     "id": 17,
     "name": "태오",
     "group": "스페셜",
-    "grade": "S",
+    "grade": "SS",
     "type": "공격",
     "youtube": "https://www.youtube.com/embed/o2XgDY-Sa64?si=Suh1qNCrQmTL2Dxo",
     "transcendBonus": [
@@ -1786,7 +1786,7 @@
     "id": 18,
     "name": "연희",
     "group": "스페셜",
-    "grade": "S",
+    "grade": "SS",
     "type": "마법",
     "youtube": "https://www.youtube.com/embed/d_3vkvDTh_Q?si=WRf2GGMwWh0fAiWX",
     "transcendBonus": [
@@ -1881,7 +1881,7 @@
     "id": 19,
     "name": "카르마",
     "group": "스페셜",
-    "grade": "S",
+    "grade": "SS",
     "type": "만능",
     "youtube": "https://www.youtube.com/embed/IFloybp-jAA?si=1cP0vvLtgFOZDuyo",
     "transcendBonus": [
@@ -2079,7 +2079,7 @@
     "id": 21,
     "name": "오를리",
     "group": "스페셜",
-    "grade": "S",
+    "grade": "SS",
     "type": "치유",
     "youtube": "https://www.youtube.com/embed/oLQwY0PjnMo?si=STLanNrzNWtBJXa-",
     "transcendBonus": [
@@ -2167,7 +2167,7 @@
     "id": 22,
     "name": "클라한",
     "group": "스페셜",
-    "grade": "S",
+    "grade": "SS",
     "type": "공격",
     "youtube": "https://www.youtube.com/embed/cYIQ6eCaZZY?si=zXUPUpxTS4PfQrDB",
     "transcendBonus": [
@@ -2322,7 +2322,7 @@
     "id": 24,
     "name": "실베스타",
     "group": "스페셜",
-    "grade": "S",
+    "grade": "SS",
     "type": "마법",
     "youtube": "https://www.youtube.com/embed/aD_PiRg3W64?si=WaCYvy21cXYgEZaq",
     "transcendBonus": [
@@ -4548,7 +4548,7 @@
     "id": 48,
     "name": "비스킷",
     "group": "일반",
-    "grade": "S",
+    "grade": "SS",
     "type": "치유",
     "youtube": "https://www.youtube.com/embed/g3N385AR62M?si=wJ7-ixyMMVAhqdST",
     "transcendBonus": [
